@@ -34,7 +34,7 @@
 #endif
 #include "rs_fileio.h"
 // #include "rs_filtercxf.h"
-// #include "rs_filterdxf1.h"
+#include "rs_filterdxf1.h"
 // #include "rs_filterjww.h"
 // #include "rs_filterlff.h"
 #include "rs_filterdxfrw.h"
@@ -279,7 +279,7 @@ std::vector<std::function<RS_FilterInterface*()>> RS_FileIO::getFilters()
                                                   RS_FilterDXFRW::createFilter,
                                                   //RS_FilterCXF::createFilter,
                                                   //RS_FilterJWW::createFilter,
-                                                  //RS_FilterDXF1::createFilter
+                                                  RS_FilterDXF1::createFilter
 												  };
 }
 

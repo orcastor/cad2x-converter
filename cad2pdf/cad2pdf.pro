@@ -103,6 +103,7 @@ HEADERS += \
     ../src/rs_entitycontainer.h \
     ../src/rs_fileio.h \
     ../src/rs_filterdxfrw.h \
+    ../src/rs_filterdxf1.h \
     ../src/rs_filterinterface.h \
     ../src/rs_flags.h \
     ../src/rs_font.h \
@@ -174,6 +175,7 @@ SOURCES += \
     ../src/rs_entitycontainer.cpp \
     ../src/rs_fileio.cpp \
     ../src/rs_filterdxfrw.cpp \
+    ../src/rs_filterdxf1.cpp \
     ../src/rs_flags.cpp \
     ../src/rs_font.cpp \
     ../src/rs_fontlist.cpp \
