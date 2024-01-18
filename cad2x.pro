@@ -1,6 +1,6 @@
 TEMPLATE = subdirs
 
-TARGET = cad2
+TARGET = cad2x
 CONFIG += ordered
 SUBDIRS     = \
     3rdparty \
