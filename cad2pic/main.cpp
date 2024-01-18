@@ -94,7 +94,7 @@ QString getFormatFromFile(const QString& fileName)
 ///
 int main(int argc, char* argv[])
 {
-    // RS_DEBUG->setLevel(RS_Debug::D_WARNING);
+    RS_DEBUG->setLevel(RS_Debug::D_NOTHING);
 
     QCoreApplication app(argc, argv);
     QCoreApplication::setOrganizationName("cad2pic");
@@ -202,7 +202,6 @@ int main(int argc, char* argv[])
         QSize borders = QSize(5, 5);
         bool black = false;
         bool bw = false;
-        qDebug() << "slotFileExport" << outFile;
         ret = slotFileExport(graphic, outFile, pngSize, borders, black, bw);
     }
 
@@ -270,7 +269,6 @@ bool slotFileExport(RS_Graphic* graphic, const QString& name, QSize size, QSize 
 
     // set painter with buffer
     RS_PainterQt painter(&img);
-    qDebug() << "painter" << name;
 
     if (black) {
         painter.setBackground(Qt::black);
@@ -285,20 +283,56 @@ bool slotFileExport(RS_Graphic* graphic, const QString& name, QSize size, QSize 
         }
     }
 
-    painter.eraseRect(0, 0, size.width(), size.height());
-    qDebug() << "eraseRect" << name;
+    double imgFx = (double)img.width() / img.widthMM();
+    double imgFy = (double)img.height() / img.heightMM();
 
-    RS_GraphicView gv(size.width(), size.height());
+    double marginLeft = graphic->getMarginLeft();
+    double marginTop = graphic-> getMarginTop();
+    double marginRight = graphic->getMarginRight();
+    double marginBottom = graphic->getMarginBottom();
+
+    painter.setClipRect(marginLeft * imgFx, marginTop * imgFy,
+                        img.width() - (marginLeft + marginRight) * imgFx,
+                        img.height() - (marginTop + marginBottom) * imgFy);
+
+    RS_GraphicView gv(img.width(), img.height());
     if (black) {
         gv.setBackground(Qt::black);
     } else {
         gv.setBackground(Qt::white);
     }
     gv.setPrinting(true);
+
+    double fx = imgFx * RS_Units::getFactorToMM(graphic->getUnit());
+    double fy = imgFy * RS_Units::getFactorToMM(graphic->getUnit());
+
+    double f = (fx + fy) / 2.0;
+
+    double scale = graphic->getPaperScale();
+
+    gv.setOffset((int)(graphic->getPaperInsertionBase().x * f),
+                 (int)(graphic->getPaperInsertionBase().y * f));
+    gv.setFactor(f*scale);
+    gv.setContainer(graphic);
+
     gv.setBorders(borders.width(), borders.height(), borders.width(), borders.height());
     gv.setContainer(graphic);
-    gv.drawEntity(&painter, graphic);
-    qDebug() << "drawEntity" << name;
+
+    double baseX = graphic->getPaperInsertionBase().x;
+    double baseY = graphic->getPaperInsertionBase().y;
+    int numX = graphic->getPagesNumHoriz();
+    int numY = graphic->getPagesNumVert();
+
+    RS_Vector printArea = graphic->getPrintAreaSize(false);
+    for (int pY = 0; pY < numY; pY++) {
+        double offsetY = printArea.y * pY;
+        for (int pX = 0; pX < numX; pX++) {
+            double offsetX = printArea.x * pX;
+            gv.setOffset((int)((baseX - offsetX) * f),
+                         (int)((baseY - offsetY) * f));
+            gv.drawEntity(&painter, graphic);
+        }
+    }
 
     bool ret = img.save(name);
 
@@ -316,7 +350,7 @@ bool slotFileExport(RS_Graphic* graphic, const QString& name, QSize size, QSize 
 ///
 static QSize parsePngSizeArg(QString arg)
 {
-    QSize v(2000, 1000); // default resolution
+    QSize v(2970, 2100); // default resolution
 
     if (arg.isEmpty())
         return v;

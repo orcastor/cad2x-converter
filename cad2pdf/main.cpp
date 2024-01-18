@@ -48,7 +48,7 @@ static void parseMarginsArg(QString, PdfPrintParams&);
 ///
 int main(int argc, char* argv[])
 {
-    // RS_DEBUG->setLevel(RS_Debug::D_WARNING);
+    RS_DEBUG->setLevel(RS_Debug::D_NOTHING);
 
     QCoreApplication app(argc, argv);
     QCoreApplication::setOrganizationName("cad2pdf");
