@@ -168,10 +168,6 @@ void RS_Spline::update() {
 
     clear();
 
-    if (isUndone()) {
-        return;
-    }
-
     if (data.degree<1 || data.degree>3) {
         RS_DEBUG->print("RS_Spline::update: invalid degree: %d", data.degree);
         return;

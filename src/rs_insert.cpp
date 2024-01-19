@@ -137,11 +137,6 @@ void RS_Insert::update() {
         return;
     }
 
-    if (isUndone()) {
-        RS_DEBUG->print("RS_Insert::update: Insert is in undo list");
-        return;
-    }
-
     if (std::abs(data.scaleFactor.x)<MIN_Scale_Factor || std::abs(data.scaleFactor.y)<MIN_Scale_Factor) {
         RS_DEBUG->print("RS_Insert::update: scale factor is 0");
         return;

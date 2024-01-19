@@ -105,26 +105,8 @@ public:
    RS_Vector getNearestCenter(const RS_Vector& /*coord*/,
 									  double* /*dist*/) const override;
 
-    /**
-     * (De-)selects startpoint.
-     */
-	virtual void setStartpointSelected(bool select);
 
-    /**
-     * (De-)selects endpoint.
-     */
-	virtual void setEndpointSelected(bool select);
 	virtual bool isTangent(const RS_CircleData& /* circleData */) const;
-
-    /**
-     * @return True if the entities startpoint is selected.
-     */
-	bool isStartpointSelected() const;
-
-    /**
-     * @return True if the entities endpoint is selected.
-     */
-	bool isEndpointSelected() const;
 
 	void revertDirection() override;
 
@@ -177,8 +159,6 @@ public:
 								  const RS_VectorSolutions& /*trimSol*/);
 
 	virtual void reverse();
-
-	void moveSelectedRef(const RS_Vector& ref, const RS_Vector& offset) override;
 
 protected:
     /**

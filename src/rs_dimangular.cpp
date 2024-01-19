@@ -291,10 +291,6 @@ void RS_DimAngular::updateDim(bool autoText /*= false*/)
 
     clear();
 
-    if (isUndone()) {
-        return;
-    }
-
     if ( ! dimCenter.valid) {
         return;
     }

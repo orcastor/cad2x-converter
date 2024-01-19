@@ -1541,10 +1541,8 @@ void RS_FilterDXFRW::writeBlockRecords(){
     RS_Block *blk;
     for (unsigned i = 0; i < graphic->countBlocks(); i++) {
         blk = graphic->blockAt(i);
-        if (!blk->isUndone()){
-            RS_DEBUG->print("writing block record: %s", (const char*)blk->getName().toLocal8Bit());
-            dxfW->writeBlockRecord(blk->getName().toUtf8().data());
-        }
+        RS_DEBUG->print("writing block record: %s", (const char*)blk->getName().toLocal8Bit());
+        dxfW->writeBlockRecord(blk->getName().toUtf8().data());
     }
 }
 
@@ -1567,9 +1565,7 @@ void RS_FilterDXFRW::writeBlocks() {
         RS_EntityContainer *ct = (RS_EntityContainer *)it.key();
         for (RS_Entity* e=ct->firstEntity(RS2::ResolveNone);
              e; e=ct->nextEntity(RS2::ResolveNone)) {
-            if ( !(e->getFlag(RS2::FlagUndone)) ) {
-                writeEntity(e);
-            }
+            writeEntity(e);
         }
         ++it;
     }
@@ -1577,21 +1573,17 @@ void RS_FilterDXFRW::writeBlocks() {
     //next write "normal" blocks
     for (unsigned i = 0; i < graphic->countBlocks(); i++) {
         blk = graphic->blockAt(i);
-        if (!blk->isUndone()) {
-            RS_DEBUG->print("writing block: %s", (const char*)blk->getName().toLocal8Bit());
+        RS_DEBUG->print("writing block: %s", (const char*)blk->getName().toLocal8Bit());
 
-            DRW_Block block;
-            block.name = blk->getName().toUtf8().data();
-            block.basePoint.x = blk->getBasePoint().x;
-            block.basePoint.y = blk->getBasePoint().y;
-            block.basePoint.z = blk->getBasePoint().z;
-            dxfW->writeBlock(&block);
-            for (RS_Entity* e=blk->firstEntity(RS2::ResolveNone);
-                 e; e=blk->nextEntity(RS2::ResolveNone)) {
-                if ( !(e->getFlag(RS2::FlagUndone)) ) {
-                    writeEntity(e);
-                }
-            }
+        DRW_Block block;
+        block.name = blk->getName().toUtf8().data();
+        block.basePoint.x = blk->getBasePoint().x;
+        block.basePoint.y = blk->getBasePoint().y;
+        block.basePoint.z = blk->getBasePoint().z;
+        dxfW->writeBlock(&block);
+        for (RS_Entity* e=blk->firstEntity(RS2::ResolveNone);
+                e; e=blk->nextEntity(RS2::ResolveNone)) {
+            writeEntity(e);
         }
     }
 }

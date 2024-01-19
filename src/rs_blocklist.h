@@ -33,7 +33,6 @@
 
 class QString;
 class RS_Block;
-class RS_BlockListListener;
 
 /**
  * List of blocks.
@@ -81,22 +80,8 @@ public:
     void toggle(RS_Block* block);
     void freezeAll(bool freeze);
 
-    void addListener(RS_BlockListListener* listener);
-    void removeListener(RS_BlockListListener* listener);
-
     bool isOwner() const {return owner;}
     void setOwner(bool ow) {owner = ow;}
-
-    /**
-     * Sets the block list modified status to 'm'.
-     */
-	void setModified(bool m);
-
-    /**
-     * @retval true The block list has been modified.
-     * @retval false The block list has not been modified.
-     */
-	bool isModified() const;
 
     friend std::ostream& operator << (std::ostream& os, RS_BlockList& b);
 
@@ -105,8 +90,6 @@ private:
     bool owner = false;
     //! Blocks in the graphic
     QList<RS_Block*> blocks;
-    //! List of registered BlockListListeners
-    QList<RS_BlockListListener*> blockListListeners;
     //! Currently active block
     RS_Block* activeBlock = nullptr;
     /** Flag set if the block list was modified and not yet saved. */

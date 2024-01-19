@@ -46,10 +46,6 @@ public:
     RS_Graphic(RS_EntityContainer* parent=nullptr);
     virtual ~RS_Graphic();
 
-    //virtual RS_Entity* clone() {
-    //	return new RS_Graphic(*this);
-    //}
-
     /** @return RS2::EntityGraphic */
     RS2::EntityType rtti() const override {
         return RS2::EntityGraphic;
@@ -65,10 +61,9 @@ public:
     }
 
     void newDoc() override;
-    bool save(bool isAutoSave = false) override;
-    bool saveAs(const QString& filename, RS2::FormatType type, bool force = false) override;
+    bool save() override;
+    bool saveAs(const QString& filename, RS2::FormatType type) override;
     bool open(const QString& filename, RS2::FormatType type) override;
-    bool loadTemplate(const QString &filename, RS2::FormatType type) override;
 
         // Wrappers for Layer functions:
     void clearLayers() {
@@ -115,22 +110,11 @@ public:
     void toggleLayerConstruction(RS_Layer* layer) {
         layerList.toggleConstruction(layer);
     }
-    void freezeAllLayers(bool freeze) {
-        layerList.freezeAll(freeze);
-    }
     void lockAllLayers(bool lock) {
         layerList.lockAll(lock);
     }
 
-    void addLayerListListener(RS_LayerListListener* listener) {
-        layerList.addListener(listener);
-    }
-    void removeLayerListListener(RS_LayerListListener* listener) {
-        layerList.removeListener(listener);
-    }
-
-
-        // Wrapper for block functions:
+    // Wrapper for block functions:
     void clearBlocks() {
         blockList.clear();
     }
@@ -172,12 +156,6 @@ public:
     }
     void freezeAllBlocks(bool freeze) {
         blockList.freezeAll(freeze);
-    }
-    void addBlockListListener(RS_BlockListListener* listener) {
-        blockList.addListener(listener);
-    }
-    void removeBlockListListener(RS_BlockListListener* listener) {
-        blockList.removeListener(listener);
     }
 
         // Wrappers for variable functions:
@@ -258,23 +236,6 @@ public:
     bool fitToPage();
 
     bool isBiggerThanPaper();
-
-    /**
-     * @retval true The document has been modified since it was last saved.
-     * @retval false The document has not been modified since it was last saved.
-     */
-    virtual bool isModified() const {
-        return modified || layerList.isModified() || blockList.isModified();
-    }
-
-    /**
-     * Sets the documents modified status to 'm'.
-     */
-    virtual void setModified(bool m) {
-        modified = m;
-        layerList.setModified(m);
-        blockList.setModified(m);
-    }
 
     //if set to true, will refuse to modify paper scale
     void setPaperScaleFixed(bool fixed)

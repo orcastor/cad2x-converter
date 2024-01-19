@@ -184,9 +184,6 @@ void RS_MText::update() {
   RS_DEBUG->print("RS_MText::update");
 
   clear();
-  if (isUndone()) {
-    return;
-  }
 
   usedTextWidth = 0.0;
   usedTextHeight = 0.0;

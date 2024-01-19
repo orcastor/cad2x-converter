@@ -30,7 +30,6 @@
 #define RS_DOCUMENT_H
 
 #include "rs_entitycontainer.h"
-#include "rs_undo.h"
 
 class RS_BlockList;
 class RS_LayerList;
@@ -43,8 +42,7 @@ class RS_LayerList;
  *
  * @author Andrew Mustun
  */
-class RS_Document : public RS_EntityContainer,
-    public RS_Undo {
+class RS_Document : public RS_EntityContainer {
 public:
 	RS_Document(RS_EntityContainer* parent=nullptr);
 
@@ -52,27 +50,15 @@ public:
     virtual RS_BlockList* getBlockList() = 0;
 
     virtual void newDoc() = 0;
-    virtual bool save(bool isAutoSave = false) = 0;
-    virtual bool saveAs(const QString &filename, RS2::FormatType type, bool force) = 0;
+    virtual bool save() = 0;
+    virtual bool saveAs(const QString &filename, RS2::FormatType type) = 0;
     virtual bool open(const QString &filename, RS2::FormatType type) = 0;
-    virtual bool loadTemplate(const QString &filename, RS2::FormatType type) = 0;
-
 
     /**
      * @return true for all document entities (e.g. Graphics or Blocks).
      */
     bool isDocument() const override {
         return true;
-    }
-
-    /**
-     * Removes an entity from the entity container. Implementation
-     * from RS_Undo.
-     */
-    void removeUndoable(RS_Undoable* u) override {
-        if (u && u->undoRtti()==RS2::UndoableEntity && u->isUndone()) {
-			removeEntity(static_cast<RS_Entity*>(u));
-        }
     }
 
     /**
@@ -98,56 +84,24 @@ public:
     }
 
     /**
-     * @return Auto-save file name of the document currently loaded.
-     */
-    QString getAutoSaveFilename() const {
-        return autosaveFilename;
-    }
-
-    /**
      * Sets file name for the document currently loaded.
      */
     void setFilename(QString fn) {
         filename = std::move(fn);
     }
 
-	/**
-	 * Sets the documents modified status to 'm'.
-	 */
-    void setModified(bool m) {
-		//std::cout << "RS_Document::setModified: %d" << (int)m << std::endl;
-		modified = m;
-	}
-
-	/**
-	 * @retval true The document has been modified since it was last saved.
-	 * @retval false The document has not been modified since it was last saved.
-	 */
-    bool isModified() const {
-        return modified;
-    }
-
-    /**
-     * Overwritten to set modified flag when undo cycle finished with undoable(s).
-     */
-    virtual void endUndoCycle() override;
-
     void setGraphicView(RS_GraphicView * g) {gv = g;}
     RS_GraphicView* getGraphicView() {return gv;}
 
 protected:
-    /** Flag set if the document was modified and not yet saved. */
-    bool modified = false;
     /** Active pen. */
     RS_Pen activePen;
     /** File name of the document or empty for a new document. */
     QString filename;
-	/** Auto-save file name of document. */
-    QString autosaveFilename;
 	/** Format type */
     RS2::FormatType formatType = RS2::FormatUnknown;
     //used to read/save current view
     RS_GraphicView * gv = nullptr;
-
 };
+
 #endif

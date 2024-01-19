@@ -54,7 +54,6 @@ struct RS_BlockData {
 
 	bool frozen {false};              //!< Frozen flag
     mutable bool visibleInBlockList {true};   //!< Visible in block list
-    mutable bool selectedInBlockList {false}; //!< selected in block list
 };
 
 
@@ -117,21 +116,17 @@ public:
     /**
      * Reimplementation from RS_Document. Saves the parent graphic document.
      */
-    bool save(bool isAutoSave = false) override;
+    bool save() override;
 
     /**
      * Reimplementation from RS_Document. Does nothing.
      */
-    bool saveAs(const QString& filename, RS2::FormatType type, bool force = false) override;
+    bool saveAs(const QString& filename, RS2::FormatType type) override;
 
     /**
      * Reimplementation from RS_Document. Does nothing.
      */
     bool open(const QString& , RS2::FormatType) override {
-        // do nothing
-        return false;
-    }
-    bool loadTemplate(const QString& , RS2::FormatType) override {
         // do nothing
         return false;
     }
@@ -170,17 +165,6 @@ public:
     void freeze(bool freeze) {
 		data.frozen = freeze;
     }
-	
-    /**
-     * Sets the parent documents modified status to 'm'.
-     */
-	virtual void setModified(bool m);
-
-    /**
-     * Sets only this block modified status to 'm'
-     * without touching parent document.
-     */
-    void setModifiedFlag(bool m) { modified = m; }
 
     /**
      * Sets the visibility of the Block in block list
@@ -193,18 +177,6 @@ public:
      * Returns the visibility of the Block in block list
      */
     bool isVisibleInBlockList() const;
-
-    /**
-     * Sets selection state of the block in block list
-     *
-     * @param v true: selected, false: deselected
-     */
-    void selectedInBlockList(bool v) const;
-
-    /**
-     * Returns selection state of the block in block list
-     */
-    bool isSelectedInBlockList() const;
 
     /**
      * Block may contain inserts of other blocks.

@@ -32,7 +32,6 @@
 #include <QList>
 
 class RS_Layer;
-class RS_LayerListListener;
 class QG_LayerWidget;
 
 /**
@@ -93,32 +92,7 @@ public:
     QG_LayerWidget* getLayerWitget() {
         return layerWidget;
     }
-    //! @return First layer of the list.
-    //RS_Layer* firstLayer() {
-    //    return layers.first();
-    //}
-    /** @return Next layer from the list after
-     * calling firstLayer() or nextLayer().
-     */
-    //RS_Layer* nextLayer() {
-    //    return layers.next();
-    //}
 
-    void addListener(RS_LayerListListener* listener);
-    void removeListener(RS_LayerListListener* listener);
-
-    /**
-     * Sets the layer lists modified status to 'm'.
-     */
-    void setModified(bool m);
-
-    /**
-     * @retval true The layer list has been modified.
-     * @retval false The layer list has not been modified.
-     */
-    virtual bool isModified() const {
-        return modified;
-    }
     /**
      * @brief sort by layer names
      */
@@ -129,8 +103,6 @@ public:
 private:
     //! layers in the graphic
     QList<RS_Layer*> layers;
-    //! List of registered LayerListListeners
-    QList<RS_LayerListListener*> layerListListeners;
     QG_LayerWidget *layerWidget = nullptr;
     //! Currently active layer
     RS_Layer *activeLayer = nullptr;

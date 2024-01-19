@@ -105,43 +105,8 @@ RS_Vector RS_AtomicEntity::getNearestCenter(const RS_Vector& /*coord*/,
 	return RS_Vector(false);
 }
 
-/**
- * (De-)selects startpoint.
- */
-void RS_AtomicEntity::setStartpointSelected(bool select) {
-	if (select) {
-		setFlag(RS2::FlagSelected1);
-	} else {
-		delFlag(RS2::FlagSelected1);
-	}
-}
-
-/**
- * (De-)selects endpoint.
- */
-void RS_AtomicEntity::setEndpointSelected(bool select) {
-	if (select) {
-		setFlag(RS2::FlagSelected2);
-	} else {
-		delFlag(RS2::FlagSelected2);
-	}
-}
 bool RS_AtomicEntity::isTangent(const RS_CircleData& /* circleData */) const{
 	return false;
-}
-
-/**
- * @return True if the entities startpoint is selected.
- */
-bool RS_AtomicEntity::isStartpointSelected() const {
-	return getFlag(RS2::FlagSelected1);
-}
-
-/**
- * @return True if the entities endpoint is selected.
- */
-bool RS_AtomicEntity::isEndpointSelected() const {
-	return getFlag(RS2::FlagSelected2);
 }
 
 void RS_AtomicEntity::revertDirection(){}
@@ -203,12 +168,6 @@ RS_Vector RS_AtomicEntity::prepareTrim(const RS_Vector& /*trimCoord*/,
 }
 
 void RS_AtomicEntity::reverse() {}
-
-void RS_AtomicEntity::moveSelectedRef(const RS_Vector& ref, const RS_Vector& offset) {
-	if (isSelected()) {
-		moveRef(ref, offset);
-	}
-}
 
 void RS_AtomicEntity::updateDashOffset(RS_Painter& painter, RS_GraphicView& view, double& offset) const
 {

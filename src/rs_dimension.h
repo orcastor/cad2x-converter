@@ -104,7 +104,6 @@ public:
                  const RS_DimensionData& d);
 
 	RS_Vector getNearestRef( const RS_Vector& coord, double* dist = nullptr) const override;
-	RS_Vector getNearestSelectedRef( const RS_Vector& coord, double* dist = nullptr) const override;
 
     /** @return Copy of data that defines the dimension. */
     RS_DimensionData getData() const {

@@ -1821,7 +1821,6 @@ void RS_Ellipse::draw(RS_Painter* painter, RS_GraphicView* view, double& offset)
 //    DEBUG_HEADER
 //    std::cout<<"crossPoints.size()="<<crossPoints.size()<<std::endl;
     RS_Ellipse arc(*this);
-    arc.setSelected(isSelected());
     arc.setPen(getPen());
     arc.setReversed(false);
     if( crossPoints.size() >= 2) {

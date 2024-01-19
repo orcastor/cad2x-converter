@@ -32,7 +32,6 @@
 #include <map>
 #include "rs_vector.h"
 #include "rs_pen.h"
-#include "rs_undoable.h"
 
 class RS_Arc;
 class RS_Block;
@@ -58,7 +57,7 @@ class QString;
  *
  * @author Andrew Mustun
  */
-class RS_Entity : public RS_Undoable {
+class RS_Entity : public RS_Flags {
 public:
 	RS_Entity(RS_EntityContainer* parent=nullptr);
 
@@ -81,14 +80,6 @@ public:
     virtual RS2::EntityType rtti() const
     {
         return RS2::EntityUnknown;
-    }
-
-    /**
-     * Identify all entities as undoable entities.
-     * @return RS2::UndoableEntity
-     */
-	virtual RS2::UndoableType undoRtti() const override {
-        return RS2::UndoableEntity;
     }
 
     /**
@@ -188,10 +179,6 @@ public:
         return false;
     }
 
-    virtual bool setSelected(bool select);
-    virtual bool toggleSelected();
-    virtual bool isSelected() const;
-	bool isParentSelected() const;
     virtual bool isProcessed() const;
     virtual void setProcessed(bool on);
 	bool isInWindow(RS_Vector v1, RS_Vector v2) const;
@@ -200,13 +187,8 @@ public:
     }
 	virtual bool isVisible() const;
 	virtual void setVisible(bool v);
-    virtual void setHighlighted(bool on);
-    virtual bool isHighlighted() const;
 
 	bool isLocked() const;
-
-	void undoStateChanged(bool undone) override;
-    virtual bool isUndone() const;
 
     /**
      * Can be implemented by child classes to update the entities
@@ -387,22 +369,6 @@ public:
 									double* dist = nullptr) const;
 
     /**
-     * Gets the nearest reference point of this entity if it is selected.
-         * Containers re-implement this method to return the nearest reference
-         * point of a selected sub entity.
-     *
-     * @param coord Coordinate (typically a mouse coordinate)
-     * @param dist Pointer to a value which will contain the measured
-     * distance between 'coord' and the closest point. The passed
-	 * pointer can also be nullptr in which case the distance will be
-     * lost.
-     *
-     * @return The closest point with the given distance to the endpoint.
-     */
-    virtual RS_Vector getNearestSelectedRef(const RS_Vector& coord,
-											double* dist = nullptr) const;
-
-    /**
      * Must be overwritten to get the shortest distance between this
      * entity and a coordinate.
      *
@@ -486,15 +452,6 @@ public:
          */
     virtual void moveRef(const RS_Vector& /*ref*/,
                          const RS_Vector& /*offset*/) {
-        return;
-    }
-
-    /**
-         * Implementations must drag the reference point(s) of selected
-         * (sub-)entities that are very close to ref by offset.
-         */
-    virtual void moveSelectedRef(const RS_Vector& /*ref*/,
-                                 const RS_Vector& /*offset*/) {
         return;
     }
 

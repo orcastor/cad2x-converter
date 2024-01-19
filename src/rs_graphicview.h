@@ -70,20 +70,6 @@ public:
 	 */
 	RS_Graphic* getGraphic() const;
 
-	/**
-	 * \brief setDrawingMode Sets the drawing mode.
-	 */
-	void setDrawingMode(RS2::DrawingMode m) {
-		drawingMode = m;
-	}
-
-	/**
-	 * @return Current drawing mode.
-	 */
-    RS2::DrawingMode getDrawingMode() const {
-		return drawingMode;
-	}
-
 	/** This virtual method must be overwritten to return
 	  the width of the widget the graphic is shown in */
 	int getWidth() const {
@@ -157,17 +143,6 @@ public:
 	double toGraphDY(int d) const;
 
 	/**
-		 * Enables or disables print preview.
-		 */
-	void setPrintPreview(bool pv);
-
-	/**
-		 * @retval true This is a print preview graphic view.
-		 * @retval false Otherwise.
-		 */
-	bool isPrintPreview() const;
-
-	/**
 		 * Enables or disables printing.
 		 */
 	void setPrinting(bool p);
@@ -177,14 +152,6 @@ public:
 		 * @retval false setSnapOtherwise.
 		 */
 	bool isPrinting() const;
-
-	/**
-		 * @retval true Draft mode is on for this view (all lines with 1 pixel / no style scaling).
-		 * @retval false Otherwise.
-		 */
-	bool isDraftMode() const;
-
-	void setDraftMode(bool dm);
 	
     const LC_Rect& getViewRect() const {
         return view_rect;
@@ -216,31 +183,6 @@ public:
 		 */
     void setMetaGridColor(const RS_Color& c);
 
-	/**
-		 * Sets the selection color.
-		 */
-    void setSelectedColor(const RS_Color& c);
-
-	/**
-		 * Sets the highlight color.
-		 */
-    void setHighlightedColor(const RS_Color& c);
-
-	/**
-		 * Sets the color for the first handle (start vertex)
-		 */
-    void setStartHandleColor(const RS_Color& c);
-
-	/**
-		 * Sets the color for handles, that are neither start nor end vertices
-		 */
-    void setHandleColor(const RS_Color& c);
-
-	/**
-		 * Sets the color for the last handle (end vertex)
-		 */
-    void setEndHandleColor(const RS_Color& c);
-
 protected:
 
     RS_EntityContainer* container = nullptr; // Holds a pointer to all the enties
@@ -251,8 +193,6 @@ protected:
 	/** Grid */
 	std::unique_ptr<RS_Grid> grid;
 
-	RS2::DrawingMode drawingMode;
-
     LC_Rect view_rect;
 
 private:
@@ -261,8 +201,6 @@ private:
 
     //! Height
     int height = 0;
-
-	bool draftMode=false;
 
     RS_Vector factor{1.,1.};
 	int offsetX=0;
@@ -273,8 +211,6 @@ private:
 	int borderRight=0;
 	int borderBottom=0;
 
-	//! Print preview flag
-	bool printPreview=false;
 	//! Active when printing only:
 	bool printing=false;
 };

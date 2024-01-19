@@ -55,15 +55,9 @@
 
 namespace Colors
 {
-    const QString snap_indicator    = "#FFC200";
     const QString background        = "Black";
     const QString grid              = "Gray";
     const QString meta_grid         = "#404040";
-    const QString select            = "#A54747";
-    const QString highlight         = "#739373";
-    const QString start_handle      = "Cyan";
-    const QString handle            = "Blue";
-    const QString end_handle        = "Blue";
 }
 
 struct RS_GraphicView::ColorData {
@@ -75,37 +69,20 @@ struct RS_GraphicView::ColorData {
     RS_Color gridColor = Qt::gray;
     /** meta grid color */
     RS_Color metaGridColor;
-    /** selected color */
-    RS_Color selectedColor;
-    /** highlighted color */
-    RS_Color highlightedColor;
-    /** Start handle color */
-    RS_Color startHandleColor;
-    /** Intermediate (not start/end vertex) handle color */
-    RS_Color handleColor;
-    /** End handle color */
-    RS_Color endHandleColor;
 };
 
 /**
  * Constructor.
  */
 RS_GraphicView::RS_GraphicView(int w, int h)
-    :width(w)
-	,height(h)
-	,m_colorData{std::make_unique<ColorData>()}
+    :m_colorData{std::make_unique<ColorData>()}
     ,grid{std::make_unique<RS_Grid>(this)}
-//    ,defaultSnapMode{std::make_unique<RS_SnapMode>()}
-	,drawingMode(RS2::ModeFull)
+	,width(w)
+	,height(h)
 {
     setBackground(Colors::background);
     setGridColor(Colors::grid);
     setMetaGridColor(Colors::meta_grid);
-    setSelectedColor(Colors::select);
-    setHighlightedColor(Colors::highlight);
-    setStartHandleColor(Colors::start_handle);
-    setHandleColor(Colors::handle);
-    setEndHandleColor(Colors::end_handle);
 }
 
 RS_GraphicView::~RS_GraphicView()
@@ -199,11 +176,6 @@ RS2::CrosshairType RS_GraphicView::getCrosshairType() const{
 
 void RS_GraphicView::setPenForEntity(RS_Painter *painter,RS_Entity *e, double& offset)
 {
-	if (draftMode) {
-        painter->setPen(RS_Pen(m_colorData->foreground,
-							   RS2::Width00, RS2::SolidLine));
-	}
-
 	// Getting pen from entity (or layer)
 	RS_Pen pen = e->getPen(true);
 
@@ -215,31 +187,21 @@ void RS_GraphicView::setPenForEntity(RS_Painter *painter,RS_Entity *e, double& o
 	//   This is the standard (AutoCAD like) behaviour.
 	// bug# 3437941
 	// ------------------------------------------------------------
-	if (!draftMode)
+	double	uf = 1.0;	// Unit factor.
+	double	wf = 1.0;	// Width factor.
+
+	RS_Graphic* graphic = container->getGraphic();
+	if (graphic)
 	{
-		double	uf = 1.0;	// Unit factor.
-		double	wf = 1.0;	// Width factor.
+		uf = RS_Units::convert(1.0, RS2::Millimeter, graphic->getUnit());
 
-		RS_Graphic* graphic = container->getGraphic();
-
-        if (graphic)
+		if (isPrinting() && graphic->getPaperScale() > RS_TOLERANCE )
 		{
-			uf = RS_Units::convert(1.0, RS2::Millimeter, graphic->getUnit());
-
-			if ((isPrinting() || isPrintPreview()) &&
-					graphic->getPaperScale() > RS_TOLERANCE )
-			{
-				wf = 1.0 / graphic->getPaperScale();
-			}
-        }
-
-        if (pen.getAlpha() == 1.0) pen.setScreenWidth(toGuiDX(w / 100.0 * uf * wf));
+			wf = 1.0 / graphic->getPaperScale();
+		}
 	}
-	else
-	{
-		//		pen.setWidth(RS2::Width00);
-		pen.setScreenWidth(0);
-	}
+
+	if (pen.getAlpha() == 1.0) pen.setScreenWidth(toGuiDX(w / 100.0 * uf * wf));
 
 	// prevent drawing with 1-width which is slow:
 	if (RS_Math::round(pen.getScreenWidth())==1) {
@@ -257,24 +219,8 @@ void RS_GraphicView::setPenForEntity(RS_Painter *painter,RS_Entity *e, double& o
 
     pen.setDashOffset(offset);
 
-    if (!isPrinting() && !isPrintPreview())
-    {
-        // this entity is selected:
-        if (e->isSelected()) {
-            pen.setLineType(RS2::DashLineTiny);
-            pen.setWidth(RS2::Width00);
-            pen.setColor(m_colorData->selectedColor);
-        }
-
-        // this entity is highlighted:
-        if (e->isHighlighted()) {
-            pen.setColor(m_colorData->highlightedColor);
-        }
-	}
-
 	painter->setPen(pen);
 }
-
 
 /**
  * Draws an entity. Might be recursively called e.g. for polylines.
@@ -289,6 +235,7 @@ void RS_GraphicView::drawEntity(RS_Painter *painter, RS_Entity* e) {
 	double offset(0.);
 	drawEntity(painter,e,offset);
 }
+
 void RS_GraphicView::drawEntity(RS_Painter *painter, RS_Entity* e, double& offset) {
 
 	// update is disabled:
@@ -301,7 +248,8 @@ void RS_GraphicView::drawEntity(RS_Painter *painter, RS_Entity* e, double& offse
 	if (!e->isVisible()) {
 		return;
 	}
-	if( isPrintPreview() || isPrinting() ) {
+
+	if (isPrinting() ) {
 		// do not draw construction layer on print preview or print
 		if( ! e->isPrint()
 				||  e->isConstruction())
@@ -319,53 +267,11 @@ void RS_GraphicView::drawEntity(RS_Painter *painter, RS_Entity* e, double& offse
 
 	// set pen (color):
     setPenForEntity(painter, e, offset);
-
-	//RS_DEBUG->print("draw plain");
-	if (isDraftMode()) {
-        switch(e->rtti()){
-        case RS2::EntityMText:
-        case RS2::EntityText:
-            painter->drawRect(toGui(e->getMin()), toGui(e->getMax()));
-            break;
-        case RS2::EntityImage:
-            // all images as rectangles:
-            painter->drawRect(toGui(e->getMin()), toGui(e->getMax()));
-            break;
-        case RS2::EntityHatch:
-            //skip hatches
-            break;
-        default:
-            drawEntityPlain(painter, e, offset);
-        }
-	} else {
-		drawEntityPlain(painter, e, offset);
-	}
-
-	// draw reference points:
-	if (e->isSelected() && !(isPrinting() || isPrintPreview())) {
-		if (!e->isParentSelected()) {
-			RS_VectorSolutions const& s = e->getRefPoints();
-
-			for (size_t i=0; i<s.getNumber(); ++i) {
-				int sz = -1;
-                RS_Color col = m_colorData->handleColor;
-				if (i == 0) {
-                    col = m_colorData->startHandleColor;
-				}
-				else if (i == s.getNumber() - 1) {
-                    col = m_colorData->endHandleColor;
-				}
-				painter->drawHandle(toGui(s.get(i)), col, sz);
-			}
-		}
-	}
+	drawEntityPlain(painter, e, offset);
 
 	//RS_DEBUG->print("draw plain OK");
-
-
 	//RS_DEBUG->print("RS_GraphicView::drawEntity() end");
 }
-
 
 /**
  * Draws an entity.
@@ -376,26 +282,17 @@ void RS_GraphicView::drawEntityPlain(RS_Painter *painter, RS_Entity* e, double& 
 		return;
 	}
 
-	if (!e->isContainer() && (e->isSelected()!=painter->shouldDrawSelected())) {
-		return;
-	}
-
 	e->draw(painter, this, offset);
-
 }
+
 void RS_GraphicView::drawEntityPlain(RS_Painter *painter, RS_Entity* e) {
 	if (!e) {
 		return;
 	}
 
-	if (!e->isContainer() && (e->isSelected()!=painter->shouldDrawSelected())) {
-		return;
-	}
 	double offset(0.);
 	e->draw(painter, this, offset);
 }
-
-
 
 /**
  * @return Pointer to the static pattern struct that belongs to the
@@ -405,8 +302,6 @@ const RS_LineTypePattern* RS_GraphicView::getPattern(RS2::LineType t) {
     return RS_LineTypePattern::getPattern(t);
 }
 
-
-
 /**
  * Draws the paper border (for print previews).
  * This function can ONLY be called from within a paintEvent because it will
@@ -415,7 +310,6 @@ const RS_LineTypePattern* RS_GraphicView::getPattern(RS2::LineType t) {
  * @see drawIt()
  */
 void RS_GraphicView::drawPaper(RS_Painter *painter) {
-
 	if (!container) {
 		return;
 	}
@@ -502,7 +396,6 @@ void RS_GraphicView::drawGrid(RS_Painter *painter) {
 
 	if (!(grid && isGridOn())) return;
 
-
 	// draw grid:
 	//painter->setPen(Qt::gray);
     painter->setPen(m_colorData->gridColor);
@@ -513,8 +406,6 @@ void RS_GraphicView::drawGrid(RS_Painter *painter) {
 		painter->drawGridPoint(toGui(v));
 	}
 }
-
-
 
 /**
  * Draws the meta grid.
@@ -587,8 +478,6 @@ void RS_GraphicView::drawMetaGrid(RS_Painter *painter) {
 							  RS_Vector(getWidth(), toGuiY(y)));
 		}
 	}
-
-
 }
 
 /**
@@ -607,16 +496,12 @@ double RS_GraphicView::toGuiX(double x) const{
 	return x*factor.x + offsetX;
 }
 
-
-
 /**
  * Translates a real coordinate in Y to a screen coordinate Y.
  */
 double RS_GraphicView::toGuiY(double y) const{
 	return -y*factor.y + getHeight() - offsetY;
 }
-
-
 
 /**
  * Translates a real coordinate distance to a screen coordinate distance.
@@ -625,16 +510,12 @@ double RS_GraphicView::toGuiDX(double d) const{
 	return d*factor.x;
 }
 
-
-
 /**
  * Translates a real coordinate distance to a screen coordinate distance.
  */
 double RS_GraphicView::toGuiDY(double d) const{
 	return d*factor.y;
 }
-
-
 
 /**
  * Translates a vector in screen coordinates to a vector in real coordinates.
@@ -643,8 +524,6 @@ RS_Vector RS_GraphicView::toGraph(const RS_Vector& v) const{
 	return RS_Vector(toGraphX(RS_Math::round(v.x)),
 					 toGraphY(RS_Math::round(v.y)));
 }
-
-
 
 /**
  * Translates two screen coordinates to a vector in real coordinates.
@@ -669,8 +548,6 @@ double RS_GraphicView::toGraphX(int x) const{
 	return (x - offsetX)/factor.x;
 }
 
-
-
 /**
  * Translates a screen coordinate in Y to a real coordinate Y.
  */
@@ -678,16 +555,12 @@ double RS_GraphicView::toGraphY(int y) const{
 	return -(y - getHeight() + offsetY)/factor.y;
 }
 
-
-
 /**
  * Translates a screen coordinate distance to a real coordinate distance.
  */
 double RS_GraphicView::toGraphDX(int d) const{
 	return d/factor.x;
 }
-
-
 
 /**
  * Translates a screen coordinate distance to a real coordinate distance.
@@ -712,7 +585,6 @@ void RS_GraphicView::setBackground(const RS_Color& bg) {
     }
 }
 
-
 RS_Color RS_GraphicView::getBackground() const{
     return m_colorData->background;
 }
@@ -736,41 +608,6 @@ void RS_GraphicView::setGridColor(const RS_Color& c) {
      */
 void RS_GraphicView::setMetaGridColor(const RS_Color& c) {
     m_colorData->metaGridColor = c;
-}
-
-/**
-     * Sets the selection color.
-     */
-void RS_GraphicView::setSelectedColor(const RS_Color& c) {
-    m_colorData->selectedColor = c;
-}
-
-/**
-     * Sets the highlight color.
-     */
-void RS_GraphicView::setHighlightedColor(const RS_Color& c) {
-    m_colorData->highlightedColor = c;
-}
-
-/**
-     * Sets the color for the first handle (start vertex)
-     */
-void RS_GraphicView::setStartHandleColor(const RS_Color& c) {
-    m_colorData->startHandleColor = c;
-}
-
-/**
-     * Sets the color for handles, that are neither start nor end vertices
-     */
-void RS_GraphicView::setHandleColor(const RS_Color& c) {
-    m_colorData->handleColor = c;
-}
-
-/**
-     * Sets the color for the last handle (end vertex)
-     */
-void RS_GraphicView::setEndHandleColor(const RS_Color& c) {
-    m_colorData->endHandleColor = c;
 }
 
 void RS_GraphicView::setBorders(int left, int top, int right, int bottom) {
@@ -825,26 +662,10 @@ int RS_GraphicView::getOffsetY() const{
 	return offsetY;
 }
 
-void RS_GraphicView::setPrintPreview(bool pv) {
-	printPreview = pv;
-}
-
-bool RS_GraphicView::isPrintPreview() const{
-	return printPreview;
-}
-
 void RS_GraphicView::setPrinting(bool p) {
 	printing = p;
 }
 
 bool RS_GraphicView::isPrinting() const{
 	return printing;
-}
-
-bool RS_GraphicView::isDraftMode() const{
-	return draftMode;
-}
-
-void RS_GraphicView::setDraftMode(bool dm) {
-	draftMode=dm;
 }

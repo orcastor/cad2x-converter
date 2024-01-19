@@ -148,13 +148,6 @@ void RS_Painter::drawRect(const RS_Vector& p1, const RS_Vector& p2) {
 //    drawLine(RS_Vector(p1.x, p2.y), RS_Vector(p1.x, p1.y));
 }
 
-void RS_Painter::drawHandle(const RS_Vector& p, const RS_Color& c, int size) {
-    if (size<0) {
-        size = 2;
-    }
-    fillRect((int)(p.x-size), (int)(p.y-size), 2*size, 2*size, c);
-}
-
 int RS_Painter::toScreenX(double x) const {
 	return RS_Math::round(offset.x + x);
 }

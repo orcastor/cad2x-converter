@@ -159,10 +159,6 @@ void RS_DimLinear::updateDim(bool autoText) {
 
     clear();
 
-    if (isUndone()) {
-        return;
-    }
-
     // general scale (DIMSCALE)
     double dimscale = getGeneralScale();
     // distance from entities (DIMEXO)

@@ -258,10 +258,6 @@ void RS_Text::update() {
 
     clear();
 
-    if (isUndone()) {
-        return;
-    }
-
     usedTextWidth = 0.0;
     usedTextHeight = 0.0;
 

@@ -53,7 +53,6 @@ public:
     void drawGridPoint(const RS_Vector& p) override;
     void drawPoint(const RS_Vector& p, int pdmode, int pdsize) override;
     void drawLine(const RS_Vector& p1, const RS_Vector& p2) override;
-    //virtual void drawRect(const RS_Vector& p1, const RS_Vector& p2);
     void fillRect ( const QRectF & rectangle, const RS_Color & color ) override;
     void fillRect ( const QRectF & rectangle, const QBrush & brush ) override;
     void drawArc(const RS_Vector& cp, double radius,

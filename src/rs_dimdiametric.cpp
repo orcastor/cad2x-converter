@@ -131,10 +131,6 @@ void RS_DimDiametric::updateDim(bool autoText) {
 
     clear();
 
-        if (isUndone()) {
-                return;
-        }
-
     // dimension line:
 	updateCreateDimensionLine(data.definitionPoint, edata.definitionPoint,
         true, true, autoText);

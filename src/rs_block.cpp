@@ -87,36 +87,23 @@ RS_BlockList* RS_Block::getBlockList() {
 }
 
 
-bool RS_Block::save(bool isAutoSave) {
+bool RS_Block::save() {
     RS_Graphic* g = getGraphic();
     if (g) {
-        return g->save(isAutoSave);
+        return g->save();
     } else {
         return false;
     }
 }
 
 
-bool RS_Block::saveAs(const QString& filename, RS2::FormatType type, bool force) {
+bool RS_Block::saveAs(const QString& filename, RS2::FormatType type) {
     RS_Graphic* g = getGraphic();
     if (g) {
-        return g->saveAs(filename, type, force);
+        return g->saveAs(filename, type);
     } else {
         return false;
     }
-}
-
-
-
-/**
- * Sets the parent documents modified status to 'm'.
- */
-void RS_Block::setModified(bool m) {
-    RS_Graphic* p = getGraphic();
-    if (p) {
-        p->setModified(m);
-    }
-    modified = m;
 }
 
 
@@ -135,23 +122,6 @@ void RS_Block::visibleInBlockList(bool v) {
  */
 bool RS_Block::isVisibleInBlockList() const {
     return data.visibleInBlockList;
-}
-
-
-/**
- * Sets selection state of the block in block list
- *
- * @param v true: selected, false: deselected
- */
-void RS_Block::selectedInBlockList(bool v) const {
-    data.selectedInBlockList = v;
-}
-
-/**
- * Returns selection state of the block in block list
- */
-bool RS_Block::isSelectedInBlockList() const {
-    return data.selectedInBlockList;
 }
 
 /**

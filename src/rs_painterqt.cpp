@@ -387,8 +387,6 @@ void RS_PainterQt::drawPoint(const RS_Vector& p, int pdmode, int pdsize) {
 	}
 }
 
-
-
 /**
  * Draws a line from (x1, y1) to (x2, y2).
  */
@@ -398,29 +396,6 @@ void RS_PainterQt::drawLine(const RS_Vector& p1, const RS_Vector& p2)
     QPainter::drawLine(toScreenX(p1.x), toScreenY(p1.y),
                        toScreenX(p2.x), toScreenY(p2.y));
 }
-
-
-
-
-
-
-/**
- * Draws a rectangle with corners p1, p2.
- */
-/*void RS_PainterQt::drawRect(const RS_Vector& p1, const RS_Vector& p2) {
-        / *QPainter::drawRect(toScreenX(p1.x), toScreenY(p1.y),
-                                           abs(toScreenX(p2.x) - toScreenX(p1.x)),
-                                           abs(toScreenY(p2.y) - toScreenY(p1.y)));* /
-        QPainter::drawLine(toScreenX(p1.x), toScreenY(p1.y),
-                       toScreenX(p2.x), toScreenY(p1.y));
-    QPainter::drawLine(toScreenX(p2.x), toScreenY(p1.y),
-                       toScreenX(p2.x), toScreenY(p2.y));
-    QPainter::drawLine(toScreenX(p2.x), toScreenY(p2.y),
-                       toScreenX(p1.x), toScreenY(p2.y));
-    QPainter::drawLine(toScreenX(p1.x), toScreenY(p2.y),
-                       toScreenX(p1.x), toScreenY(p1.y));
-}*/
-
 
 /**
  * Draws an arc which starts / ends exactly at the given coordinates.
@@ -517,8 +492,6 @@ void RS_PainterQt::drawArc(const RS_Vector& cp, double radius,
     }
 }
 
-
-
 /**
  * Draws an arc.
  *
@@ -560,7 +533,6 @@ void RS_PainterQt::drawArc( const RS_Vector& cp,
                        (a2-a1) * 16.0 * 180.0 / M_PI);
     }
 }
-
 
 /**
  * Draws an arc on apple.
@@ -652,8 +624,6 @@ void RS_PainterQt::drawArcMac(const RS_Vector& cp, double radius,
     }
 }
 
-
-
 /**
  * Draws a circle.
  * @param cp Center point
@@ -729,7 +699,6 @@ void RS_PainterQt::drawSpline(const RS_Spline& spline, const RS_GraphicView& vie
     drawPath(createSpline(spline, view));
 }
 
-
 void RS_PainterQt::drawImg(QImage& img, const RS_Vector& pos,
                            const RS_Vector& uVector, const RS_Vector& vVector, const RS_Vector& factor) {
     save();
@@ -762,7 +731,6 @@ void RS_PainterQt::drawImg(QImage& img, const RS_Vector& pos,
     restore();
 }
 
-
 void RS_PainterQt::drawTextH(int x1, int y1,
                              int x2, int y2,
                              const QString& text) {
@@ -770,8 +738,6 @@ void RS_PainterQt::drawTextH(int x1, int y1,
              Qt::AlignRight|Qt::AlignVCenter,
              text);
 }
-
-
 
 void RS_PainterQt::drawTextV(int x1, int y1,
                              int x2, int y2,
@@ -792,7 +758,6 @@ void RS_PainterQt::fillRect(int x1, int y1, int w, int h,
                             const RS_Color& col) {
     QPainter::fillRect(x1, y1, w, h, col);
 }
-
 
 void RS_PainterQt::fillTriangle(const RS_Vector& p1,
                                 const RS_Vector& p2,

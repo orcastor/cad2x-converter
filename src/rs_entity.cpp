@@ -124,68 +124,6 @@ void RS_Entity::scaleBorders(const RS_Vector& center, const RS_Vector& factor){
 }
 
 
-/**
- * Selects or deselects this entity.
- *
- * @param select True to select, false to deselect.
- */
-bool RS_Entity::setSelected(bool select) {
-    // layer is locked:
-    if (select && isLocked()) {
-        return false;
-    }
-
-    if (select) {
-        setFlag(RS2::FlagSelected);
-    } else {
-        delFlag(RS2::FlagSelected);
-    }
-
-    return true;
-}
-
-
-
-/**
- * Toggles select on this entity.
- */
-bool RS_Entity::toggleSelected() {
-    return setSelected(!isSelected());
-    //toggleFlag(RS2::FlagSelected);
-}
-
-
-
-/**
- * @return True if the entity is selected. Note that an entity might
- * not be selected but one of its parents is selected. In that case
- * this function returns false.
- */
-bool RS_Entity::isSelected() const {
-	//bug 557, Selected entities in invisible layers are deleted
-	return isVisible() && getFlag(RS2::FlagSelected);
-}
-
-
-
-/**
- * @return true if a parent entity of this entity is selected.
- */
-bool RS_Entity::isParentSelected() const
-{
-	RS_Entity const* p = this;
-
-	while(p) {
-		p = p->getParent();
-		if (p && p->isSelected()==true) {
-			return true;
-		}
-	}
-
-    return false;
-}
-
-
 
 /**
  * Sets or resets the processed flag of this entity.
@@ -207,35 +145,6 @@ void RS_Entity::setProcessed(bool on) {
  */
 bool RS_Entity::isProcessed() const {
     return getFlag(RS2::FlagProcessed);
-}
-
-
-
-/**
- * Called when the undo state changed.
- *
- * @param undone true: entity has become invisible.
- *               false: entity has become visible.
- */
-void RS_Entity::undoStateChanged(bool undone)
-{
-    Q_UNUSED( undone);
-
-    setSelected(false);
-    update();
-}
-
-
-/**
- * @return true if this entity or any parent entities are undone.
- */
-bool RS_Entity::isUndone() const {
-		if (!parent) {
-                return RS_Undoable::isUndone();
-        }
-        else {
-                return RS_Undoable::isUndone() || parent->isUndone();
-        }
 }
 
 
@@ -353,15 +262,6 @@ bool RS_Entity::isVisible() const{
         return false;
     }
 
-    if (isUndone()) {
-        return false;
-    }
-
-        /*RS_EntityContainer* parent = getParent();
-        if (parent && parent->isUndone()) {
-                return false;
-        }*/
-
 	if (!getLayer()) {
         return true;
     }
@@ -425,19 +325,6 @@ void RS_Entity::setVisible(bool v) {
 		delFlag(RS2::FlagVisible);
 	}
 }
-
-/**
- * Sets the highlight status of the entity. Highlighted entities
- * usually indicate a feedback to a user action.
- */
-void RS_Entity::setHighlighted(bool on) {
-    if (on) {
-        setFlag(RS2::FlagHighlighted);
-    } else {
-        delFlag(RS2::FlagHighlighted);
-    }
-}
-
 RS_Vector RS_Entity::getStartpoint() const {
 	return {};
 }
@@ -452,12 +339,6 @@ RS_VectorSolutions RS_Entity::getTangentPoint(const RS_Vector& /*point*/) const 
 
 RS_Vector RS_Entity::getTangentDirection(const RS_Vector& /*point*/)const{
 	return {};
-}
-/**
- * @return true if the entity is highlighted.
- */
-bool RS_Entity::isHighlighted() const{
-    return getFlag(RS2::FlagHighlighted);
 }
 
 
@@ -905,30 +786,25 @@ double RS_Entity::getStyleFactor(RS_GraphicView* view) {
     double styleFactor = 1.0;
 	if (!view) return styleFactor;
 
+    //styleFactor = getStyleFactor();
+    // the factor caused by the unit:
+    RS2::Unit unit = RS2::None;
+    RS_Graphic* g = getGraphic();
+    if (g) {
+        unit = g->getUnit();
+        //double scale = g->getPaperScale();
+        styleFactor = RS_Units::convert(1.0, RS2::Millimeter, unit);
+        // / scale;
+    }
 
-	if (view->isPrinting()==false && view->isDraftMode()) {
-		styleFactor = 1.0/view->getFactor().x;
-	} else {
-		//styleFactor = getStyleFactor();
-		// the factor caused by the unit:
-		RS2::Unit unit = RS2::None;
-		RS_Graphic* g = getGraphic();
-		if (g) {
-			unit = g->getUnit();
-			//double scale = g->getPaperScale();
-			styleFactor = RS_Units::convert(1.0, RS2::Millimeter, unit);
-			// / scale;
-		}
+    // the factor caused by the line width:
+    if (((int)getPen(true).getWidth())>0) {
+        styleFactor *= ((double)getPen(true).getWidth()/100.0);
+    } else if (((int)getPen(true).getWidth())==0) {
+        styleFactor *= 0.01;
+    }
 
-		// the factor caused by the line width:
-		if (((int)getPen(true).getWidth())>0) {
-			styleFactor *= ((double)getPen(true).getWidth()/100.0);
-		} else if (((int)getPen(true).getWidth())==0) {
-			styleFactor *= 0.01;
-		}
-	}
-
-	if (view->isPrinting() || view->isPrintPreview() || view->isDraftMode()==false) {
+	if (view->isPrinting()) {
 		RS_Graphic* graphic = getGraphic();
 		if (graphic && graphic->getPaperScale()>1.0e-6) {
 			styleFactor /= graphic->getPaperScale();
@@ -1036,16 +912,6 @@ RS_Vector RS_Entity::getNearestRef(const RS_Vector& coord,
 	return s.getClosest(coord, dist);
 }
 
-RS_Vector RS_Entity::getNearestSelectedRef(const RS_Vector& coord,
-										   double* dist) const{
-	if (isSelected()) {
-		return getNearestRef(coord, dist);
-	}
-	else {
-		return RS_Vector(false);
-	}
-}
-
 /**
  * Dumps the elements data to stdout.
  */
@@ -1061,8 +927,6 @@ std::ostream& operator << (std::ostream& os, RS_Entity& e) {
     }
 
     os << " flags: " << (e.getFlag(RS2::FlagVisible) ? "RS2::FlagVisible" : "");
-    os << (e.getFlag(RS2::FlagUndone) ? " RS2::FlagUndone" : "");
-    os << (e.getFlag(RS2::FlagSelected) ? " RS2::FlagSelected" : "");
     os << "\n";
 
 	if (!e.layer) {

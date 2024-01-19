@@ -52,8 +52,6 @@ namespace RS2 {
      * Flags.
      */
     enum Flags : unsigned {
-        /** Flag for Undoables. */
-        FlagUndone      = 1<<0,
         /** Entity Visibility. */
         FlagVisible     = 1<<1,
         /** Entity attribute (e.g. color) is defined by layer. */
@@ -68,20 +66,12 @@ namespace RS2 {
         FlagLocked      = 1<<6,
         /** Used for invalid pens. */
         FlagInvalid     = 1<<7,
-        /** Entity in current selection. */
-        FlagSelected    = 1<<8,
         /** Polyline closed? */
         FlagClosed      = 1<<9,
         /** Flag for temporary entities (e.g. hatch) */
         FlagTemp        = 1<<10,
         /** Flag for processed entities (optcontour) */
-        FlagProcessed   = 1<<11,
-        /** Startpoint selected */
-        FlagSelected1   = 1<<12,
-        /** Endpoint selected */
-        FlagSelected2   = 1<<13,
-                /** Entity is highlighted temporarily (as a user action feedback) */
-                FlagHighlighted = 1<<14
+        FlagProcessed   = 1<<11
     };
 
     /**
@@ -110,10 +100,10 @@ namespace RS2 {
 #ifdef DWGSUPPORT
         FormatDWG,           /**< DWG format. */
 #endif
-        FormatLFF,           /**< LibreCAD Font File format. */
-        FormatCXF,           /**< CAM Expert Font format. */
-        FormatJWW,           /**< JWW Format type */
-        FormatJWC            /**< JWC Format type */
+        //FormatLFF,           /**< LibreCAD Font File format. */
+        //FormatCXF,           /**< CAM Expert Font format. */
+        //FormatJWW,           /**< JWW Format type */
+        //FormatJWC            /**< JWC Format type */
     };
 
     /*
@@ -156,257 +146,8 @@ namespace RS2 {
         EntityImage,        /**< Image */
         EntitySpline,       /**< Spline */
         EntitySplinePoints,       /**< SplinePoints */
-        EntityOverlayBox,    /**< OverlayBox */
-        EntityPreview,    /**< Preview Container */
         EntityPattern,
         EntityOverlayLine
-    };
-
-
-    /**
-     * Action types used by action factories.
-     */
-    enum ActionType {
-        ActionNone,        /**< Invalid action id. */
-
-        ActionDefault,
-
-        ActionFileNew,
-        ActionFileNewTemplate,
-        ActionFileOpen,
-        ActionFileSave,
-        ActionFileSaveAs,
-        ActionFileExport,
-        ActionFileClose,
-        ActionFilePrint,
-        ActionFilePrintPDF,
-        ActionFilePrintPreview,
-        ActionFileExportMakerCam,
-        ActionFileQuit,
-
-        ActionEditKillAllActions,
-        ActionEditUndo,
-        ActionEditRedo,
-        ActionEditCut,
-        ActionEditCutNoSelect,
-        ActionEditCopy,
-        ActionEditCopyNoSelect,
-        ActionEditPaste,
-        ActionOrderNoSelect,
-        ActionOrderBottom,
-        ActionOrderLower,
-        ActionOrderRaise,
-        ActionOrderTop,
-
-        ActionViewStatusBar,
-        ActionViewLayerList,
-        ActionViewBlockList,
-        ActionViewCommandLine,
-        ActionViewLibrary,
-
-        ActionViewPenToolbar,
-        ActionViewOptionToolbar,
-        ActionViewCadToolbar,
-        ActionViewFileToolbar,
-        ActionViewEditToolbar,
-        ActionViewSnapToolbar,
-
-        ActionViewGrid,
-        ActionViewDraft,
-
-        ActionZoomIn,
-        ActionZoomOut,
-        ActionZoomAuto,
-        ActionZoomWindow,
-        ActionZoomPan,
-        ActionZoomRedraw,
-        ActionZoomPrevious,
-
-        ActionSelect,
-        ActionSelectSingle,
-        ActionSelectContour,
-        ActionSelectWindow,
-        ActionDeselectWindow,
-        ActionSelectAll,
-        ActionDeselectAll,
-        ActionSelectIntersected,
-        ActionDeselectIntersected,
-        ActionSelectInvert,
-        ActionSelectLayer,
-        ActionSelectDouble,
-        ActionGetSelect,
-
-        ActionDrawArc,
-        ActionDrawArc3P,
-        ActionDrawArcParallel,
-        ActionDrawArcTangential,
-        ActionDrawCircle,
-        ActionDrawCircle2P,
-        ActionDrawCircle2PR,
-        ActionDrawCircle3P,
-        ActionDrawCircleCR,
-        ActionDrawCircleParallel,
-        ActionDrawCircleInscribe,
-        ActionDrawCircleTan2_1P,
-        ActionDrawCircleTan1_2P,
-        ActionDrawCircleTan2,
-        ActionDrawCircleTan3,
-
-        ActionDrawEllipseArcAxis,
-        ActionDrawEllipseAxis,
-        ActionDrawEllipseFociPoint,
-        ActionDrawEllipse4Points,
-        ActionDrawEllipseCenter3Points,
-        ActionDrawEllipseInscribe,
-
-        ActionDrawHatch,
-        ActionDrawHatchNoSelect,
-        ActionDrawImage,
-        ActionDrawLine,
-        ActionDrawLineAngle,
-        ActionDrawLineBisector,
-        ActionDrawLineFree,
-        ActionDrawLineHorVert,
-        ActionDrawLineHorizontal,
-        ActionDrawLineOrthogonal,
-        ActionDrawLineOrthTan,
-        ActionDrawLineParallel,
-        ActionDrawLineParallelThrough,
-        ActionDrawLinePolygonCenCor,
-        ActionDrawLinePolygonCenTan,//add by txmy
-        ActionDrawLinePolygonCorCor,
-        ActionDrawLineRectangle,
-        ActionDrawLineRelAngle,
-        ActionDrawLineTangent1,
-        ActionDrawLineTangent2,
-        ActionDrawLineVertical,
-        ActionDrawMText,
-        ActionDrawPoint,
-        ActionDrawSpline,
-        ActionDrawSplinePoints, //interpolation spline
-        ActionDrawPolyline,
-        ActionDrawText,
-
-        ActionPolylineAdd,
-        ActionPolylineAppend,
-        ActionPolylineDel,
-        ActionPolylineDelBetween,
-        ActionPolylineTrim,
-        ActionPolylineEquidistant,
-        ActionPolylineSegment,
-
-        ActionDimAligned,
-        ActionDimLinear,
-        ActionDimLinearVer,
-        ActionDimLinearHor,
-        ActionDimRadial,
-        ActionDimDiametric,
-        ActionDimAngular,
-        ActionDimArc,
-        ActionDimLeader,
-
-        ActionModifyAttributes,
-        ActionModifyAttributesNoSelect,
-        ActionModifyDelete,
-        ActionModifyDeleteNoSelect,
-        ActionModifyDeleteQuick,
-        ActionModifyDeleteFree,
-        ActionModifyMove,
-        ActionModifyMoveNoSelect,
-        ActionModifyRotate,
-        ActionModifyRotateNoSelect,
-        ActionModifyScale,
-        ActionModifyScaleNoSelect,
-        ActionModifyMirror,
-        ActionModifyMirrorNoSelect,
-        ActionModifyMoveRotate,
-        ActionModifyMoveRotateNoSelect,
-		ActionModifyRevertDirection,
-		ActionModifyRevertDirectionNoSelect,
-        ActionModifyRotate2,
-        ActionModifyRotate2NoSelect,
-        ActionModifyEntity,
-        ActionModifyTrim,
-        ActionModifyTrim2,
-        ActionModifyTrimAmount,
-        ActionModifyCut,
-        ActionModifyStretch,
-        ActionModifyBevel,
-        ActionModifyRound,
-        ActionModifyOffset,
-        ActionModifyOffsetNoSelect,
-
-        ActionSnapFree,
-        ActionSnapGrid,
-        ActionSnapEndpoint,
-        ActionSnapOnEntity,
-        ActionSnapCenter,
-        ActionSnapMiddle,
-        ActionSnapDist,
-        ActionSnapIntersection,
-        ActionSnapIntersectionManual,
-
-        ActionRestrictNothing,
-        ActionRestrictOrthogonal,
-        ActionRestrictHorizontal,
-        ActionRestrictVertical,
-
-        ActionSetRelativeZero,
-        ActionLockRelativeZero,
-        ActionUnlockRelativeZero,
-
-        ActionInfoInside,
-        ActionInfoDist,
-        ActionInfoDist2,
-        ActionInfoAngle,
-        ActionInfoTotalLength,
-        ActionInfoTotalLengthNoSelect,
-        ActionInfoArea,
-
-        ActionLayersDefreezeAll,
-        ActionLayersFreezeAll,
-        ActionLayersUnlockAll,
-        ActionLayersLockAll,
-        ActionLayersAdd,
-        ActionLayersRemove,
-        ActionLayersEdit,
-        ActionLayersToggleView,
-        ActionLayersToggleLock,
-        ActionLayersTogglePrint,
-        ActionLayersToggleConstruction,
-        ActionLayersExportSelected,
-        ActionLayersExportVisible,
-
-        ActionBlocksDefreezeAll,
-        ActionBlocksFreezeAll,
-        ActionBlocksAdd,
-        ActionBlocksRemove,
-        ActionBlocksAttributes,
-        ActionBlocksEdit,
-        ActionBlocksSave,
-        ActionBlocksInsert,
-        ActionBlocksToggleView,
-        ActionBlocksCreate,
-        ActionBlocksCreateNoSelect,
-        ActionBlocksExplode,
-        ActionBlocksExplodeNoSelect,
-        ActionBlocksImport,
-
-        ActionModifyExplodeText,
-        ActionModifyExplodeTextNoSelect,
-
-        ActionLibraryInsert,
-
-        ActionOptionsGeneral,
-        ActionOptionsDrawing,
-
-        ActionToolRegenerateDimensions,
-
-        ActionScriptOpenIDE,
-        ActionScriptRun,
-
-        /** Needed to loop through all actions */
-        ActionLast
     };
 
     /**
@@ -419,16 +160,6 @@ namespace RS2 {
     };
 
     /**
-     * Update mode for non-atomic entities that need to be updated when
-     * they change. e.g. texts, inserts, ...
-     */
-    enum UpdateMode {
-        NoUpdate,       /**< No automatic updates. */
-        Update,         /**< Always update automatically when modified. */
-                PreviewUpdate   /**< Update automatically but only for previews (quick update) */
-    };
-
-    /**
      * Drawing mode.
      */
     enum DrawingMode {
@@ -437,15 +168,6 @@ namespace RS2 {
         ModePreview,    /**< Draw only in black/white without styles */
         ModeBW,         /**< Black/white. Can be used for printing. */
         ModeWB,         /**< White/black, used for export */
-    };
-
-    /**
-     * Undoable rtti.
-     */
-    enum UndoableType {
-        UndoableUnknown,    /**< Unknown undoable */
-        UndoableEntity,     /**< Entity */
-        UndoableLayer       /**< Layer */
     };
 
     /**
@@ -547,25 +269,6 @@ namespace RS2 {
     };
 
     /**
-     * Direction used for scrolling actions.
-     */
-    enum Direction {
-        Up, Left, Right, Down
-    };
-
-	enum SubWindowMode {
-		CurrentMode = -1, Maximized, Cascade, Tile, TileVertical, TileHorizontal
-	};
-
-	enum TabShape {
-		AnyShape = -1, Rounded, Triangular
-	};
-
-	enum TabPosition {
-		AnyPosition = -1, North, South, West, East
-	};
-
-    /**
      * Vertical alignments.
      */
 //    enum VAlign {
@@ -609,13 +312,6 @@ namespace RS2 {
     };
 
     /**
-     * Direction for zooming actions.
-     */
-    enum ZoomDirection {
-        In, Out
-    };
-
-    /**
      * Axis specification for zooming actions.
      */
     enum Axis : unsigned short {
@@ -632,31 +328,6 @@ namespace RS2 {
         TopCrosshair,         /**< Top type isometric Crosshair */
         RightCrosshair,         /**< Right type isometric Crosshair */
         OrthogonalCrosshair         /**< Orthogonal Crosshair */
-    };
-
-    /**
-     * Snapping modes
-     */
-    enum SnapMode {
-        SnapFree,         /**< Free positioning */
-        SnapGrid,         /**< Snap to grid points */
-        SnapEndpoint,     /**< Snap to endpoints */
-        SnapMiddle,       /**< Snap to middle points */
-        SnapCenter,       /**< Snap to centers */
-        SnapOnEntity,     /**< Snap to the next point on an entity */
-        SnapDist,         /**< Snap to points with a distance to an endpoint */
-        SnapIntersection, /**< Snap to intersection */
-        SnapIntersectionManual  /**< Snap to intersection manually */
-    };
-
-    /**
-     * Snap restrictions
-     */
-    enum SnapRestriction {
-        RestrictNothing,        /**< No restriction to snap mode */
-        RestrictHorizontal,     /**< Restrict to 0,180 degrees */
-        RestrictVertical,       /**< Restrict to 90,270 degrees */
-        RestrictOrthogonal      /**< Restrict to 90,180,270,0 degrees */
     };
 
     /**
@@ -698,8 +369,8 @@ namespace RS2 {
         BorderLine2 = 24,     /**< dash, dash, dot small. */
         BorderLineX2 = 25,    /**< dash, dash, dot large. */
 
-        LineTypeUnchanged=26,      /**< Line type defined by block not entity */
-        LineSelected=27      /**< Line type for selected */
+        LineTypeUnchanged = 26,      /**< Line type defined by block not entity */
+        LineSelected = 27      /**< Line type for selected */
     };
 
     /**
@@ -809,82 +480,6 @@ namespace RS2 {
     LineWidth intToLineWidth(int w);
 
     /**
-     * Enum of cursor types.
-     */
-    enum CursorType {
-        ArrowCursor,          /**< ArrowCursor - standard arrow cursor. */
-        UpArrowCursor,        /**< UpArrowCursor - upwards arrow. */
-        CrossCursor,          /**< CrossCursor - crosshair. */
-        WaitCursor,           /**< WaitCursor - hourglass/watch. */
-        IbeamCursor,          /**< IbeamCursor - ibeam/text entry. */
-        SizeVerCursor,        /**< SizeVerCursor - vertical resize. */
-        SizeHorCursor,        /**< SizeHorCursor - horizontal resize. */
-        SizeBDiagCursor,      /**< SizeBDiagCursor - diagonal resize (/). */
-        SizeFDiagCursor,      /**< SizeFDiagCursor - diagonal resize (\). */
-        SizeAllCursor,        /**< SizeAllCursor - all directions resize. */
-        BlankCursor,          /**< BlankCursor - blank/invisible cursor. */
-        SplitVCursor,         /**< SplitVCursor - vertical splitting. */
-        SplitHCursor,         /**< SplitHCursor - horizontal splitting. */
-        PointingHandCursor,   /**< PointingHandCursor - a pointing hand. */
-        ForbiddenCursor,      /**< ForbiddenCursor - a slashed circle. */
-        WhatsThisCursor,      /**< WhatsThisCursor - an arrow with a ?. */
-        OpenHandCursor,       /**< Qt OpenHandCursor */
-        ClosedHandCursor,     /**< Qt ClosedHandCursor */
-        CadCursor,            /**< CadCursor - a bigger cross. */
-        DelCursor,            /**< DelCursor - cursor for choosing entities */
-        SelectCursor,         /**< SelectCursor - for selecting single entities */
-        MagnifierCursor,      /**< MagnifierCursor - a magnifying glass. */
-        MovingHandCursor      /**< Moving hand - a little flat hand. */
-    };
-
-    /**
-     * Wrapper for Qt.
-     */
-	/*
-    static Qt::CursorShape rsToQtCursorType(RS2::CursorType t) {
-        switch (t) {
-        case ArrowCursor:
-            return Qt::ArrowCursor;
-        case UpArrowCursor:
-            return Qt::UpArrowCursor;
-        case CrossCursor:
-            return Qt::CrossCursor;
-        case WaitCursor:
-            return Qt::WaitCursor;
-        case IbeamCursor:
-            return Qt::IBeamCursor;
-        case SizeVerCursor:
-            return Qt::SizeVerCursor;
-        case SizeHorCursor:
-            return Qt::SizeHorCursor;
-        case SizeBDiagCursor:
-            return Qt::SizeBDiagCursor;
-        case SizeFDiagCursor:
-            return Qt::SizeFDiagCursor;
-        case SizeAllCursor:
-            return Qt::SizeAllCursor;
-        case BlankCursor:
-            return Qt::BlankCursor;
-        case SplitVCursor:
-            return Qt::SplitVCursor;
-        case SplitHCursor:
-            return Qt::SplitHCursor;
-        case PointingHandCursor:
-            return Qt::PointingHandCursor;
-        case OpenHandCursor:
-            return Qt::OpenHandCursor;
-        case ClosedHandCursor:
-            return Qt::ClosedHandCursor;
-        case ForbiddenCursor:
-            return Qt::ForbiddenCursor;
-        case WhatsThisCursor:
-            return Qt::WhatsThisCursor;
-        default:
-            return Qt::ArrowCursor;
-        }
-    }
-*/
-    /**
      * Paper formats.
      */
     enum PaperFormat {
@@ -926,34 +521,6 @@ namespace RS2 {
 
         NPageFormat
     };
-
-        /**
-         * Items that can be put on a overlay, the items are rendered in this order. Best is to leave snapper as last so
-         * it always shows up
-         */
-        enum OverlayGraphics: short {
-                ActionPreviewEntity = 0, // Action Entities
-                Snapper = 1, // Snapper
-                OverlayEffects =2 // special effects, like glowing on hover
-        };
-
-        //Different re-draw methods to speed up rendering of the screen
-        enum RedrawMethod {
-                RedrawNone = 0,
-                RedrawGrid = 1,
-                RedrawOverlay = 2,
-                RedrawDrawing = 4,
-                RedrawAll = 0xffff
-        };
-
-        /**
-         * Text drawing direction.
-         */
-        enum TextLocaleDirection {
-            locLeftToRight,     /** Left to right **/
-            locRightToLeft      /** Right to Left **/
-        };
-
 };
 
 #endif

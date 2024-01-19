@@ -167,8 +167,6 @@ void LC_DimArc::updateDim(bool autoText /* = false */)
 
     clear();
 
-    if (isUndone()) return;
-
     if ( ! dimArcData.centre.valid) return;
 
     calcDimension();

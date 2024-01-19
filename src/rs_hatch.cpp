@@ -186,12 +186,6 @@ void RS_Hatch::update() {
 		hatch = nullptr;
     }
 
-    if (isUndone()) {
-        RS_DEBUG->print(RS_Debug::D_NOTICE, "RS_Hatch::update: skip undone hatch");
-        updateRunning = false;
-        return;
-    }
-
     if (!validate()) {
         RS_DEBUG->print(RS_Debug::D_ERROR, "RS_Hatch::update: invalid contour in hatch found");
         updateRunning = false;
@@ -536,7 +530,6 @@ void RS_Hatch::update() {
 void RS_Hatch::activateContour(bool on) {
         RS_DEBUG->print("RS_Hatch::activateContour: %d", (int)on);
 		for(auto e: entities){
-        if (!e->isUndone()) {
             if (!e->getFlag(RS2::FlagTemp)) {
                                 RS_DEBUG->print("RS_Hatch::activateContour: set visible");
                 e->setVisible(on);
@@ -544,10 +537,6 @@ void RS_Hatch::activateContour(bool on) {
                         else {
                                 RS_DEBUG->print("RS_Hatch::activateContour: entity temp");
                         }
-        }
-                else {
-                        RS_DEBUG->print("RS_Hatch::activateContour: entity undone");
-                }
     }
         RS_DEBUG->print("RS_Hatch::activateContour: OK");
 }

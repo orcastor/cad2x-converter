@@ -131,10 +131,6 @@ void RS_DimRadial::updateDim(bool autoText) {
 
     clear();
 
-    if (isUndone()) {
-        return;
-    }
-
     // general scale (DIMSCALE)
     double dimscale = getGeneralScale();
 

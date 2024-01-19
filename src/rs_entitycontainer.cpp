@@ -220,121 +220,6 @@ double RS_EntityContainer::getLength() const {
 
 
 /**
- * Selects this entity.
- */
-bool RS_EntityContainer::setSelected(bool select) {
-    // This entity's select:
-    if (RS_Entity::setSelected(select)) {
-
-        // All sub-entity's select:
-        for(auto e: entities){
-            if (e->isVisible()) {
-                e->setSelected(select);
-            }
-        }
-        return true;
-    } else {
-        return false;
-    }
-}
-
-
-
-/**
- * Toggles select on this entity.
- */
-bool RS_EntityContainer::toggleSelected() {
-    // Toggle this entity's select:
-    if (RS_Entity::toggleSelected()) {
-
-        // Toggle all sub-entity's select:
-        /*for (RS_Entity* e=firstEntity(RS2::ResolveNone);
-                e;
-                e=nextEntity(RS2::ResolveNone)) {
-            e->toggleSelected();
-    }*/
-        return true;
-    } else {
-        return false;
-    }
-}
-
-
-void RS_EntityContainer::setHighlighted(bool on)
-{
-    for (auto e : entities)
-    {
-        e->setHighlighted(on);
-    }
-    RS_Entity::setHighlighted(on);
-}
-
-
-/**
- * Selects all entities within the given area.
- *
- * @param select True to select, False to deselect the entities.
- */
-void RS_EntityContainer::selectWindow(RS_Vector v1, RS_Vector v2,
-                                      bool select, bool cross) {
-
-    bool included;
-
-    for(auto e: entities){
-
-        included = false;
-
-        if (e->isVisible()) {
-            if (e->isInWindow(v1, v2)) {
-                //e->setSelected(select);
-                included = true;
-            } else if (cross) {
-                RS_EntityContainer l;
-                l.addRectangle(v1, v2);
-                RS_VectorSolutions sol;
-
-                if (e->isContainer()) {
-                    RS_EntityContainer* ec = (RS_EntityContainer*)e;
-                    for (RS_Entity* se=ec->firstEntity(RS2::ResolveAll);
-                         se && included==false;
-                         se=ec->nextEntity(RS2::ResolveAll)) {
-
-                        if (se->rtti() == RS2::EntitySolid){
-                            included = static_cast<RS_Solid*>(se)->isInCrossWindow(v1,v2);
-                        } else {
-                            for (auto line: l) {
-                                sol = RS_Information::getIntersection(
-                                            se, line, true);
-                                if (sol.hasValid()) {
-                                    included = true;
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                } else if (e->rtti() == RS2::EntitySolid){
-                    included = static_cast<RS_Solid*>(e)->isInCrossWindow(v1,v2);
-                } else {
-                    for (auto line: l) {
-                        sol = RS_Information::getIntersection(e, line, true);
-                        if (sol.hasValid()) {
-                            included = true;
-                            break;
-                        }
-                    }
-                }
-            }
-        }
-
-        if (included) {
-            e->setSelected(select);
-        }
-    }
-}
-
-
-
-/**
  * Adds a entity to this container and updates the borders of this
  * entity-container if autoUpdateBorders is true.
  */
@@ -508,46 +393,6 @@ unsigned int RS_EntityContainer::countDeep() const{
     }
     return c;
 }
-
-
-
-/**
- * Counts the selected entities in this container.
- */
-unsigned RS_EntityContainer::countSelected(bool deep, QList<RS2::EntityType> const& types) {
-    unsigned c=0;
-    std::set<RS2::EntityType> type{types.cbegin(), types.cend()};
-
-    for (RS_Entity* t: entities){
-
-        if (t->isSelected())
-	    if (!types.size() || type.count(t->rtti()))
-                c++;
-
-        if (t->isContainer())
-            c += static_cast<RS_EntityContainer*>(t)->countSelected(deep);
-    }
-
-    return c;
-}
-
-/**
- * Counts the selected entities in this container.
- */
-double RS_EntityContainer::totalSelectedLength() {
-    double ret(0.0);
-    for (RS_Entity* e: entities){
-
-        if (e->isVisible() && e->isSelected()) {
-            double l = e->getLength();
-            if (l>=0.) {
-                ret += l;
-            }
-        }
-    }
-    return ret;
-}
-
 
 /**
  * Adjusts the borders of this graphic (max/min values)
@@ -1447,32 +1292,6 @@ RS_Vector RS_EntityContainer::getNearestRef(const RS_Vector& coord,
 }
 
 
-RS_Vector RS_EntityContainer::getNearestSelectedRef(const RS_Vector& coord,
-                                                    double* dist) const{
-
-    double minDist = RS_MAXDOUBLE;  // minimum measured distance
-    double curDist;                 // currently measured distance
-    RS_Vector closestPoint(false);  // closest found endpoint
-    RS_Vector point;                // endpoint found
-
-    for(auto en: entities){
-
-        if (en->isVisible() && en->isSelected() && !en->isParentSelected()) {
-            point = en->getNearestSelectedRef(coord, &curDist);
-            if (point.valid && curDist<minDist) {
-                closestPoint = point;
-                minDist = curDist;
-                if (dist) {
-                    *dist = minDist;
-                }
-            }
-        }
-    }
-
-    return closestPoint;
-}
-
-
 double RS_EntityContainer::getDistanceToPoint(const RS_Vector& coord,
                                               RS_Entity** entity,
                                               RS2::ResolveLevel level,
@@ -1803,20 +1622,6 @@ void RS_EntityContainer::moveRef(const RS_Vector& ref,
     }
 }
 
-
-void RS_EntityContainer::moveSelectedRef(const RS_Vector& ref,
-                                         const RS_Vector& offset) {
-
-    resetBorders();
-    for(auto* e: entities){
-        e->moveSelectedRef(ref, offset);
-        adjustBorders(e);
-    }
-    if (autoUpdateBorders) {
-        calculateBorders();
-    }
-}
-
 void RS_EntityContainer::revertDirection() {
     // revert entity order in the container
     for(int k = 0; k < entities.size() / 2; ++k) {
@@ -1982,8 +1787,6 @@ std::ostream& operator << (std::ostream& os, RS_EntityContainer& ec) {
 
     os << tab << " Flags[" << id << "]: "
        << (ec.getFlag(RS2::FlagVisible) ? "RS2::FlagVisible" : "");
-    os << (ec.getFlag(RS2::FlagUndone) ? " RS2::FlagUndone" : "");
-    os << (ec.getFlag(RS2::FlagSelected) ? " RS2::FlagSelected" : "");
     os << "\n";
 
 

@@ -78,14 +78,6 @@ public:
 
 	void setVisible(bool v) override;
 
-	bool setSelected(bool select=true) override;
-	bool toggleSelected() override;
-
-    void setHighlighted(bool on) override;
-
-	virtual void selectWindow(RS_Vector v1, RS_Vector v2,
-				bool select=true, bool cross=false);
-
     virtual void addEntity(RS_Entity* entity);
     virtual void appendEntity(RS_Entity* entity);
     virtual void prependEntity(RS_Entity* entity);
@@ -118,13 +110,6 @@ public:
 	}
 	unsigned count() const override;
 	unsigned countDeep() const override;
-	//virtual unsigned long int countLayerEntities(RS_Layer* layer);
-	/** \brief countSelected number of selected
-	* @param deep count sub-containers, if true
-	* @param types if is not empty, only counts by types listed
-	*/
-    virtual unsigned countSelected(bool deep=true, QList<RS2::EntityType> const& types = {});
-    virtual double totalSelectedLength();
 
     /**
      * Enables / disables automatic update of borders on entity removals
@@ -173,8 +158,6 @@ public:
                                             double* dist);
 	RS_Vector getNearestRef(const RS_Vector& coord,
 									 double* dist = nullptr) const override;
-	RS_Vector getNearestSelectedRef(const RS_Vector& coord,
-									 double* dist = nullptr) const override;
 
 	double getDistanceToPoint(const RS_Vector& coord,
                                       RS_Entity** entity,
@@ -195,7 +178,6 @@ public:
                          const RS_Vector& secondCorner,
 						 const RS_Vector& offset) override;
 	void moveRef(const RS_Vector& ref, const RS_Vector& offset) override;
-	void moveSelectedRef(const RS_Vector& ref, const RS_Vector& offset) override;
 	void revertDirection() override;
 
 

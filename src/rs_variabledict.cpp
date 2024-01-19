@@ -39,30 +39,6 @@ void RS_VariableDict::clear()
 
 
 /**
- * Activates the given block.
- * Listeners are notified.
- */
-//void RS_VariableDict::activateBlock(const QString& name) {
-//	activateBlock(findBlock(name));
-//}
-
-/**
- * Activates the given block.
- * Listeners are notified.
- */
-/*void RS_VariableDict::activateBlock(RS_Block* block)
-{
-	activeBlock = block;
-	
-    for (unsigned i=0; i<blockListListeners.count(); ++i) {
-		RS_VariableDictListener* l = blockListListeners.at(i);
- 
-		l->blockActivated(activeBlock);
-	}
-}*/
-
-
-/**
  * Adds a variable to the variable dictionary. If a variable with the 
  * same name already exists, is will be overwritten.
  */
@@ -233,21 +209,6 @@ double RS_VariableDict::getDouble(const QString& key, double def) const
 
     return ret;
 }
-
-
-/**
- * Notifies the listeners about layers that were added. This can be
- * used after adding a lot of variables without auto-update.
- */
-/*
-void RS_VariableDict::addBlockNotification()
-{
-    for (unsigned i=0; i<blockListListeners.count(); ++i) {
-        RS_VariableDictListener* l = blockListListeners.at(i);
-        l->blockAdded(NULL);
-    }
-}
-*/
 
 
 /**

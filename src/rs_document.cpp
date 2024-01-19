@@ -30,7 +30,6 @@
 #include "rs_debug.h"
 #include "rs_layerlist.h"
 
-
 /**
  * Constructor.
  *
@@ -40,20 +39,6 @@
 RS_Document::RS_Document(RS_EntityContainer* parent)
     : RS_EntityContainer{parent}
     , activePen {RS_Color{RS2::FlagByLayer}, RS2::WidthByLayer, RS2::LineByLayer}
-    , autosaveFilename{ "Unnamed"}
 {
     RS_DEBUG->print("RS_Document::RS_Document() ");
 }
-
-/**
- * Overwritten to set modified flag when undo cycle finished with undoable(s).
- */
-void RS_Document::endUndoCycle()
-{
-    if (hasUndoable()) {
-        setModified(true);
-    }
-
-    RS_Undo::endUndoCycle();
-}
-

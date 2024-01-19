@@ -88,8 +88,6 @@ RS_Graphic::RS_Graphic(RS_EntityContainer* parent)
 	//set default values for point style
 	addVariable("$PDMODE", LC_DEFAULTS_PDMode, DXF_FORMAT_GC_PDMode);
 	addVariable("$PDSIZE", LC_DEFAULTS_PDSize, DXF_FORMAT_GC_PDSize);
-
-    setModified(false);
 }
 
 
@@ -140,13 +138,9 @@ void RS_Graphic::removeLayer(RS_Layer* layer) {
         }
 		// remove all entities on that layer:
 		if(toRemove.size()){
-			startUndoCycle();
             for(RS_Entity* e: toRemove){
-				e->setUndoState(true);
 				e->setLayer("0");
-				addUndoable(e);
 			}
-			endUndoCycle();
 		}
 
 		toRemove.clear();
@@ -163,7 +157,6 @@ void RS_Graphic::removeLayer(RS_Layer* layer) {
 		}
 
         for(RS_Entity* e: toRemove){
-			e->setUndoState(true);
 			e->setLayer("0");
 		}
 
@@ -187,8 +180,6 @@ void RS_Graphic::newDoc() {
 
     addLayer(new RS_Layer("0"));
     //addLayer(new RS_Layer("ByBlock"));
-
-        setModified(false);
 }
 
 
@@ -295,70 +286,38 @@ bool RS_Graphic::BackupDrawingFile(const QString &filename)
  * 					  is saved more than one time without being modified.
  */
 
-bool RS_Graphic::save(bool isAutoSave)
+bool RS_Graphic::save()
 {
     bool ret	= false;
 
     RS_DEBUG->print("RS_Graphic::save: Entering...");
 
     /*	- Save drawing file only if it has been modified.
-         *	- Notes: Potentially dangerous in case of an internal
-         *	  coding error that make LibreCAD not aware of modification
-         *	  when some kind of drawing modification is done.
-         *	----------------------------------------------------------- */
-	if (isModified())
+    *	- Notes: Potentially dangerous in case of an internal
+    *	  coding error that make LibreCAD not aware of modification
+    *	  when some kind of drawing modification is done.
+    *	----------------------------------------------------------- */
+    QString actualName;
+    RS2::FormatType	actualType;
+
+    actualType	= formatType;
+
+    /*	Save drawing file if able to created associated object.
+                *	------------------------------------------------------- */
+    if (!actualName.isEmpty())
     {
-		QString actualName;
-        RS2::FormatType	actualType;
+        RS_DEBUG->print("RS_Graphic::save: File: %s", actualName.toLatin1().data());
+        RS_DEBUG->print("RS_Graphic::save: Format: %d", (int) actualType);
+        RS_DEBUG->print("RS_Graphic::save: Export...");
 
-        actualType	= formatType;
-
-        /*	Save drawing file if able to created associated object.
-                 *	------------------------------------------------------- */
-		if (!actualName.isEmpty())
-        {
-			RS_DEBUG->print("RS_Graphic::save: File: %s", actualName.toLatin1().data());
-            RS_DEBUG->print("RS_Graphic::save: Format: %d", (int) actualType);
-            RS_DEBUG->print("RS_Graphic::save: Export...");
-
-			ret = RS_FileIO::instance()->fileExport(*this, actualName, actualType);
-			currentFileName=actualName;
-		} else {
-            RS_DEBUG->print("RS_Graphic::save: Can't create object!");
-            RS_DEBUG->print("RS_Graphic::save: File not saved!");
-        }
-
-        /*	Remove AutoSave file after user has successfully saved file.
-                 *	------------------------------------------------------------ */
-        if (ret && !isAutoSave)
-        {
-            /*	Autosave file object.
-                         *	*/
-			QFile	qf_file(autosaveFilename);
-
-			/*	Tell that drawing file is no more modified.
-						 *	------------------------------------------- */
-			setModified(false);
-			layerList.setModified(false);
-			blockList.setModified(false);
-
-			/*	- Remove autosave file, if able to create associated object,
-						 *	  and if autosave file exist.
-						 *	------------------------------------------------------------ */
-			if (qf_file.exists())
-			{
-				RS_DEBUG->print(	"RS_Graphic::save: Removing old autosave file %s",
-									autosaveFilename.toLatin1().data());
-				qf_file.remove();
-			}
-
-        }
-
-        RS_DEBUG->print("RS_Graphic::save: Done!");
-	} else {
-        RS_DEBUG->print("RS_Graphic::save: File not modified, not saved");
-        ret = true;
+        ret = RS_FileIO::instance()->fileExport(*this, actualName, actualType);
+        currentFileName=actualName;
+    } else {
+        RS_DEBUG->print("RS_Graphic::save: Can't create object!");
+        RS_DEBUG->print("RS_Graphic::save: File not saved!");
     }
+
+    RS_DEBUG->print("RS_Graphic::save: Done!");
 
     RS_DEBUG->print("RS_Graphic::save: Exiting...");
 
@@ -376,9 +335,6 @@ bool RS_Graphic::save(bool isAutoSave)
  *	Last modified:	13 July 2011
  *	Parameters:         QString: name to save
  *                      RS2::FormatType: format to save
- *                      bool:
- *                          false: do not save if not needed
- *                          true: force to save (when called for save as...
  *
  *	Returns:			bool:
  *							false:	Operation failed.
@@ -387,7 +343,7 @@ bool RS_Graphic::save(bool isAutoSave)
  * Notes:			Backup the drawing file (if necessary).
  */
 
-bool RS_Graphic::saveAs(const QString &filename, RS2::FormatType type, bool force)
+bool RS_Graphic::saveAs(const QString &filename, RS2::FormatType type)
 {
 	RS_DEBUG->print("RS_Graphic::saveAs: Entering...");
 
@@ -396,75 +352,21 @@ bool RS_Graphic::saveAs(const QString &filename, RS2::FormatType type, bool forc
 
 	// Check/memorize if file name we want to use as new file
 	// name is the same as the actual file name.
-	bool fn_is_same	= filename == this->filename;
 	auto const filenameSaved=this->filename;
-	auto const autosaveFilenameSaved=this->autosaveFilename;
 	auto const formatTypeSaved=this->formatType;
 
 	this->filename = filename;
-	this->formatType	= type;
-
-	// QString	const oldAutosaveName = this->autosaveFilename;
-	QFileInfo	finfo(filename);
-
-	// Construct new autosave filename by prepending # to the filename
-	// part, using the same directory as the destination file.
-	this->autosaveFilename = finfo.path() + "/#" + finfo.fileName();
-
-	// When drawing is saved using a different name than the actual
-	// drawing file name, make LibreCAD think that drawing file
-	// has been modified, to make sure the drawing file saved.
-	if (!fn_is_same || force)
-		setModified(true);
+	this->formatType = type;
 
 	ret	= save();		//	Save file.
 
-	if (ret) {
-		// Save was successful, remove old autosave file.
-		QFile	qf_file(autosaveFilenameSaved);
-
-		if (qf_file.exists()) {
-			RS_DEBUG->print("RS_Graphic::saveAs: Removing old autosave file %s",
-							autosaveFilenameSaved.toLatin1().data());
-			qf_file.remove();
-		}
-
-	}else{
+	if (!ret) {
 		//do not modify filenames:
 		this->filename=filenameSaved;
-		this->autosaveFilename=autosaveFilenameSaved;
 		this->formatType=formatTypeSaved;
 	}
 
 	return ret;
-}
-
-
-/**
- * Loads the given file into this graphic.
- */
-bool RS_Graphic::loadTemplate(const QString &filename, RS2::FormatType type) {
-    RS_DEBUG->print("RS_Graphic::loadTemplate(%s)", filename.toLatin1().data());
-
-    bool ret = false;
-
-    // Construct new autosave filename by prepending # to the filename part,
-    // using system temporary dir.
-    this->autosaveFilename = QDir::tempPath () + "/#" + "Unnamed.dxf";
-
-    // clean all:
-    newDoc();
-
-    // import template file:
-    ret = RS_FileIO::instance()->fileImport(*this, filename, type);
-
-    setModified(false);
-    layerList.setModified(false);
-    blockList.setModified(false);
-
-    RS_DEBUG->print("RS_Graphic::loadTemplate(%s): OK", filename.toLatin1().data());
-
-    return ret;
 }
 
 /**
@@ -476,10 +378,6 @@ bool RS_Graphic::open(const QString &filename, RS2::FormatType type) {
         bool ret = false;
 
     this->filename = filename;
-        QFileInfo finfo(filename);
-        // Construct new autosave filename by prepending # to the filename
-        // part, using the same directory as the destination file.
-        this->autosaveFilename = finfo.path() + "/#" + finfo.fileName();
 
     // clean all:
     newDoc();
@@ -488,9 +386,6 @@ bool RS_Graphic::open(const QString &filename, RS2::FormatType type) {
     ret = RS_FileIO::instance()->fileImport(*this, filename, type);
 
     if( ret) {
-        setModified(false);
-        layerList.setModified(false);
-        blockList.setModified(false);
         currentFileName=QString(filename);
 
         //cout << *((RS_Graphic*)graphic);
