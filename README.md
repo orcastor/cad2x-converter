@@ -17,10 +17,10 @@ qmake -qt=qt5 -r -- -developer-build -release -no-iconv -no-icu -confirm-license
 
 ## Features
 
-- remove depends of QtWidgets & QtPrintSupport
-- remove depends of GUI (QtGuiApplication / events / plugins)
-- remove depends of OpenGL / Vulkan
-- remove depends of qpa (X server and etc.)
-- remove depends of icu
-- remove depends of Pixmap
-- static link
+- ✅remove dependency of QtWidgets & QtPrintSupport
+- ✅remove dependency of GUI (QtGuiApplication / events / plugins)
+- ✅remove dependency of OpenGL / Vulkan
+- ✅remove dependency of qpa (X server and etc.)
+- ✅remove dependency of icu
+- ✅remove dependency of Pixmap
+- ✅static link
