@@ -39,7 +39,7 @@
 
 #include "qfontengine_coretext_p.h"
 
-#include <qpa/qplatformfontdatabase.h>
+#include "qplatformfontdatabase.h"
 #include <QtCore/qendian.h>
 #if QT_CONFIG(settings)
 #include <QtCore/qsettings.h>

@@ -53,7 +53,7 @@
 
 #include <qglobal.h>
 
-#include <qpa/qplatformfontdatabase.h>
+#include "qplatformfontdatabase.h"
 #include <private/qcore_mac_p.h>
 
 Q_FORWARD_DECLARE_CF_TYPE(CTFontDescriptor);

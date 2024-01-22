@@ -51,7 +51,7 @@
 // We mean it.
 //
 
-#include <qpa/qplatformfontdatabase.h>
+#include "qplatformfontdatabase.h"
 #include <QtGui/private/qfreetypefontdatabase_p.h>
 
 QT_BEGIN_NAMESPACE

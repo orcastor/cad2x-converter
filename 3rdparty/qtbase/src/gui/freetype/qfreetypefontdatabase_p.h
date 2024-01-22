@@ -51,7 +51,7 @@
 // We mean it.
 //
 
-#include <qpa/qplatformfontdatabase.h>
+#include "qplatformfontdatabase.h"
 #include <QtCore/QByteArray>
 #include <QtCore/QString>
 
