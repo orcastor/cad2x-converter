@@ -1,0 +1,5 @@
+<!DOCTYPE RCC><RCC version="1.0">
+<qresource prefix="qgradient">
+<file alias="webgradients.binaryjson">/opt/cad2x-converter/3rdparty/qtbase/src/gui/painting/webgradients.binaryjson</file>
+</qresource>
+</RCC>

@@ -1,0 +1,7 @@
+naturallanguage         = en
+outputencoding          = UTF-8
+sourceencoding          = UTF-8
+
+headers.fileextensions  = "*.ch *.h *.h++ *.hh *.hpp *.hxx"
+sources.fileextensions  = "*.c++ *.cc *.cpp *.cxx *.mm *.qml *.qdoc"
+

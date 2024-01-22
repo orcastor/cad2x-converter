@@ -1,0 +1,17 @@
+Qt_5_PRIVATE_API {
+    qt_private_api_tag*;
+};
+Qt_5 { *; };
+Qt_5.0 {} Qt_5;
+Qt_5.1 {} Qt_5.0;
+Qt_5.2 {} Qt_5.1;
+Qt_5.3 {} Qt_5.2;
+Qt_5.4 {} Qt_5.3;
+Qt_5.5 {} Qt_5.4;
+Qt_5.6 {} Qt_5.5;
+Qt_5.7 {} Qt_5.6;
+Qt_5.8 {} Qt_5.7;
+Qt_5.9 {} Qt_5.8;
+Qt_5.10 {} Qt_5.9;
+Qt_5.11 {} Qt_5.10;
+Qt_5.12 { qt_version_tag; } Qt_5.11;

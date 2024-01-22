@@ -1,0 +1,7 @@
+load(default_post)
+
+!xcodebuild:equals(TEMPLATE, app):!isEmpty(QMAKE_INFO_PLIST) {
+     # Only link in photo library support if Info.plist contains
+     # NSPhotoLibraryUsageDescription. Otherwise it will be rejected from AppStore.
+     plist_path = $$absolute_path($$QMAKE_INFO_PLIST, $$_PRO_FILE_PWD_)
+}

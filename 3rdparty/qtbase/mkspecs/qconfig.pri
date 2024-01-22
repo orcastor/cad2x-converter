@@ -1,0 +1,14 @@
+QT_ARCH = arm64
+QT_BUILDABI = arm64-little_endian-lp64
+QT.global.enabled_features = c++11 c++14 c++1z c99 c11 pkg-config static thread
+QT.global.disabled_features = cross_compile framework shared rpath appstore-compliant debug_and_release simulator_and_device build_all force_asserts separate_debug_info
+QT_CONFIG += private_tests release c++11 c++14 c++1z reduce_exports static stl
+CONFIG += release static
+QT_VERSION = 5.12.12
+QT_MAJOR_VERSION = 5
+QT_MINOR_VERSION = 12
+QT_PATCH_VERSION = 12
+QT_GCC_MAJOR_VERSION = 9
+QT_GCC_MINOR_VERSION = 4
+QT_GCC_PATCH_VERSION = 0
+QT_EDITION = OpenSource

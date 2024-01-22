@@ -1,0 +1,522 @@
+{
+    "module": "gui",
+    "depends": [
+        "core"
+    ],
+    "testDir": "../../config.tests",
+
+    "commandline": {
+        "options": {
+            "direct2d": "boolean",
+            "directwrite": "boolean",
+            "fontconfig": "boolean",
+            "freetype": { "type": "enum", "values": [ "no", "qt", "system" ] },
+            "gif": "boolean",
+            "harfbuzz": { "type": "enum", "values": [ "no", "qt", "system" ] },
+            "ico": "boolean",
+            "libjpeg": { "type": "enum", "values": [ "no", "qt", "system" ] },
+            "libpng": { "type": "enum", "values": [ "no", "qt", "system" ] }
+        }
+    },
+
+    "libraries": {
+        "dxguid": {
+            "label": "DirectX GUID",
+            "sources": [
+                "-ldxguid"
+            ]
+        },
+        "dxgi": {
+            "label": "DirectX GI",
+            "headers": "dxgi.h",
+            "sources": [
+                "-ldxgi"
+            ]
+        },
+        "dxgi1_2": {
+            "label": "DirectX GI 1.2",
+            "test": {
+                "main": [
+                    "// fails with mingw-w64 5.4.0 - declaration is missing from header",
+                    "IDXGISurface1 *surface;",
+                    "(void) surface;"
+                ]
+            },
+            "headers": "dxgi1_2.h",
+            "sources": [
+                "-ldxgi"
+            ]
+        },
+        "d3d9": {
+            "label": "Direct3D 9",
+            "headers": "d3d9.h",
+            "sources": [
+                "-ld3d9"
+            ]
+        },
+        "d3d11": {
+            "label": "Direct3D 11",
+            "headers": "d3d11.h",
+            "sources": [
+                "-ld3d11"
+            ]
+        },
+        "d3d11_1": {
+            "label": "Direct3D 11.1",
+            "headers": "d3d11_1.h",
+            "sources": [
+                "-ld3d11"
+            ]
+        },
+        "d3dcompiler": {
+            "label": "Direct3D Shader Compiler Library",
+            "headers": "d3dcompiler.h",
+            "sources": [
+                "-ld3dcompiler"
+            ]
+        },
+        "d2d1": {
+            "label": "Direct2D 1",
+            "headers": [ "d2d1.h", "d2d1helper.h" ],
+            "sources": [
+                "-ld2d1"
+            ]
+        },
+        "d2d1_1": {
+            "label": "Direct2D 1.1",
+            "test": {
+                "main": [
+                    "ID2D1Factory1 *d2dFactory;",
+                    "D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, &d2dFactory);"
+                ]
+            },
+            "headers": [ "d2d1_1.h", "d2d1_1helper.h" ],
+            "sources": [
+                "-ld2d1"
+            ]
+        },
+        "dwrite": {
+            "label": "DirectWrite",
+            "test": {
+                "main": [
+                    "IDWriteFactory *factory = 0;",
+                    "DWriteCreateFactory(DWRITE_FACTORY_TYPE_SHARED, __uuidof(IDWriteFactory),",
+                    "                    (IUnknown **)(&factory));"
+                ]
+            },
+            "headers": "dwrite.h",
+            "sources": [
+                "-ldwrite"
+            ]
+        },
+        "dwrite_1": {
+            "label": "DirectWrite 1",
+            "headers": "dwrite_1.h",
+            "sources": [
+                "-ldwrite"
+            ]
+        },
+        "dwrite_2": {
+            "label": "DirectWrite 2",
+            "test": {
+                "main": [
+                    "IUnknown *factory = 0;",
+                    "(void)(size_t(DWRITE_E_NOCOLOR) + sizeof(IDWriteFontFace2));",
+                    "DWriteCreateFactory(DWRITE_FACTORY_TYPE_SHARED, __uuidof(IDWriteFactory2),",
+                    "                    &factory);"
+                ]
+            },
+            "headers": "dwrite_2.h",
+            "sources": [
+                "-ldwrite"
+            ]
+        },
+        "freetype": {
+            "label": "FreeType",
+            "test": {
+                "tail": [
+                    "#include FT_FREETYPE_H",
+                    "#if ((FREETYPE_MAJOR*10000 + FREETYPE_MINOR*100 + FREETYPE_PATCH) < 20200)",
+                    "#  error This version of freetype is too old.",
+                    "#endif"
+                ],
+                "main": [
+                    "FT_Face face = 0;"
+                ]
+            },
+            "headers": "ft2build.h",
+            "sources": [
+                { "type": "pkgConfig", "args": "freetype2" },
+                { "type": "freetype", "libs": "-lfreetype", "condition": "!config.wasm" },
+                { "libs": "-s USE_FREETYPE=1", "condition": "config.wasm" },
+                { "libs": "-lfreetype" }
+            ],
+            "use": [
+                { "lib": "zlib", "condition": "features.system-zlib" }
+            ]
+        },
+        "fontconfig": {
+            "label": "Fontconfig",
+            "test": {
+                "tail": [
+                    "#ifndef FC_RGBA_UNKNOWN",
+                    "#  error This version of fontconfig is too old, it is missing the FC_RGBA_UNKNOWN define",
+                    "#endif"
+                ],
+                "main": [
+                    "FcPattern *pattern = 0;"
+                ]
+            },
+            "headers": "fontconfig/fontconfig.h",
+            "sources": [
+                { "type": "pkgConfig", "args": "fontconfig" },
+                { "type": "freetype", "libs": "-lfontconfig" }
+            ],
+            "use": "freetype"
+        },
+        "harfbuzz": {
+            "label": "HarfBuzz",
+            "test": {
+                "tail": [
+                    "#if !HB_VERSION_ATLEAST(1, 6, 0)",
+                    "#  error This version of harfbuzz is too old.",
+                    "#endif"
+                ],
+                "main": [
+                    "hb_buffer_t *buffer = hb_buffer_create();",
+                    "const uint16_t string[] = { 'A', 'b', 'c' };",
+                    "hb_buffer_add_utf16(buffer, string, 3, 0, 3);",
+                    "hb_buffer_guess_segment_properties(buffer);",
+                    "hb_buffer_set_flags(buffer, hb_buffer_flags_t(HB_BUFFER_FLAG_PRESERVE_DEFAULT_IGNORABLES));",
+                    "hb_buffer_destroy(buffer);"
+                ]
+            },
+            "headers": "harfbuzz/hb.h",
+            "sources": [
+                "-lharfbuzz"
+            ]
+        },
+        "libjpeg": {
+            "label": "libjpeg",
+            "test": {
+                "head": [
+                    "#include <sys/types.h>",
+                    "#include <stdio.h>",
+                    "extern \"C\" {"
+                ],
+                "tail": [
+                    "}",
+                    "",
+                    "j_compress_ptr cinfo;"
+                ],
+                "main": "jpeg_create_compress(cinfo);"
+            },
+            "headers": "jpeglib.h",
+            "sources": [
+                { "libs": "-llibjpeg", "condition": "config.msvc" },
+                "-ljpeg"
+            ]
+        },
+        "libpng": {
+            "label": "libpng",
+            "test": {
+                "main": "(void) png_create_read_struct(PNG_LIBPNG_VER_STRING,0,0,0);"
+            },
+            "headers": "png.h",
+            "sources": [
+                { "type": "pkgConfig", "args": "libpng" },
+                { "libs": "-llibpng16", "condition": "config.msvc" },
+                { "libs": "-llibpng", "condition": "config.msvc" },
+                { "libs": "-lpng16", "condition": "!config.msvc" },
+                { "libs": "-lpng", "condition": "!config.msvc" },
+                { "libs": "-s USE_LIBPNG=1", "condition": "config.wasm" }
+            ],
+            "use": [
+                { "lib": "zlib", "condition": "features.system-zlib" }
+            ]
+        }
+    },
+
+    "tests": {
+        "fxc": {
+            "label": "Direct3D Shader Compiler",
+            "type": "fxc",
+            "log": "value"
+        }
+     },
+
+    "features": {
+        "directwrite": {
+            "label": "DirectWrite",
+            "emitIf": "config.win32",
+            "condition": "libs.dwrite",
+            "output": [ "privateFeature" ]
+        },
+        "directwrite1": {
+            "label": "DirectWrite 1",
+            "emitIf": "config.win32",
+            "condition": "libs.dwrite_1",
+            "output": [ "privateFeature" ]
+        },
+        "directwrite2": {
+            "label": "DirectWrite 2",
+            "emitIf": "config.win32",
+            "condition": "features.directwrite1 && libs.dwrite_2",
+            "output": [ "privateFeature" ]
+        },
+        "dxguid": {
+            "label": "DirectX GUID",
+            "condition": "config.win32 && libs.dxguid",
+            "output": [ "privateFeature" ]
+        },
+        "direct3d9": {
+            "label": "Direct 3D 9",
+            "condition": "config.win32 && !config.winrt && libs.d3d9",
+            "output": [ "privateFeature" ]
+        },
+        "dxgi": {
+            "label": "DirectX GI",
+            "condition": "config.win32 && libs.dxgi",
+            "output": [ "privateFeature" ]
+        },
+        "dxgi1_2": {
+            "label": "DirectX GI 1.2",
+            "condition": "features.dxgi && libs.dxgi1_2",
+            "output": [ "privateFeature" ]
+        },
+        "direct3d11": {
+            "label": "Direct 3D 11",
+            "condition": "features.dxgi && libs.d3d11",
+            "output": [ "privateFeature" ]
+        },
+        "direct3d11_1": {
+            "label": "Direct 3D 11.1",
+            "condition": "features.direct3d11 && features.dxgi1_2 && libs.d3d11_1",
+            "output": [ "privateFeature" ]
+        },
+        "direct2d": {
+            "label": "Direct 2D",
+            "condition": "config.win32 && !config.winrt && features.direct3d11 && libs.d2d1",
+            "output": [ "privateFeature" ]
+        },
+        "direct2d1_1": {
+            "label": "Direct 2D 1.1",
+            "condition": "features.direct2d && libs.d2d1_1",
+            "output": [ "privateFeature" ]
+        },
+        "freetype": {
+            "label": "FreeType",
+            "purpose": "Supports the FreeType 2 font engine (and its supported font formats).",
+            "section": "Fonts",
+            "output": [ "privateFeature", "feature" ]
+        },
+        "system-freetype": {
+            "label": "  Using system FreeType",
+            "enable": "input.freetype == 'system'",
+            "disable": "input.freetype == 'qt'",
+            "autoDetect": "!config.msvc",
+            "condition": "features.freetype && libs.freetype",
+            "output": [ "privateFeature" ]
+        },
+        "fontconfig": {
+            "label": "Fontconfig",
+            "autoDetect": "!config.darwin",
+            "condition": "!config.msvc && features.system-freetype && libs.fontconfig",
+            "output": [ "privateFeature", "feature" ]
+        },
+        "harfbuzz": {
+            "label": "HarfBuzz",
+            "output": [ "privateFeature", "feature" ]
+        },
+        "system-harfbuzz": {
+            "label": "  Using system HarfBuzz",
+            "enable": "input.harfbuzz == 'system'",
+            "disable": "input.harfbuzz == 'qt'",
+            "autoDetect": "!config.darwin && !config.win32",
+            "condition": "features.harfbuzz && libs.harfbuzz",
+            "output": [ "privateFeature" ]
+        },
+        "gif": {
+            "label": "GIF",
+            "condition": "features.imageformatplugin",
+            "output": [
+                "privateFeature",
+                { "type": "define", "negative": true, "name": "QT_NO_IMAGEFORMAT_GIF" }
+            ]
+        },
+        "ico": {
+            "label": "ICO",
+            "condition": "features.imageformatplugin",
+            "output": [ "privateFeature", "feature" ]
+        },
+        "jpeg": {
+            "label": "JPEG",
+            "disable": "input.libjpeg == 'no'",
+            "condition": "features.imageformatplugin",
+            "output": [
+                "privateFeature",
+                { "type": "define", "negative": true, "name": "QT_NO_IMAGEFORMAT_JPEG" }
+            ]
+        },
+        "system-jpeg": {
+            "label": "  Using system libjpeg",
+            "disable": "input.libjpeg == 'qt'",
+            "enable": "input.libjpeg == 'system'",
+            "condition": "features.jpeg && libs.libjpeg",
+            "output": [ "privateFeature" ]
+        },
+        "png": {
+            "label": "PNG",
+            "disable": "input.libpng == 'no'",
+            "output": [
+                "privateFeature",
+                { "type": "define", "negative": true, "name": "QT_NO_IMAGEFORMAT_PNG" }
+            ]
+        },
+        "system-png": {
+            "label": "  Using system libpng",
+            "disable": "input.libpng == 'qt'",
+            "enable": "input.libpng == 'system'",
+            "autoDetect": "features.system-zlib",
+            "condition": "features.png && libs.libpng",
+            "output": [ "privateFeature" ]
+        },
+        "texthtmlparser": {
+            "label": "HtmlParser",
+            "purpose": "Provides a parser for HTML.",
+            "section": "Kernel",
+            "output": [ "publicFeature", "feature" ]
+        },
+        "textodfwriter": {
+            "label": "OdfWriter",
+            "purpose": "Provides an ODF writer.",
+            "section": "Kernel",
+            "condition": "features.xmlstreamwriter",
+            "output": [ "publicFeature", "feature" ]
+        },
+        "cssparser": {
+            "label": "CssParser",
+            "purpose": "Provides a parser for Cascading Style Sheets.",
+            "section": "Kernel",
+            "output": [ "publicFeature", "feature" ]
+        },
+        "validator": {
+            "label": "QValidator",
+            "purpose": "Supports validation of input text.",
+            "section": "Widgets",
+            "output": [ "publicFeature", "feature" ]
+        },
+        "imageformatplugin": {
+            "label": "QImageIOPlugin",
+            "purpose": "Provides a base for writing a image format plugins.",
+            "section": "Images",
+            "output": [ "publicFeature", "feature" ]
+        },
+        "imageformat_bmp": {
+            "label": "BMP Image Format",
+            "purpose": "Supports Microsoft's Bitmap image file format.",
+            "section": "Images",
+            "output": [ "publicFeature", "feature" ]
+        },
+        "imageformat_ppm": {
+            "label": "PPM Image Format",
+            "purpose": "Supports the Portable Pixmap image file format.",
+            "section": "Images",
+            "output": [ "publicFeature", "feature" ]
+        },
+        "imageformat_xbm": {
+            "label": "XBM Image Format",
+            "purpose": "Supports the X11 Bitmap image file format.",
+            "section": "Images",
+            "output": [ "publicFeature", "feature" ]
+        },
+        "imageformat_xpm": {
+            "label": "XPM Image Format",
+            "purpose": "Supports the X11 Pixmap image file format.",
+            "section": "Images",
+            "output": [ "publicFeature", "feature" ]
+        },
+        "imageformat_png": {
+            "label": "PNG Image Format",
+            "purpose": "Supports the Portable Network Graphics image file format.",
+            "section": "Images",
+            "output": [ "publicFeature", "feature" ]
+        },
+        "imageformat_jpeg": {
+            "label": "JPEG Image Format",
+            "purpose": "Supports the Joint Photographic Experts Group image file format.",
+            "section": "Images",
+            "output": [ "publicFeature", "feature" ]
+        },
+        "image_heuristic_mask": {
+            "label": "QImage::createHeuristicMask()",
+            "purpose": "Supports creating a 1-bpp heuristic mask for images.",
+            "section": "Images",
+            "output": [ "publicFeature", "feature" ]
+        },
+        "image_text": {
+            "label": "Image Text",
+            "purpose": "Supports image file text strings.",
+            "section": "Images",
+            "output": [ "publicFeature", "feature" ]
+        },
+        "picture": {
+            "label": "QPicture",
+            "purpose": "Supports recording and replaying QPainter commands.",
+            "section": "Painting",
+            "output": [ "publicFeature", "feature" ]
+        },
+        "colornames": {
+            "label": "Color Names",
+            "purpose": "Supports color names such as \"red\", used by QColor and by some HTML documents.",
+            "section": "Painting",
+            "output": [ "publicFeature", "feature" ]
+        },
+        "pdf": {
+            "label": "QPdf",
+            "purpose": "Provides a PDF backend for QPainter.",
+            "section": "Painting",
+            "condition": "features.temporaryfile",
+            "output": [ "publicFeature", "feature" ]
+        },
+        "multiprocess": {
+            "label": "Multi process",
+            "purpose": "Provides support for detecting the desktop environment, launching external processes and opening URLs.",
+            "section": "Utilities",
+            "output": [ "privateFeature" ]
+        },
+        "whatsthis": {
+            "label": "QWhatsThis",
+            "purpose": "Supports displaying \"What's this\" help.",
+            "section": "Widget Support",
+            "output": [ "publicFeature", "feature" ]
+        }
+    },
+
+    "report": [
+        {
+            "type": "warning",
+            "condition": "config.darwin && features.system-harfbuzz",
+            "message": "On OS X, AAT is supported only with -qt-harfbuzz."
+        }
+    ],
+
+    "summary": [
+        {
+            "section": "Qt Gui",
+            "entries": [
+                "freetype",
+                "system-freetype",
+                "harfbuzz",
+                "system-harfbuzz",
+                "fontconfig",
+                {
+                    "section": "Image formats",
+                    "entries": [
+                        "gif", "ico", "jpeg", "system-jpeg", "png", "system-png"
+                    ]
+                }
+            ]
+        }
+    ]
+}

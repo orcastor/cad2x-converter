@@ -1,0 +1,121 @@
+Qt_5_PRIVATE_API {
+    qt_private_api_tag*;
+    /* /opt/cad2x-converter/3rdparty/qtbase/src/gui/image/qimage_p.h */
+    *10QImageData*;
+    /* /opt/cad2x-converter/3rdparty/qtbase/src/gui/kernel/qinternalmimedata_p.h */
+    *17QInternalMimeData*;
+    /* /opt/cad2x-converter/3rdparty/qtbase/src/gui/painting/qbezier_p.h */
+    *7QBezier*;
+    /* /opt/cad2x-converter/3rdparty/qtbase/src/gui/painting/qcolorprofile_p.h */
+    *13QColorProfile*;
+    /* /opt/cad2x-converter/3rdparty/qtbase/src/gui/painting/qcoregraphics_p.h */
+    *13QMacCGContext*;
+    /* /opt/cad2x-converter/3rdparty/qtbase/src/gui/painting/qpagedpaintdevice_p.h */
+    *24QPagedPaintDevicePrivate*;
+    /* /opt/cad2x-converter/3rdparty/qtbase/src/gui/painting/qpaintengine_p.h */
+    *19QPaintEnginePrivate*;
+    /* /opt/cad2x-converter/3rdparty/qtbase/src/gui/painting/qpaintengine_raster_p.h */
+    *18QRasterPaintEngine*;
+    /* /opt/cad2x-converter/3rdparty/qtbase/src/gui/painting/qpaintengineex_p.h */
+    *14QPaintEngineEx*;
+    *21QPaintEngineExPrivate*;
+    /* /opt/cad2x-converter/3rdparty/qtbase/src/gui/painting/qpainter_p.h */
+    *13QPainterState*;
+    /* /opt/cad2x-converter/3rdparty/qtbase/src/gui/painting/qpathclipper_p.h */
+    *12QPathClipper*;
+    *11QWingedEdge*;
+    /* /opt/cad2x-converter/3rdparty/qtbase/src/gui/painting/qpdf_p.h */
+    *10QPdfEngine*;
+    *17QPdfEnginePrivate*;
+    /* /opt/cad2x-converter/3rdparty/qtbase/src/gui/painting/qstroker_p.h */
+    *11QStrokerOps*;
+    *8QStroker*;
+    *12QDashStroker*;
+    /* /opt/cad2x-converter/3rdparty/qtbase/src/gui/painting/qtextureglyphcache_p.h */
+    *18QTextureGlyphCache*;
+    *23QImageTextureGlyphCache*;
+    /* /opt/cad2x-converter/3rdparty/qtbase/src/gui/painting/qtriangulatingstroker_p.h */
+    *21QTriangulatingStroker*;
+    *22QDashedStrokeProcessor*;
+    /* /opt/cad2x-converter/3rdparty/qtbase/src/gui/painting/qtriangulator_p.h */
+    *18QVertexIndexVector*;
+    *12QTriangleSet*;
+    *12QPolylineSet*;
+    /* /opt/cad2x-converter/3rdparty/qtbase/src/gui/painting/qvectorpath_p.h */
+    *11QVectorPath*;
+    /* /opt/cad2x-converter/3rdparty/qtbase/src/gui/text/qabstracttextdocumentlayout_p.h */
+    *34QAbstractTextDocumentLayoutPrivate*;
+    /* /opt/cad2x-converter/3rdparty/qtbase/src/gui/text/qcssparser_p.h */
+    *11Declaration*;
+    *8Selector*;
+    *13StyleSelector*;
+    *7Scanner*;
+    *6Parser*;
+    *14ValueExtractor*;
+    /* /opt/cad2x-converter/3rdparty/qtbase/src/gui/text/qdistancefield_p.h */
+    *18QDistanceFieldData*;
+    *14QDistanceField*;
+    /* /opt/cad2x-converter/3rdparty/qtbase/src/gui/text/qfont_p.h */
+    *12QFontPrivate*;
+    *10QFontCache*;
+    /* /opt/cad2x-converter/3rdparty/qtbase/src/gui/text/qfontengine_p.h */
+    *11QFontEngine*;
+    *16QFontEngineMulti*;
+    /* /opt/cad2x-converter/3rdparty/qtbase/src/gui/text/qfontengine_qpf2_p.h */
+    *15QFontEngineQPF2*;
+    /* /opt/cad2x-converter/3rdparty/qtbase/src/gui/text/qfontengineglyphcache_p.h */
+    *21QFontEngineGlyphCache*;
+    /* /opt/cad2x-converter/3rdparty/qtbase/src/gui/text/qrawfont_p.h */
+    *15QRawFontPrivate*;
+    /* /opt/cad2x-converter/3rdparty/qtbase/src/gui/text/qstatictext_p.h */
+    *19QStaticTextUserData*;
+    *15QStaticTextItem*;
+    *18QStaticTextPrivate*;
+    /* /opt/cad2x-converter/3rdparty/qtbase/src/gui/text/qtextcursor_p.h */
+    *18QTextCursorPrivate*;
+    /* /opt/cad2x-converter/3rdparty/qtbase/src/gui/text/qtextdocument_p.h */
+    *20QTextDocumentPrivate*;
+    /* /opt/cad2x-converter/3rdparty/qtbase/src/gui/text/qtextdocumentlayout_p.h */
+    *19QTextDocumentLayout*;
+    /* /opt/cad2x-converter/3rdparty/qtbase/src/gui/text/qtextengine_p.h */
+    *15glyph_metrics_t*;
+    *15QScriptAnalysis*;
+    *11QScriptLine*;
+    *11QTextEngine*;
+    *16QStackTextEngine*;
+    /* /opt/cad2x-converter/3rdparty/qtbase/src/gui/text/qtextformat_p.h */
+    *21QTextFormatCollection*;
+    /* /opt/cad2x-converter/3rdparty/qtbase/src/gui/text/qtextimagehandler_p.h */
+    *17QTextImageHandler*;
+    /* /opt/cad2x-converter/3rdparty/qtbase/src/gui/text/qtextodfwriter_p.h */
+    *14QTextOdfWriter*;
+    /* /opt/cad2x-converter/3rdparty/qtbase/src/gui/text/qzipreader_p.h */
+    *10QZipReader*;
+    /* /opt/cad2x-converter/3rdparty/qtbase/src/gui/text/qzipwriter_p.h */
+    *10QZipWriter*;
+    /* /opt/cad2x-converter/3rdparty/qtbase/src/gui/util/qabstractlayoutstyleinfo_p.h */
+    *24QAbstractLayoutStyleInfo*;
+    /* /opt/cad2x-converter/3rdparty/qtbase/src/gui/util/qgridlayoutengine_p.h */
+    *14QGridLayoutBox*;
+    *15QGridLayoutItem*;
+    *17QGridLayoutEngine*;
+    /* /opt/cad2x-converter/3rdparty/qtbase/src/gui/util/qlayoutpolicy_p.h */
+    *13QLayoutPolicy*;
+    /* /opt/cad2x-converter/3rdparty/qtbase/src/gui/text/qplatformfontdatabase.h */
+    *24QSupportedWritingSystems*;
+    *21QPlatformFontDatabase*;
+};
+Qt_5 { *; };
+Qt_5.0 {} Qt_5;
+Qt_5.1 {} Qt_5.0;
+Qt_5.2 {} Qt_5.1;
+Qt_5.3 {} Qt_5.2;
+Qt_5.4 {} Qt_5.3;
+Qt_5.5 {} Qt_5.4;
+Qt_5.6 {} Qt_5.5;
+Qt_5.7 {} Qt_5.6;
+Qt_5.8 {} Qt_5.7;
+Qt_5.9 {} Qt_5.8;
+Qt_5.10 {} Qt_5.9;
+Qt_5.11 {} Qt_5.10;
+Qt_5.12 { qt_version_tag; } Qt_5.11;

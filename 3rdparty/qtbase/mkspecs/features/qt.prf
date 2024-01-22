@@ -1,0 +1,157 @@
+# This avoids spurious errors when a project is explicitly disabled
+# due to required Qt modules being missing.
+!isEmpty(QMAKE_FAILED_REQUIREMENTS): return()
+
+CONFIG *= thread
+
+#handle defines
+win32 {
+   qtConfig(shared) {
+      # this variable is read by qmake in qmake/generators/win32/msvc_vcproj.cpp
+      # function VcprojGenerator::initDeploymentTool()
+      QMAKE_DLL_PATHS += $$[QT_INSTALL_BINS/get]
+   }
+}
+CONFIG(release, debug|release):DEFINES += QT_NO_DEBUG
+qtConfig(force_asserts): DEFINES += QT_FORCE_ASSERTS
+no_keywords:DEFINES += QT_NO_KEYWORDS
+
+help {
+    warning("CONFIG+=help is deprecated. Use QT+=help instead.")
+    QT += help-private   # sic!
+}
+designer {
+    warning("CONFIG+=designer is deprecated. Use QT+=designer instead.")
+    QT += designer
+}
+uitools {
+    warning("CONFIG+=uitools is deprecated. Use QT+=uitools instead.")
+    QT += uitools
+}
+qaxcontainer {
+    warning("CONFIG+=qaxcontainer is deprecated. Use QT+=axcontainer instead.")
+    QT += axcontainer
+}
+qaxserver {
+    warning("CONFIG+=qaxserver is deprecated. Use QT+=axserver instead.")
+    QT += axserver
+}
+
+# qmake variables cannot contain dashes, so normalize the names first
+CLEAN_QT = $$replace(QT, -private$, _private)
+CLEAN_QT_PRIVATE = $$replace(QT_PRIVATE, -private$, _private)
+
+qt_module_deps = $$CLEAN_QT $$CLEAN_QT_PRIVATE
+all_qt_module_deps = $$resolve_depends(qt_module_deps, "QT.", ".depends" ".run_depends")
+
+# target variable, flag source variable
+defineTest(qtProcessModuleFlags) {
+    for(flag, $$2) {
+        contains(flag, ^-.*): \
+            $$1 -= $$replace(flag, ^-, )
+        else: \
+            $$1 += $$flag
+    }
+    export($$1)
+}
+
+unset(using_privates)
+var_sfx =
+for(ever) {
+    # Topological resolution of modules based on their QT.<module>.depends variable
+    FULL_QT$$var_sfx = $$resolve_depends(CLEAN_QT$$var_sfx, "QT.")
+    # Finally actually add the modules
+    unset(BAD_QT)
+    for(QTLIB, FULL_QT$$var_sfx) {
+        MODULE_NAME = $$eval(QT.$${QTLIB}.name)
+        MODULE_MODULE = $$eval(QT.$${QTLIB}.module)
+        MODULE_INCLUDES = $$eval(QT.$${QTLIB}.includes)
+        MODULE_LIBS = $$eval(QT.$${QTLIB}.libs)
+        MODULE_FRAMEWORKS = $$eval(QT.$${QTLIB}.frameworks)
+        MODULE_USES = $$eval(QT.$${QTLIB}.uses)
+        MODULE_CONFIG = $$eval(QT.$${QTLIB}.module_config)
+
+        isEmpty(MODULE_NAME) {
+            BAD_QT += $$QTLIB
+            next()
+        }
+
+        contains(MODULE_CONFIG, internal_module): \
+            using_privates = true
+        contains(MODULE_CONFIG, ltcg): \
+            CONFIG += link_ltcg
+
+        qtProcessModuleFlags(CONFIG, QT.$${QTLIB}.CONFIG)
+        qtProcessModuleFlags(DEFINES, QT.$${QTLIB}.DEFINES)
+
+        MODULE_INCLUDES -= $$QMAKE_DEFAULT_INCDIRS
+
+        # Frameworks shouldn't need include paths, but much code does not use
+        # module-qualified #includes, so by default we add paths which point
+        # directly into the frameworks. Private modules have somewhat convoluted
+        # header paths, so adding them is necessary in every case.
+        !if(contains(MODULE_CONFIG, lib_bundle):qt_no_framework_direct_includes) \
+                |contains(MODULE_CONFIG, internal_module): \
+            INCLUDEPATH *= $$MODULE_INCLUDES
+        QMAKE_FRAMEWORKPATH *= $$MODULE_FRAMEWORKS
+        !isEmpty(MODULE_MODULE) {
+            contains(MODULE_CONFIG, lib_bundle) {
+                framework = $$MODULE_MODULE
+                # Linking frameworks by absolute path does not work.
+                LIBS$$var_sfx += -framework $$framework
+            } else {
+                lib = $$MODULE_MODULE$$qtPlatformTargetSuffix()
+                win32|contains(MODULE_CONFIG, staticlib) {
+                    lib = $$MODULE_LIBS/$$QMAKE_PREFIX_STATICLIB$${lib}.$$QMAKE_EXTENSION_STATICLIB
+                    PRE_TARGETDEPS += $$lib
+                } else {
+                    lib = $$MODULE_LIBS/$$QMAKE_PREFIX_SHLIB$${lib}.$$QMAKE_EXTENSION_SHLIB
+                }
+                LIBS$$var_sfx += $$lib
+            }
+        }
+        QMAKE_USE$$var_sfx += $$MODULE_USES
+        # Add capabilities as defined by modules used in the project
+        winrt {
+            MODULE_WINRT_CAPABILITIES = $$eval(QT.$${QTLIB}.winrt_capabilities)
+            !isEmpty(MODULE_WINRT_CAPABILITIES): \
+                WINRT_MANIFEST.capabilities_default += $$MODULE_WINRT_CAPABILITIES
+            MODULE_WINRT_CAPABILITIES_DEVICE = $$eval(QT.$${QTLIB}.winrt_capabilities_device)
+            !isEmpty(MODULE_WINRT_CAPABILITIES_DEVICE): \
+                WINRT_MANIFEST.capabilities_device_default += $$MODULE_WINRT_CAPABILITIES_DEVICE
+        }
+    }
+    !isEmpty(BAD_QT):error("Unknown module(s) in QT$$var_sfx: $$replace(BAD_QT, _private$, -private)")
+
+    !isEmpty(var_sfx): break()
+    var_sfx = _PRIVATE
+}
+!isEmpty(using_privates):!no_private_qt_headers_warning:!build_pass {
+    message("This project is using private headers and will therefore be tied to this specific Qt module build version.")
+    message("Running this project against other versions of the Qt modules may crash at any arbitrary point.")
+    message("This is not a bug, but a result of using Qt internals. You have been warned!")
+}
+
+!no_qt_rpath:!static:qtConfig(rpath):!qtConfig(static):\
+        contains(all_qt_module_deps, core) {
+    relative_qt_rpath:!isEmpty(QMAKE_REL_RPATH_BASE):contains(INSTALLS, target):\
+            isEmpty(target.files):isEmpty(target.commands):isEmpty(target.extra) {
+        # NOT the /dev property, as INSTALLS use host paths
+        QMAKE_RPATHDIR += $$relative_path($$[QT_INSTALL_LIBS], $$qtRelativeRPathBase())
+    } else {
+        QMAKE_RPATHDIR += $$[QT_INSTALL_LIBS/dev]
+    }
+}
+
+!isEmpty(QMAKE_LFLAGS_RPATHLINK):!qtConfig(static) {
+    # -rpath-link is used by the linker to find dependencies of dynamic
+    # libraries which were NOT specified on the command line.
+    # This means that paths of direct dependencies (QT & QT_PRIVATE)
+    # don't need to be listed, unlike their private dependencies' paths.
+    privdep = $$all_qt_module_deps
+    privdep -= $$resolve_depends(qt_module_deps, "QT.")
+    rpaths =
+    for(dep, privdep): \
+        rpaths += $$eval(QT.$${dep}.libs)
+    QMAKE_RPATHLINKDIR *= $$unique(rpaths)
+}
