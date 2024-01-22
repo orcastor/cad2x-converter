@@ -22,7 +22,7 @@ macx|win32|equals(build_muparser, "true")|!packagesExist(muparser){
 	DEPENDPATH += $$MUPARSER_DIR/include \
 				$$MUPARSER_DIR/src
 	INCLUDEPATH += $$MUPARSER_DIR/include
-	GEN_LIB_DIR = ../generated/lib
+	GEN_LIB_DIR = ../generated/lib ../3rdparty/qtbase/lib
 	LIBS += -L$$GEN_LIB_DIR -lmuparser
 	msvc {
 		PRE_TARGETDEPS += $$GEN_LIB_DIR/muparser.lib
@@ -33,6 +33,18 @@ macx|win32|equals(build_muparser, "true")|!packagesExist(muparser){
     message("Using external muparser")
     CONFIG += link_pkgconfig
     PKGCONFIG += muparser
+}
+
+QTBASE_DIR = ../3rdparty/qtbase
+DEPENDPATH += $$QTBASE_DIR/include \
+            $$QTBASE_DIR/src
+INCLUDEPATH += $$QTBASE_DIR/include
+GEN_LIB_DIR = $$QTBASE_DIR/lib
+LIBS += -L$$GEN_LIB_DIR -lQt5Core -lQt5Gui
+msvc {
+    PRE_TARGETDEPS += $$GEN_LIB_DIR/Qt5Core.lib $$GEN_LIB_DIR/Qt5Gui.lib
+} else {
+    PRE_TARGETDEPS += $$GEN_LIB_DIR/libQt5Core.a $$GEN_LIB_DIR/libQt5Gui.a
 }
 
 QT -= widgets

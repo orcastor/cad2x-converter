@@ -1,27 +1,53 @@
 # cad2x
 A standalone tool that can convert cad file(dxf, dwg) to other formats(pdf, png, svg) from LibreCAD.
 
-You can refer to original [BUILDING FROM SOURCE](https://github.com/LibreCAD/LibreCAD/wiki/Build-from-source#generic-unix) page.
+You can refer to original [LibreCAD Wiki - BUILD FROM SOURCE](https://github.com/LibreCAD/LibreCAD/wiki/Build-from-source#generic-unix) page first.
 
 ``` sh
-apt-get install g++ gcc make git-core libmuparser-dev libfreetype6-dev libicu-dev pkg-config
+apt-get install g++ gcc make git-core pkg-config -y --no-install-recommends
 ```
 
-## How to config
+## How to build modified `qtbase(Qt 5.12.12)`
 
 - static library
 ``` sh
 ./configure -developer-build -release -no-iconv -no-icu -static -confirm-license -opensource
-qmake -qt=qt5 -r -- -developer-build -release -no-iconv -no-icu -static -confirm-license -opensource
-make -j20 staticlib # just in module dir
+
+# qmake -qt=qt5 -r -- -developer-build -release -no-iconv -no-icu -static -confirm-license -opensource
+
+cd ./3rdparty/qtbase/src/corelib
+make -j20 staticlib
+make install
+
+cd -
+cd ./3rdparty/qtbase/src/gui
+make -j20 staticlib
+make install
 ```
 
 - shared library
 ``` sh
 ./configure -developer-build -release -no-iconv -no-icu -confirm-license -opensource -R .
-qmake -qt=qt5 -r -- -developer-build -release -no-iconv -no-icu -confirm-license -opensource -R .
+
+# qmake -qt=qt5 -r -- -developer-build -release -no-iconv -no-icu -confirm-license -opensource -R .
+
+cd ./3rdparty/qtbase/src/corelib
+make -j20
+make install
+
+cd -
+cd ./3rdparty/qtbase/src/gui
+make -j20
+make install
+```
+
+## How to build cad2x
+
+``` sh
+qmake -qt=qt5 -r
 make -j20
 ```
+
 
 ## Features
 
