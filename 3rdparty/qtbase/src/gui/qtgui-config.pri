@@ -1,12 +1,10 @@
 QT.gui.enabled_features = colornames cssparser imageformatplugin image_heuristic_mask image_text imageformat_bmp imageformat_jpeg imageformat_png imageformat_ppm imageformat_xbm imageformat_xpm pdf picture texthtmlparser textodfwriter validator whatsthis
 QT.gui.disabled_features = 
-QT.gui.QT_CONFIG = colornames cssparser egl freetype fontconfig imageformatplugin harfbuzz ico image_heuristic_mask image_text imageformat_bmp imageformat_jpeg imageformat_png imageformat_ppm imageformat_xbm imageformat_xpm pdf picture texthtmlparser textodfwriter validator whatsthis
+QT.gui.QT_CONFIG = colornames cssparser freetype fontconfig imageformatplugin harfbuzz ico image_heuristic_mask image_text imageformat_bmp imageformat_jpeg imageformat_png imageformat_ppm imageformat_xbm imageformat_xpm pdf picture texthtmlparser textodfwriter validator whatsthis
 QT.gui.exports = 
-QT.gui_private.enabled_features = egl egl_x11 freetype system-freetype fontconfig gif harfbuzz ico jpeg multiprocess png system-jpeg system-png
-QT.gui_private.disabled_features = direct2d direct2d1_1 dxgi direct3d11 direct3d11_1 direct3d9 dxgi1_2 dxguid mtdev system-harfbuzz texture_format_astc_experimental tslib vsp2
-QT.gui_private.libraries = egl xlib freetype fontconfig libjpeg libpng
-QMAKE_LIBS_EGL = /usr/lib/aarch64-linux-gnu/libEGL.so
-QMAKE_LIBS_XLIB = /usr/lib/aarch64-linux-gnu/libXext.so /usr/lib/aarch64-linux-gnu/libX11.so /usr/lib/aarch64-linux-gnu/libm.so
+QT.gui_private.enabled_features = freetype system-freetype fontconfig gif harfbuzz ico jpeg multiprocess png system-jpeg system-png
+QT.gui_private.disabled_features = direct2d direct2d1_1 dxgi direct3d11 direct3d11_1 direct3d9 dxgi1_2 dxguid system-harfbuzz
+QT.gui_private.libraries = freetype fontconfig libjpeg libpng
 QMAKE_LIBS_FREETYPE = /usr/lib/aarch64-linux-gnu/libfreetype.so
 QMAKE_INCDIR_FREETYPE = /usr/include/freetype2 /usr/include/libpng16
 QMAKE_DEPENDS_FREETYPE_CC = ZLIB
