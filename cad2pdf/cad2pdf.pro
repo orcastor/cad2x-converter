@@ -86,7 +86,6 @@ HEADERS += \
     ../src/rs_atomicentity.h \
     ../src/rs_block.h \
     ../src/rs_blocklist.h \
-    ../src/rs_blocklistlistener.h \
     ../src/rs_circle.h \
     ../src/rs_color.h \
     ../src/rs_constructionline.h \
@@ -118,7 +117,6 @@ HEADERS += \
     ../src/rs_insert.h \
     ../src/rs_layer.h \
     ../src/rs_layerlist.h \
-    ../src/rs_layerlistlistener.h \
     ../src/rs_leader.h \
     ../src/rs_line.h \
     ../src/rs_linetypepattern.h \
@@ -134,9 +132,6 @@ HEADERS += \
     ../src/rs_solid.h \
     ../src/rs_spline.h \
     ../src/rs_text.h \
-    ../src/rs_undo.h \
-    ../src/rs_undoable.h \
-    ../src/rs_undocycle.h \
     ../src/rs_units.h \
     ../src/rs_utility.h \
     ../src/rs_variable.h \
@@ -203,9 +198,6 @@ SOURCES += \
     ../src/rs_solid.cpp \
     ../src/rs_spline.cpp \
     ../src/rs_text.cpp \
-    ../src/rs_undo.cpp \
-    ../src/rs_undoable.cpp \
-    ../src/rs_undocycle.cpp \
     ../src/rs_units.cpp \
     ../src/rs_utility.cpp \
     ../src/rs_variabledict.cpp \
