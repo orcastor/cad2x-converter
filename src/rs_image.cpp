@@ -93,50 +93,12 @@ void RS_Image::updateData(RS_Vector size, RS_Vector Uv, RS_Vector Vv) {
 }
 
 void RS_Image::update() {
+    // RS_DEBUG->print("RS_Image::update");
 
-    RS_DEBUG->print("RS_Image::update");
-
-    RS_DEBUG->print("RS_Image::update: OK");
-
-    /*
-    // number of small images:
-    nx = image.width()/100;
-    ny = image.height()/100;
-
-    // create small images:
-    img = new QImage*[nx];
-    QPixmap pm;
-    int w,h;
-    for (int x = 0; x<nx; ++x) {
-        img[x] = new QImage[ny];
-        for (int y = 0; y<ny; ++y) {
-                if (x<nx-1) {
-                        w = 100;
-                }
-                else {
-                        w = image.width()%100;
-                }
-
-                if (y<ny-1) {
-                        h = 100;
-                }
-                else {
-                        h = image.height()%100;
-                }
-
-                pm = QPixmap(w, h);
-                RS_PainterQt painter(&pm);
-                painter.drawImage(-x*100, -y*100, image);
-                img[x][y] = pm.convertToImage();
-        }
-    }
-    */
+    // RS_DEBUG->print("RS_Image::update: OK");
 }
 
-
-
 void RS_Image::calculateBorders() {
-
     RS_VectorSolutions sol = getCorners();
         minV =  RS_Vector::minimum(
                 RS_Vector::minimum(sol.get(0), sol.get(1)),
@@ -149,16 +111,16 @@ void RS_Image::calculateBorders() {
 }
 
 RS_VectorSolutions RS_Image::getCorners() const {
-        RS_VectorSolutions sol(4);
+    RS_VectorSolutions sol(4);
 
-        sol.set(0, data.insertionPoint);
-        sol.set(1,
-                data.insertionPoint + data.uVector*RS_Math::round(data.size.x));
-        sol.set(3,
-                data.insertionPoint + data.vVector*RS_Math::round(data.size.y));
-        sol.set(2, sol.get(3) + data.uVector*RS_Math::round(data.size.x));
+    sol.set(0, data.insertionPoint);
+    sol.set(1,
+            data.insertionPoint + data.uVector*RS_Math::round(data.size.x));
+    sol.set(3,
+            data.insertionPoint + data.vVector*RS_Math::round(data.size.y));
+    sol.set(2, sol.get(3) + data.uVector*RS_Math::round(data.size.x));
 
-        return sol;
+    return sol;
 }
 
 /**
