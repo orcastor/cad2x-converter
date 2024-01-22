@@ -31,13 +31,12 @@
 */
 
 #include <cmath>
+#include <regex>
 #include <iomanip>
 #include <complex>
 #include <float.h>
 #include <muParser.h>
 #include <QString>
-#include <QRegularExpression>
-#include <QRegularExpressionMatch>
 #include <QDebug>
 
 #include "rs.h"
@@ -52,20 +51,21 @@
 
 namespace {
     constexpr double m_piX2 = M_PI*2; //2*PI
-    const QRegularExpression unitreg(
-        R"((?P<sign>^-?))"
-        R"((?:(?:(?:(?P<degrees>\d+\.?\d*)(?:degree[s]?|deg|[Dd]|°)))"  // DMS
-            R"((?:(?P<minutes>\d+\.?\d*)(?:minute[s]?|min|[Mm]|'))?)"
-            R"((?:(?P<seconds>\d+\.?\d*)(?:second[s]?|sec|[Ss]|"))?$)|)"
-        R"((?:(?:(?P<meters>\d+\.?\d*)(?:meter[s]?|m(?![m])))?)"        // Metric
-            R"((?:(?P<centis>\d+\.?\d*)(?:centimeter[s]?|centi|cm))?)"
-            R"((?:(?P<millis>\d+\.?\d*)(?:millimeter[s]?|mm))?$)|)"
-        R"((?:(?:(?P<yards>\d+\.?\d*)(?:yards|yard|yd))?)"              // Imperial
-            R"((?:(?P<feet>\d+\.?\d*)(?:feet|foot|ft|'))?)"
-            R"((?:(?P<inches>\d+\.?\d*)[-+]?)"
-                R"((?:(?P<numer>\d+)\/(?P<denom>\d+))?)"                // rational inches
-            R"((?:inches|inch|in|"))?$)))"
-	);
+    // 将 QRegularExpression 转换为 std::regex
+    const std::regex unitreg(
+        R"((^[-+]?)"
+        R"((?:(?:(?:(\d+\.?\d*)(?:degree[s]?|deg|[Dd]|°)))"  // DMS
+        R"((?:(\d+\.?\d*)(?:minute[s]?|min|[Mm]|'))?)"
+        R"((?:(\d+\.?\d*)(?:second[s]?|sec|[Ss]|"))?$)|)"
+        R"((?:(?:(\d+\.?\d*)(?:meter[s]?|m(?![m])))?)"        // Metric
+        R"((?:(\d+\.?\d*)(?:centimeter[s]?|centi|cm))?)"
+        R"((?:(\d+\.?\d*)(?:millimeter[s]?|mm))?$)|)"
+        R"((?:(?:(\d+\.?\d*)(?:yards|yard|yd))?)"              // Imperial
+        R"((?:(\d+\.?\d*)(?:feet|foot|ft|'))?)"
+        R"((?:(\d+\.?\d*)[-+]?)"
+        R"((?:(\d+)\/(\d+))?)"                // rational inches
+        R"((?:inches|inch|in|"))?$)))"
+    );
 }
 
 /**
@@ -285,16 +285,6 @@ double RS_Math::eval(const QString& expr, double def) {
 
     return res;
 }
-/**
- * Helper function for derationalize; convert one unit to base unit using
- * provided regex match, named group, conversion factor, and default value.
- */
-double RS_Math::convert_unit(const QRegularExpressionMatch& match, const QString& name, double factor, double defval) {
-    if (!match.captured(name).isNull())
-        LC_ERR <<"name="<<name<<": "<<  match.captured(name);
-    QString input = (!match.captured(name).isNull()) ? match.captured(name) : QString("%1").arg(defval);
-    return input.toDouble() * factor;
-}
 
 /**
  * Convert a string containing rational numbers (fractions) and / or
@@ -304,25 +294,31 @@ double RS_Math::convert_unit(const QRegularExpressionMatch& match, const QString
 QString RS_Math::derationalize(const QString& expr) {
 	RS_DEBUG->print(RS_Debug::D_DEBUGGING, "RS_Math::derationalize: expr = '%s'", expr.toLatin1().data());
 
-	QRegularExpressionMatch match = unitreg.match(expr);
-	if (match.hasMatch()){
-		RS_DEBUG->print(RS_Debug::D_DEBUGGING,
-			"RS_Math::derationalize: matches = '%s'", match.capturedTexts().join(", ").toLatin1().data());
-		double total = 0.0;
-		int sign = (match.captured("sign").isNull() || match.captured("sign") == "") ? 1 : -1;
+	std::smatch match;
+    if (std::regex_match(expr.toLatin1().data(), match, unitreg)) {
+        for (size_t i = 1; i < match.size(); ++i) {
+            std::cout << "Capture group " << i << ": " << match[i] << std::endl;
+        }
+        
+        int sign = (match[1].str().empty()) ? 1 : -1;
+        double total = 0.0;
 
-        // convert_unit(<match obj ref>, <regex group name>, <unit->base conversion factor>, <default value>)
-        total += convert_unit(match, "degrees", 1.0, 0.0);
-        total += convert_unit(match, "minutes", 1/60.0, 0.0);
-        total += convert_unit(match, "seconds", 1/3600.0, 0.0);
-        total += convert_unit(match, "meters", 100.0, 0.0);
-        total += convert_unit(match, "centis", 1.0, 0.0);
-        total += convert_unit(match, "millis", 0.1, 0.0);
-        total += convert_unit(match, "yards", 36.0, 0.0);
-        total += convert_unit(match, "feet", 12.0, 0.0);
-        total += convert_unit(match, "inches", 1.0, 0.0);
-        total += convert_unit(match, "numer", 1.0, 0.0) / convert_unit(match, "denom", 1.0, 1.0);
-		total *= sign;
+        auto convert_unit = [&](int idx, double factor, double defaultValue) {
+            return (match[idx].str().empty()) ? defaultValue : std::stod(match[idx].str()) * factor;
+        };
+
+        total += convert_unit(2, 1.0, 0.0);
+        total += convert_unit(4, 1/60.0, 0.0);
+        total += convert_unit(6, 1/3600.0, 0.0);
+        total += convert_unit(8, 100.0, 0.0);
+        total += convert_unit(10, 1.0, 0.0);
+        total += convert_unit(12, 0.1, 0.0);
+        total += convert_unit(14, 36.0, 0.0);
+        total += convert_unit(16, 12.0, 0.0);
+        total += convert_unit(18, 1.0, 0.0);
+        total += convert_unit(20, 1.0, 0.0) / convert_unit(22, 1.0, 1.0);
+
+        total *= sign;
 
 		RS_DEBUG->print("RS_Math::derationalize: total = '%f'", total);
 		return QString("%1").arg(total);		

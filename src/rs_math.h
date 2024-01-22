@@ -32,7 +32,6 @@
 class RS_Vector;
 class RS_VectorSolutions;
 class QString;
-class QRegularExpressionMatch;
 
 /**
  * Math functions.
@@ -70,7 +69,6 @@ bool isAngleReadable(double angle);
 bool isSameDirection(double dir1, double dir2, double tol);
 
 //! \convert measurement strings with rationals or unit symbols to current unit
-double convert_unit(const QRegularExpressionMatch &, const QString &, double, double);
 QString derationalize(const QString &expr);
 
 //! \{ \brief evaluate a math string
