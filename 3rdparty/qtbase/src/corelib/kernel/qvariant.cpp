@@ -2388,14 +2388,14 @@ static const ushort mapIdFromQt3ToCurrent[MapFromThreeCount] =
     QVariant::String,
     QVariant::StringList,
     QVariant::Font,
-    QVariant::Pixmap,
+    0, // Pixmap
     QVariant::Brush,
     QVariant::Rect,
     QVariant::Size,
     QVariant::Color,
     QVariant::Palette,
     0, // ColorGroup
-    QVariant::Icon,
+    0, // Icon
     QVariant::Point,
     QVariant::Image,
     QVariant::Int,
@@ -2405,15 +2405,15 @@ static const ushort mapIdFromQt3ToCurrent[MapFromThreeCount] =
     0, // Buggy ByteArray, QByteArray never had id == 20
     QVariant::Polygon,
     QVariant::Region,
-    QVariant::Bitmap,
-    QVariant::Cursor,
+    0, // Bitmap
+    0, // Cursor
     QVariant::SizePolicy,
     QVariant::Date,
     QVariant::Time,
     QVariant::DateTime,
     QVariant::ByteArray,
     QVariant::BitArray,
-    QVariant::KeySequence,
+    0, // KeySequence
     QVariant::Pen,
     QVariant::LongLong,
     QVariant::ULongLong,
@@ -2516,7 +2516,7 @@ void QVariant::save(QDataStream &s) const
             typeId += 97;
         } else if (typeId == QMetaType::QSizePolicy) {
             typeId = 75;
-        } else if (typeId >= QMetaType::QKeySequence && typeId <= QMetaType::QQuaternion) {
+        } else if (typeId >= QMetaType::QFont && typeId <= QMetaType::QQuaternion) {
             // and as a result these types received lower ids too
             typeId +=1;
         } else if (typeId == QMetaType::QPolygonF) {
@@ -3537,10 +3537,6 @@ bool QVariant::canConvert(int targetTypeId) const
     // FIXME It should be LastCoreType intead of Uuid
     if (currentType > int(QMetaType::QUuid) || targetTypeId > int(QMetaType::QUuid)) {
         switch (uint(targetTypeId)) {
-        case QVariant::Int:
-            if (currentType == QVariant::KeySequence)
-                return true;
-            Q_FALLTHROUGH();
         case QVariant::UInt:
         case QVariant::LongLong:
         case QVariant::ULongLong:
@@ -3552,29 +3548,20 @@ bool QVariant::canConvert(int targetTypeId) const
                    || currentType == QMetaType::SChar
                    || currentType == QMetaType::Short
                    || QMetaType::typeFlags(currentType) & QMetaType::IsEnumeration;
-        case QVariant::Image:
-            return currentType == QVariant::Pixmap || currentType == QVariant::Bitmap;
-        case QVariant::Pixmap:
-            return currentType == QVariant::Image || currentType == QVariant::Bitmap
-                              || currentType == QVariant::Brush;
-        case QVariant::Bitmap:
-            return currentType == QVariant::Pixmap || currentType == QVariant::Image;
         case QVariant::ByteArray:
             return currentType == QVariant::Color || currentType == QMetaType::Nullptr
                               || ((QMetaType::typeFlags(currentType) & QMetaType::IsEnumeration) && QMetaType::metaObjectForType(currentType));
         case QVariant::String:
-            return currentType == QVariant::KeySequence || currentType == QVariant::Font
+            return currentType == QVariant::Font
                               || currentType == QVariant::Color || currentType == QMetaType::Nullptr
                               || ((QMetaType::typeFlags(currentType) & QMetaType::IsEnumeration) && QMetaType::metaObjectForType(currentType));
-        case QVariant::KeySequence:
-            return currentType == QVariant::String || currentType == QVariant::Int;
         case QVariant::Font:
             return currentType == QVariant::String;
         case QVariant::Color:
             return currentType == QVariant::String || currentType == QVariant::ByteArray
                               || currentType == QVariant::Brush;
         case QVariant::Brush:
-            return currentType == QVariant::Color || currentType == QVariant::Pixmap;
+            return currentType == QVariant::Color || currentType == QVariant::Image;
         case QMetaType::Long:
         case QMetaType::Char:
         case QMetaType::SChar:

@@ -1759,7 +1759,6 @@ bool QMetaType::load(QDataStream &stream, int type, void *data)
         break;
 #endif // QT_BOOTSTRAPPED
     case QMetaType::QFont:
-    case QMetaType::QPixmap:
     case QMetaType::QBrush:
     case QMetaType::QColor:
     case QMetaType::QPalette:
@@ -1767,9 +1766,6 @@ bool QMetaType::load(QDataStream &stream, int type, void *data)
     case QMetaType::QPolygon:
     case QMetaType::QPolygonF:
     case QMetaType::QRegion:
-    case QMetaType::QBitmap:
-    case QMetaType::QCursor:
-    case QMetaType::QKeySequence:
     case QMetaType::QPen:
     case QMetaType::QTextLength:
     case QMetaType::QTextFormat:
@@ -1780,7 +1776,6 @@ bool QMetaType::load(QDataStream &stream, int type, void *data)
     case QMetaType::QVector3D:
     case QMetaType::QVector4D:
     case QMetaType::QQuaternion:
-    case QMetaType::QIcon:
         if (!qMetaTypeGuiHelper)
             return false;
         qMetaTypeGuiHelper[type - FirstGuiType].loadOp(stream, data);

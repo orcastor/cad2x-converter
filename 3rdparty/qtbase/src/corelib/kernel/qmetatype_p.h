@@ -227,12 +227,6 @@ template<> struct TypeDefinition<QPointF> { static const bool IsAvailable = fals
 #ifdef QT_NO_REGEXP
 template<> struct TypeDefinition<QRegExp> { static const bool IsAvailable = false; };
 #endif
-#ifdef QT_NO_SHORTCUT
-template<> struct TypeDefinition<QKeySequence> { static const bool IsAvailable = false; };
-#endif
-#ifdef QT_NO_CURSOR
-template<> struct TypeDefinition<QCursor> { static const bool IsAvailable = false; };
-#endif
 #ifdef QT_NO_MATRIX4X4
 template<> struct TypeDefinition<QMatrix4x4> { static const bool IsAvailable = false; };
 #endif
@@ -247,9 +241,6 @@ template<> struct TypeDefinition<QVector4D> { static const bool IsAvailable = fa
 #endif
 #ifdef QT_NO_QUATERNION
 template<> struct TypeDefinition<QQuaternion> { static const bool IsAvailable = false; };
-#endif
-#ifdef QT_NO_ICON
-template<> struct TypeDefinition<QIcon> { static const bool IsAvailable = false; };
 #endif
 } //namespace QtMetaTypePrivate
 

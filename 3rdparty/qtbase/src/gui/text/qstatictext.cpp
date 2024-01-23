@@ -492,8 +492,7 @@ namespace {
 
         virtual bool begin(QPaintDevice *) override  { return true; }
         virtual bool end() override { return true; }
-        virtual void drawImage(const QRectF &r, const QImage &pm, const QRectF &sr,
-                           Qt::ImageConversionFlags flags = Qt::AutoColor) override {}
+        virtual void drawImage(const QRectF &, const QImage &, const QRectF &, Qt::ImageConversionFlags) override {}
         virtual Type type() const override
         {
             return User;

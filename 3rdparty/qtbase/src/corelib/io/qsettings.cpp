@@ -418,8 +418,7 @@ QString QSettingsPrivate::variantToString(const QVariant &v)
         case QVariant::Int:
         case QVariant::UInt:
         case QVariant::Bool:
-        case QVariant::Double:
-        case QVariant::KeySequence: {
+        case QVariant::Double: {
             result = v.toString();
             if (result.contains(QChar::Null))
                 result = QLatin1String("@String(") + result + QLatin1Char(')');

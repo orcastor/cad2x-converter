@@ -1871,50 +1871,6 @@ ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS
 SOFTWARE.
 
 ************************************************************************/
-/*
- * The functions in this file implement the Region abstraction, similar to one
- * used in the X11 sample server. A Region is simply an area, as the name
- * implies, and is implemented as a "y-x-banded" array of rectangles. To
- * explain: Each Region is made up of a certain number of rectangles sorted
- * by y coordinate first, and then by x coordinate.
- *
- * Furthermore, the rectangles are banded such that every rectangle with a
- * given upper-left y coordinate (y1) will have the same lower-right y
- * coordinate (y2) and vice versa. If a rectangle has scanlines in a band, it
- * will span the entire vertical distance of the band. This means that some
- * areas that could be merged into a taller rectangle will be represented as
- * several shorter rectangles to account for shorter rectangles to its left
- * or right but within its "vertical scope".
- *
- * An added constraint on the rectangles is that they must cover as much
- * horizontal area as possible. E.g. no two rectangles in a band are allowed
- * to touch.
- *
- * Whenever possible, bands will be merged together to cover a greater vertical
- * distance (and thus reduce the number of rectangles). Two bands can be merged
- * only if the bottom of one touches the top of the other and they have
- * rectangles in the same places (of the same width, of course). This maintains
- * the y-x-banding that's so nice to have...
- */
-/* $XFree86: xc/lib/X11/Region.c,v 1.1.1.2.2.2 1998/10/04 15:22:50 hohndel Exp $ */
-
-static void UnionRectWithRegion(const QRect *rect, const QRegionPrivate *source,
-                                QRegionPrivate &dest)
-{
-    if (rect->isEmpty())
-        return;
-
-    Q_ASSERT(EqualRegion(source, &dest));
-
-    if (dest.numRects == 0) {
-        dest = QRegionPrivate(*rect);
-    } else if (dest.canAppend(rect)) {
-        dest.append(rect);
-    } else {
-        QRegionPrivate p(*rect);
-        UnionRegion(&p, source, dest);
-    }
-}
 
 /*-
  *-----------------------------------------------------------------------
