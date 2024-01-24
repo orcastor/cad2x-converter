@@ -4,13 +4,20 @@
   </a>
 </p>
 
-<p align="center"><strong>cad2x-converter</strong></p>
+<h1 align="center"><strong>cad2x</strong> - sub tool of <a href="https://github.com/orcastor/addon-previewer">orcastor/addon-previewer</a></h1>
 
-<p align="center">Minimal portable CLI tool that can convert CAD files(dxf, dwg) to other formats(pdf, png, svg) trimming from LibreCAD.</p>
+Minimal CLI tool convert CAD files (DXF / DWG) to other formats (PDF / PNG / SVG) trimming from [LibreCAD](https://github.com/LibreCAD/LibreCAD).
+
+# Features
+
+- 💼 **Portable** - no GUI & no dependencies
+- 🌈 **Customized** - with trimmed Qt 5.12.12 (QtCore & QtGUI)
+- 🚀 **Extremely small** - 2.9MB binary file size at all (on aarch64-linux)
+- 🗳️ **Cross platform** - support Mac OSX / Windows / Linux (Most linux based operating systems)
 
 ## How to build trimmed `qtbase(Qt 5.12.12)`
 
-- static library
+- static QtCore & QtGUI library
 ``` sh
 ./configure -developer-build -release -no-iconv -no-icu -static -strip -confirm-license -opensource
 
@@ -28,7 +35,7 @@ cd ./3rdparty/qtbase/src/gui
 make -j20 staticlib
 ```
 
-- shared library
+- shared QtCore & QtGUI library
 ``` sh
 ./configure -developer-build -release -no-iconv -no-icu -strip -confirm-license -opensource -R .
 
@@ -44,14 +51,15 @@ qmake -qt=qt5 -r
 make -j20
 ```
 
-## Features
+## Changelog
 
-- ✨ add font by dropping `.lff` into `cad2x-converter/output/fonts` without plugin
+- ✨ add font by easily dropping `.lff` into `cad2x-converter/output/fonts`
 - ✅ trim dependency of QtWidgets & QtPrintSupport
 - ✅ trim dependency of GUI app (QtGuiApplication / accessible / input / events / plugins)
 - ✅ trim dependency of Render (OpenGL / Vulkan / KMS / VNC)
 - ✅ trim dependency of qpa (X server and etc.)
 - ✅ trim dependency of icu / pcre2
+- ✅ inbuild font database
 - ✅ trim useless codes (Pixmap / Icon / Windows and etc.)
 - ✅ minimal binary size (static link) (2.9MB after `strip` and `./upx -9 --ultra-brute`)
     ``` sh
@@ -71,15 +79,12 @@ make -j20
             libpcre.so.3 => /lib/aarch64-linux-gnu/libpcre.so.3 (0x0000005502918000)
     ```
     - only `libmuparser.so.2` is 3rd party library
-
-## TODO
-
 - [ ] finish the README
 - [ ] merge: cad2pdf + cad2pic = cad2x
 
 ## Referrence
 
-You can refer to original [LibreCAD Wiki - BUILD FROM SOURCE](https://github.com/LibreCAD/LibreCAD/wiki/Build-from-source#generic-unix) page first.
+You can refer to original [LibreCAD Wiki - BUILD FROM SOURCE](https://github.com/LibreCAD/LibreCAD/wiki/Build-from-source) page first.
 
 #### How to prepare toolchain
 
