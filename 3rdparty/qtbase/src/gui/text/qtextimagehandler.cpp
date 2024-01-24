@@ -47,11 +47,58 @@
 #include <private/qtextengine_p.h>
 #include <qpalette.h>
 #include <qthread.h>
+#include <QtCore/qglobal.h>
+#include <QtCore/qmath.h>
 
 QT_BEGIN_NAMESPACE
 
-extern QString qt_findAtNxFile(const QString &baseFileName, qreal targetDevicePixelRatio,
-                               qreal *sourceDevicePixelRatio);
+
+/*!
+    \internal
+    \since 5.6
+    Attempts to find a suitable @Nx file for the given \a targetDevicePixelRatio
+    Returns the the \a baseFileName if no such file was found.
+
+    Given base foo.png and a target dpr of 2.5, this function will look for
+    foo@3x.png, then foo@2x, then fall back to foo.png if not found.
+
+    \a sourceDevicePixelRatio will be set to the value of N if the argument is
+    a non-null pointer
+*/
+QString qt_findAtNxFile(const QString &baseFileName, qreal targetDevicePixelRatio,
+                        qreal *sourceDevicePixelRatio)
+{
+    if (targetDevicePixelRatio <= 1.0)
+        return baseFileName;
+
+    static bool disableNxImageLoading = !qEnvironmentVariableIsEmpty("QT_HIGHDPI_DISABLE_2X_IMAGE_LOADING");
+    if (disableNxImageLoading)
+        return baseFileName;
+
+    int dotIndex = baseFileName.lastIndexOf(QLatin1Char('.'));
+    if (dotIndex == -1) { /* no dot */
+        dotIndex = baseFileName.size(); /* append */
+    } else if (dotIndex >= 2 && baseFileName[dotIndex - 1] == QLatin1Char('9')
+        && baseFileName[dotIndex - 2] == QLatin1Char('.')) {
+        // If the file has a .9.* (9-patch image) extension, we must ensure that the @nx goes before it.
+        dotIndex -= 2;
+    }
+
+    QString atNxfileName = baseFileName;
+    atNxfileName.insert(dotIndex, QLatin1String("@2x"));
+    // Check for @Nx, ..., @3x, @2x file versions,
+    for (int n = qMin(qCeil(targetDevicePixelRatio), 9); n > 1; --n) {
+        atNxfileName[dotIndex + 1] = QLatin1Char('0' + n);
+        if (QFile::exists(atNxfileName)) {
+            if (sourceDevicePixelRatio)
+                *sourceDevicePixelRatio = n;
+            return atNxfileName;
+        }
+    }
+
+    return baseFileName;
+}
+
 static QString resolveFileName(QString fileName, QUrl *url, qreal targetDevicePixelRatio,
                                qreal *sourceDevicePixelRatio)
 {

@@ -356,6 +356,20 @@ QBrush::QBrush()
     d->ref.ref();
 }
 
+
+/*!
+    Constructs a brush with a black color and a texture set to the
+    given \a image. The style is set to Qt::TexturePattern.
+
+    \sa setTextureImage()
+*/
+
+QBrush::QBrush(const QImage &image)
+{
+    init(Qt::black, Qt::TexturePattern);
+    setTextureImage(image);
+}
+
 /*!
     Constructs a black brush with the given \a style.
 
@@ -1173,11 +1187,6 @@ QGradient::QGradient(Preset preset)
         cachedPresets.insert(preset, *this);
     }
 }
-
-QT_END_NAMESPACE
-static void initGradientPresets() { Q_INIT_RESOURCE(qmake_webgradients); }
-Q_CONSTRUCTOR_FUNCTION(initGradientPresets);
-QT_BEGIN_NAMESPACE
 
 /*!
     \enum QGradient::Type
