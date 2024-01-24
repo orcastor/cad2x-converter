@@ -3,19 +3,7 @@ if (CMAKE_VERSION VERSION_LESS 3.1.0)
     message(FATAL_ERROR "Qt 5 Gui module requires at least CMake version 3.1.0")
 endif()
 
-get_filename_component(_IMPORT_PREFIX "${CMAKE_CURRENT_LIST_FILE}" PATH)
-# Use original install prefix when loaded through a
-# cross-prefix symbolic link such as /lib -> /usr/lib.
-get_filename_component(_realCurr "${_IMPORT_PREFIX}" REALPATH)
-get_filename_component(_realOrig "/usr/lib/aarch64-linux-gnu/cmake/Qt5Gui" REALPATH)
-if(_realCurr STREQUAL _realOrig)
-    get_filename_component(_qt5Gui_install_prefix "/usr/lib/aarch64-linux-gnu/../../" ABSOLUTE)
-else()
-    get_filename_component(_qt5Gui_install_prefix "${CMAKE_CURRENT_LIST_DIR}/../../../../" ABSOLUTE)
-endif()
-unset(_realOrig)
-unset(_realCurr)
-unset(_IMPORT_PREFIX)
+get_filename_component(_qt5Gui_install_prefix "${CMAKE_CURRENT_LIST_DIR}/../../../" ABSOLUTE)
 
 # For backwards compatibility only. Use Qt5Gui_VERSION instead.
 set(Qt5Gui_VERSION_STRING 5.12.12)
@@ -39,12 +27,11 @@ endmacro()
 macro(_populate_Gui_target_properties Configuration LIB_LOCATION IMPLIB_LOCATION)
     set_property(TARGET Qt5::Gui APPEND PROPERTY IMPORTED_CONFIGURATIONS ${Configuration})
 
-    set(imported_location "${_qt5Gui_install_prefix}/lib/aarch64-linux-gnu/${LIB_LOCATION}")
+    set(imported_location "${_qt5Gui_install_prefix}/lib/${LIB_LOCATION}")
     _qt5_Gui_check_file_exists(${imported_location})
     set_target_properties(Qt5::Gui PROPERTIES
         "INTERFACE_LINK_LIBRARIES" "${_Qt5Gui_LIB_DEPENDENCIES}"
         "IMPORTED_LOCATION_${Configuration}" ${imported_location}
-        "IMPORTED_SONAME_${Configuration}" "libQt5Gui.so.5"
         # For backward compatibility with CMake < 2.8.12
         "IMPORTED_LINK_INTERFACE_LIBRARIES_${Configuration}" "${_Qt5Gui_LIB_DEPENDENCIES}"
     )
@@ -53,10 +40,10 @@ endmacro()
 
 if (NOT TARGET Qt5::Gui)
 
-    set(_Qt5Gui_OWN_INCLUDE_DIRS "${_qt5Gui_install_prefix}/include/aarch64-linux-gnu/qt5/" "${_qt5Gui_install_prefix}/include/aarch64-linux-gnu/qt5/QtGui")
+    set(_Qt5Gui_OWN_INCLUDE_DIRS "${_qt5Gui_install_prefix}/include/" "${_qt5Gui_install_prefix}/include/QtGui")
     set(Qt5Gui_PRIVATE_INCLUDE_DIRS
-        "${_qt5Gui_install_prefix}/include/aarch64-linux-gnu/qt5/QtGui/5.12.12"
-        "${_qt5Gui_install_prefix}/include/aarch64-linux-gnu/qt5/QtGui/5.12.12/QtGui"
+        "${_qt5Gui_install_prefix}/include/QtGui/5.12.12"
+        "${_qt5Gui_install_prefix}/include/QtGui/5.12.12/QtGui"
     )
 
     foreach(_dir ${_Qt5Gui_OWN_INCLUDE_DIRS})
@@ -126,7 +113,8 @@ if (NOT TARGET Qt5::Gui)
     set(_Qt5Gui_LIB_DEPENDENCIES "Qt5::Core")
 
 
-    add_library(Qt5::Gui SHARED IMPORTED)
+    add_library(Qt5::Gui STATIC IMPORTED)
+    set_property(TARGET Qt5::Gui PROPERTY IMPORTED_LINK_INTERFACE_LANGUAGES CXX)
 
     set_property(TARGET Qt5::Gui PROPERTY
       INTERFACE_INCLUDE_DIRECTORIES ${_Qt5Gui_OWN_INCLUDE_DIRS})
@@ -159,7 +147,7 @@ if (NOT TARGET Qt5::Gui)
         )
     endif()
 
-    _populate_Gui_target_properties(RELEASE "libQt5Gui.so.5.12.12" "" )
+    _populate_Gui_target_properties(RELEASE "libQt5Gui.a" "" )
 
 
 

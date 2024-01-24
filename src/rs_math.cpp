@@ -53,18 +53,18 @@ namespace {
     constexpr double m_piX2 = M_PI*2; //2*PI
     // 将 QRegularExpression 转换为 std::regex
     const std::regex unitreg(
-        R"((^[-+]?)"
-        R"((?:(?:(?:(\d+\.?\d*)(?:degree[s]?|deg|[Dd]|°)))"  // DMS
-        R"((?:(\d+\.?\d*)(?:minute[s]?|min|[Mm]|'))?)"
-        R"((?:(\d+\.?\d*)(?:second[s]?|sec|[Ss]|"))?$)|)"
-        R"((?:(?:(\d+\.?\d*)(?:meter[s]?|m(?![m])))?)"        // Metric
-        R"((?:(\d+\.?\d*)(?:centimeter[s]?|centi|cm))?)"
-        R"((?:(\d+\.?\d*)(?:millimeter[s]?|mm))?$)|)"
-        R"((?:(?:(\d+\.?\d*)(?:yards|yard|yd))?)"              // Imperial
-        R"((?:(\d+\.?\d*)(?:feet|foot|ft|'))?)"
-        R"((?:(\d+\.?\d*)[-+]?)"
-        R"((?:(\d+)\/(\d+))?)"                // rational inches
-        R"((?:inches|inch|in|"))?$)))"
+        R"((^-?))"
+        R"((?:(?:(?:(\d+\.?\d*)(?=degree[s]?|deg|[Dd]|°)))"   // DMS
+            R"((?:(\d+\.?\d*)(?=minute[s]?|min|[Mm]|'))?)"
+            R"((?:(\d+\.?\d*)(?=second[s]?|sec|[Ss]|"))?$)|)"
+        R"((?:(?:(\d+\.?\d*)(?=meter[s]?|m(?![m])))?)"        // Metric
+            R"((?:(\d+\.?\d*)(?=centimeter[s]?|centi|cm))?)"
+            R"((?:(\d+\.?\d*)(?=millimeter[s]?|mm))?$)|)"
+        R"((?:(?:(\d+\.?\d*)(?=yards|yard|yd))?)"             // Imperial
+            R"((?:(\d+\.?\d*)(?=feet|foot|ft|'))?)"
+            R"((?:(\d+\.?\d*)([-+]?)"
+                R"((?:(\d+)\/(\d+))?))"                       // rational inches
+            R"((?:inches|inch|in|"))?)"
     );
 }
 
@@ -295,7 +295,8 @@ QString RS_Math::derationalize(const QString& expr) {
 	RS_DEBUG->print(RS_Debug::D_DEBUGGING, "RS_Math::derationalize: expr = '%s'", expr.toLatin1().data());
 
 	std::smatch match;
-    if (std::regex_match(expr.toLatin1().data(), match, unitreg)) {
+    std::string s = expr.toStdString();
+    if (std::regex_search(s, match, unitreg)) {
         for (size_t i = 1; i < match.size(); ++i) {
             std::cout << "Capture group " << i << ": " << match[i] << std::endl;
         }

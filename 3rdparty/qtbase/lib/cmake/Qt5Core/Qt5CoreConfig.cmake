@@ -3,19 +3,7 @@ if (CMAKE_VERSION VERSION_LESS 3.1.0)
     message(FATAL_ERROR "Qt 5 Core module requires at least CMake version 3.1.0")
 endif()
 
-get_filename_component(_IMPORT_PREFIX "${CMAKE_CURRENT_LIST_FILE}" PATH)
-# Use original install prefix when loaded through a
-# cross-prefix symbolic link such as /lib -> /usr/lib.
-get_filename_component(_realCurr "${_IMPORT_PREFIX}" REALPATH)
-get_filename_component(_realOrig "/usr/lib/aarch64-linux-gnu/cmake/Qt5Core" REALPATH)
-if(_realCurr STREQUAL _realOrig)
-    get_filename_component(_qt5Core_install_prefix "/usr/lib/aarch64-linux-gnu/../../" ABSOLUTE)
-else()
-    get_filename_component(_qt5Core_install_prefix "${CMAKE_CURRENT_LIST_DIR}/../../../../" ABSOLUTE)
-endif()
-unset(_realOrig)
-unset(_realCurr)
-unset(_IMPORT_PREFIX)
+get_filename_component(_qt5Core_install_prefix "${CMAKE_CURRENT_LIST_DIR}/../../../" ABSOLUTE)
 
 # For backwards compatibility only. Use Qt5Core_VERSION instead.
 set(Qt5Core_VERSION_STRING 5.12.12)
@@ -39,12 +27,11 @@ endmacro()
 macro(_populate_Core_target_properties Configuration LIB_LOCATION IMPLIB_LOCATION)
     set_property(TARGET Qt5::Core APPEND PROPERTY IMPORTED_CONFIGURATIONS ${Configuration})
 
-    set(imported_location "${_qt5Core_install_prefix}/lib/aarch64-linux-gnu/${LIB_LOCATION}")
+    set(imported_location "${_qt5Core_install_prefix}/lib/${LIB_LOCATION}")
     _qt5_Core_check_file_exists(${imported_location})
     set_target_properties(Qt5::Core PROPERTIES
         "INTERFACE_LINK_LIBRARIES" "${_Qt5Core_LIB_DEPENDENCIES}"
         "IMPORTED_LOCATION_${Configuration}" ${imported_location}
-        "IMPORTED_SONAME_${Configuration}" "libQt5Core.so.5"
         # For backward compatibility with CMake < 2.8.12
         "IMPORTED_LINK_INTERFACE_LIBRARIES_${Configuration}" "${_Qt5Core_LIB_DEPENDENCIES}"
     )
@@ -53,10 +40,10 @@ endmacro()
 
 if (NOT TARGET Qt5::Core)
 
-    set(_Qt5Core_OWN_INCLUDE_DIRS "${_qt5Core_install_prefix}/include/aarch64-linux-gnu/qt5/" "${_qt5Core_install_prefix}/include/aarch64-linux-gnu/qt5/QtCore")
+    set(_Qt5Core_OWN_INCLUDE_DIRS "${_qt5Core_install_prefix}/include/" "${_qt5Core_install_prefix}/include/QtCore")
     set(Qt5Core_PRIVATE_INCLUDE_DIRS
-        "${_qt5Core_install_prefix}/include/aarch64-linux-gnu/qt5/QtCore/5.12.12"
-        "${_qt5Core_install_prefix}/include/aarch64-linux-gnu/qt5/QtCore/5.12.12/QtCore"
+        "${_qt5Core_install_prefix}/include/QtCore/5.12.12"
+        "${_qt5Core_install_prefix}/include/QtCore/5.12.12/QtCore"
     )
 
     foreach(_dir ${_Qt5Core_OWN_INCLUDE_DIRS})
@@ -126,7 +113,8 @@ if (NOT TARGET Qt5::Core)
     set(_Qt5Core_LIB_DEPENDENCIES "")
 
 
-    add_library(Qt5::Core SHARED IMPORTED)
+    add_library(Qt5::Core STATIC IMPORTED)
+    set_property(TARGET Qt5::Core PROPERTY IMPORTED_LINK_INTERFACE_LANGUAGES CXX)
 
     set_property(TARGET Qt5::Core PROPERTY
       INTERFACE_INCLUDE_DIRECTORIES ${_Qt5Core_OWN_INCLUDE_DIRS})
@@ -159,7 +147,7 @@ if (NOT TARGET Qt5::Core)
         )
     endif()
 
-    _populate_Core_target_properties(RELEASE "libQt5Core.so.5.12.12" "" )
+    _populate_Core_target_properties(RELEASE "libQt5Core.a" "" )
 
 
 

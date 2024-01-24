@@ -219,7 +219,6 @@ std::unique_ptr<RS_Entity> RS_Polyline::createVertex(const RS_Vector& v, double 
         entity = std::make_unique<RS_Line>(this,
                                            prepend ? v : data.endpoint,
                                            prepend ? data.startpoint : v);
-        entity->setSelected(isSelected());
         entity->setPen(RS_Pen(RS2::FlagInvalid));
         entity->setLayer(nullptr);
     } else {
@@ -249,7 +248,6 @@ std::unique_ptr<RS_Entity> RS_Polyline::createVertex(const RS_Vector& v, double 
                      reversed);
 
         entity = std::make_unique<RS_Arc>(this, d);
-        entity->setSelected(isSelected());
         entity->setPen(RS_Pen(RS2::FlagInvalid));
         entity->setLayer(nullptr);
     }
@@ -428,14 +426,6 @@ RS_Vector RS_Polyline::getNearestRef( const RS_Vector& coord,
     // override the RS_EntityContainer method
     // use RS_Entity instead for vertex dragging
     return RS_Entity::getNearestRef( coord, dist);
-}
-
-RS_Vector RS_Polyline::getNearestSelectedRef( const RS_Vector& coord,
-                                              double* dist /*= nullptr*/) const
-{
-    // override the RS_EntityContainer method
-    // use RS_Entity instead for vertex dragging
-    return RS_Entity::getNearestSelectedRef( coord, dist);
 }
 
 /*

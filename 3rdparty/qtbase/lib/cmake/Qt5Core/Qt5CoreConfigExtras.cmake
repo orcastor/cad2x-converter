@@ -2,7 +2,7 @@
 if (NOT TARGET Qt5::qmake)
     add_executable(Qt5::qmake IMPORTED)
 
-    set(imported_location "${_qt5Core_install_prefix}/lib/qt5/bin/qmake")
+    set(imported_location "${_qt5Core_install_prefix}/bin/qmake")
     _qt5_Core_check_file_exists(${imported_location})
 
     set_target_properties(Qt5::qmake PROPERTIES
@@ -13,7 +13,7 @@ endif()
 if (NOT TARGET Qt5::moc)
     add_executable(Qt5::moc IMPORTED)
 
-    set(imported_location "${_qt5Core_install_prefix}/lib/qt5/bin/moc")
+    set(imported_location "${_qt5Core_install_prefix}/bin/moc")
     _qt5_Core_check_file_exists(${imported_location})
 
     set_target_properties(Qt5::moc PROPERTIES

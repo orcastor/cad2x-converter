@@ -1,8 +1,15 @@
-QT_MODULE_BIN_BASE = /opt/cad2x-converter/3rdparty/qtbase/bin
-QT_MODULE_INCLUDE_BASE = /opt/cad2x-converter/3rdparty/qtbase/include
-QT_MODULE_LIB_BASE = /opt/cad2x-converter/3rdparty/qtbase/lib
-QT_MODULE_HOST_LIB_BASE = /opt/cad2x-converter/3rdparty/qtbase/lib
-include(/opt/cad2x-converter/3rdparty/qtbase/mkspecs/modules-inst/qt_lib_gui.pri)
-QT.gui.priority = 1
-include(/opt/cad2x-converter/3rdparty/qtbase/mkspecs/modules-inst/qt_lib_gui_private.pri)
-QT.gui_private.priority = 1
+QT.gui.VERSION = 5.12.12
+QT.gui.name = QtGui
+QT.gui.module = Qt5Gui
+QT.gui.libs = $$QT_MODULE_LIB_BASE
+QT.gui.includes = $$QT_MODULE_INCLUDE_BASE $$QT_MODULE_INCLUDE_BASE/QtGui
+QT.gui.frameworks =
+QT.gui.bins = $$QT_MODULE_BIN_BASE
+QT.gui.depends = core
+QT.gui.uses =
+QT.gui.module_config = v2 staticlib
+QT.gui.DEFINES = QT_GUI_LIB
+QT.gui.enabled_features = colornames cssparser imageformatplugin image_heuristic_mask image_text imageformat_bmp imageformat_jpeg imageformat_png imageformat_ppm imageformat_xbm imageformat_xpm pdf picture texthtmlparser textodfwriter validator whatsthis
+QT.gui.disabled_features =
+QT_CONFIG += colornames cssparser freetype fontconfig imageformatplugin harfbuzz ico image_heuristic_mask image_text imageformat_bmp imageformat_jpeg imageformat_png imageformat_ppm imageformat_xbm imageformat_xpm pdf picture texthtmlparser textodfwriter validator whatsthis
+QT_MODULES += gui

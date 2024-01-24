@@ -851,7 +851,6 @@ std::ostream& operator << (std::ostream& os, RS_Graphic& g) {
     os << "--- Graphic: \n";
     os << "---" << *g.getLayerList() << "\n";
     os << "---" << *g.getBlockList() << "\n";
-    os << "---" << (RS_Undo&)g << "\n";
     os << "---" << (RS_EntityContainer&)g << "\n";
 
     return os;

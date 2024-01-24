@@ -538,7 +538,7 @@ void RS_Text::draw(RS_Painter* painter, RS_GraphicView* view, double& /*offset*/
         return;
     }
 
-    if (!view->isPrintPreview() && !view->isPrinting())
+    if (!view->isPrinting())
     {
         if (view->toGuiDY(getHeight()) < 4)
         {

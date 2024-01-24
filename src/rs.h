@@ -100,8 +100,8 @@ namespace RS2 {
 #ifdef DWGSUPPORT
         FormatDWG,           /**< DWG format. */
 #endif
-        //FormatLFF,           /**< LibreCAD Font File format. */
-        //FormatCXF,           /**< CAM Expert Font format. */
+        FormatLFF,           /**< LibreCAD Font File format. */
+        FormatCXF,           /**< CAM Expert Font format. */
         //FormatJWW,           /**< JWW Format type */
         //FormatJWC            /**< JWC Format type */
     };
@@ -157,6 +157,16 @@ namespace RS2 {
         EndingStart,    /**< Start point. */
         EndingEnd,      /**< End point. */
         EndingNone      /**< Neither. */
+    };
+
+    /**
+     * Update mode for non-atomic entities that need to be updated when
+     * they change. e.g. texts, inserts, ...
+     */
+    enum UpdateMode {
+        NoUpdate,       /**< No automatic updates. */
+        Update,         /**< Always update automatically when modified. */
+        PreviewUpdate   /**< Update automatically but only for previews (quick update) */
     };
 
     /**

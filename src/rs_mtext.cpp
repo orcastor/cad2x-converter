@@ -630,7 +630,7 @@ void RS_MText::draw(RS_Painter *painter, RS_GraphicView *view,
   if (!(painter && view))
     return;
 
-  if (!view->isPrintPreview() && !view->isPrinting()) {
+  if (!view->isPrinting()) {
     if (view->toGuiDY(getHeight()) < 4) {
       painter->drawRect(view->toGui(getMin()), view->toGui(getMax()));
       return;

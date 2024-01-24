@@ -59,7 +59,6 @@ struct RS_LayerData {
     bool construction {false};      //!< a construction layer has entities of infinite length
                                     //!< and will never be printed out
     bool visibleInLayerList {true}; //!< visible in layer list
-    bool selectedInLayerList {false}; //!< selected in layer list
 };
 
 
@@ -156,18 +155,6 @@ public:
      * return the visibility of the Layer in layer list
      */
 	bool isVisibleInLayerList() const;
-
-    /**
-     * set selection state of the layer in layer list
-     *
-     * @param val true: selected, false: deselected
-     */
-    void selectedInLayerList(bool val);
-
-    /**
-     * return selection state of the layer in layer list
-     */
-    bool isSelectedInLayerList() const;
 
     /**
      * set the PRINT state of the Layer

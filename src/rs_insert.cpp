@@ -217,8 +217,6 @@ void RS_Insert::update() {
                     ne->rotate(data.insertionPoint, data.angle);
 
                    // RS_DEBUG->print(RS_Debug::D_ERROR, "ne: angle: %lg\n", data.angle);
-                // Select:
-                    ne->setSelected(isSelected());
 
                 // individual entities can be on indiv. layers
                     RS_Pen tmpPen = updatePen(ne->getPen(false), getPen());

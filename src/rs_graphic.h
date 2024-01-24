@@ -133,11 +133,8 @@ public:
     RS_Block* getActiveBlock() {
         return blockList.getActive();
     }
-    virtual bool addBlock(RS_Block* block, bool notify=true) {
-        return blockList.add(block, notify);
-    }
-    virtual void addBlockNotification() {
-        blockList.addNotification();
+    virtual bool addBlock(RS_Block* block) {
+        return blockList.add(block);
     }
     virtual void removeBlock(RS_Block* block) {
         blockList.remove(block);

@@ -33,6 +33,8 @@
 
 #include <QStringList>
 
+#include <regex>
+
 #define STR(x)   #x
 #define XSTR(x)  STR(x)
 
@@ -167,13 +169,8 @@ int main(int argc, char* argv[])
 
     RS_FONTLIST->init();
 
-    PdfPrintLoop *loop = new PdfPrintLoop(params, &app);
-
-    QObject::connect(loop, SIGNAL(finished()), &app, SLOT(quit()));
-
-    QTimer::singleShot(0, loop, SLOT(run()));
-
-    return app.exec();
+    PdfPrintLoop(params).run();
+    return 0;
 }
 
 
@@ -184,14 +181,13 @@ static RS_Vector parsePageSizeArg(QString arg)
     if (arg.isEmpty())
         return v;
 
-    QRegularExpression re("^(?<width>\\d+)[x|X]{1}(?<height>\\d+)$");
-    QRegularExpressionMatch match = re.match(arg);
+    std::regex re("^<width>(\\d+)[xX]{1}<height>(\\d+)$");
+    std::smatch match;
 
-    if (match.hasMatch()) {
-        QString width = match.captured("width");
-        QString height = match.captured("height");
-        v.x = width.toDouble();
-        v.y = height.toDouble();
+    std::string s = arg.toStdString();
+    if (std::regex_search(s, match, re)) {
+        v.x = std::stod(match[1]);
+        v.y = std::stod(match[2]);
     } else {
         qDebug() << "WARNING: Ignoring bad page size:" << arg;
     }
@@ -205,14 +201,13 @@ static void parsePagesNumArg(QString arg, PdfPrintParams& params)
     if (arg.isEmpty())
         return;
 
-    QRegularExpression re("^(?<horiz>\\d+)[x|X](?<vert>\\d+)$");
-    QRegularExpressionMatch match = re.match(arg);
+    std::regex re("^<horiz>(\\d+)[xX]{1}<vert>(\\d+)$");
+    std::smatch match;
 
-    if (match.hasMatch()) {
-        QString h = match.captured("horiz");
-        QString v = match.captured("vert");
-        params.pagesH = h.toInt();
-        params.pagesV = v.toInt();
+    std::string s = arg.toStdString();
+    if (std::regex_search(s, match, re)) {
+        params.pagesH = std::stoi(match[1]);
+        params.pagesV = std::stoi(match[2]);
     } else {
         qDebug() << "WARNING: Ignoring bad number of pages:" << arg;
     }
@@ -224,21 +219,16 @@ static void parseMarginsArg(QString arg, PdfPrintParams& params)
     if (arg.isEmpty())
         return;
 
-    QRegularExpression re("^(?<left>\\d+(?:\\.\\d+)?),"
-                          "(?<top>\\d+(?:\\.\\d+)?),"
-                          "(?<right>\\d+(?:\\.\\d+)?),"
-                          "(?<bottom>\\d+(?:\\.\\d+)?)$");
-    QRegularExpressionMatch match = re.match(arg);
 
-    if (match.hasMatch()) {
-        QString left = match.captured("left");
-        QString top = match.captured("top");
-        QString right = match.captured("right");
-        QString bottom = match.captured("bottom");
-        params.margins.left = left.toDouble();
-        params.margins.top = top.toDouble();
-        params.margins.right = right.toDouble();
-        params.margins.bottom = bottom.toDouble();
+    std::regex re(R"(<left>(\d+(?:\.\d+)?),(?=<top>(\d+(?:\.\d+)?),<right>(\d+(?:\.\d+)?),<bottom>(\d+(?:\.\d+)?)))");
+    std::smatch match;
+
+    std::string s = arg.toStdString();
+    if (std::regex_search(s, match, re)) {
+        params.margins.left = std::stod(match[1]);
+        params.margins.top = std::stod(match[2]);
+        params.margins.right = std::stod(match[3]);
+        params.margins.bottom = std::stod(match[4]);
     } else {
         qDebug() << "WARNING: Ignoring bad paper margins:" << arg;
     }

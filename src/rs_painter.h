@@ -125,7 +125,6 @@ public:
                               const RS_Vector& p3) = 0;
 
     virtual void drawPath ( const QPainterPath & path ) = 0;
-    virtual void drawHandle(const RS_Vector& p, const RS_Color& c, int size=-1);
 
     virtual RS_Pen getPen() const = 0;
     virtual void setPen(const RS_Pen& pen) = 0;

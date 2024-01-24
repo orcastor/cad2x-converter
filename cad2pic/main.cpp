@@ -51,6 +51,8 @@
 #include "rs_graphicview.h"
 // #include "rs_system.h"
 
+#include <regex>
+
 
 ///////////////////////////////////////////////////////////////////////
 /// \brief openDocAndSetGraphic opens a DXF file and prepares all its graphics content
@@ -355,14 +357,13 @@ static QSize parsePngSizeArg(QString arg)
     if (arg.isEmpty())
         return v;
 
-    QRegularExpression re("^(?<width>\\d+)[x|X]{1}(?<height>\\d+)$");
-    QRegularExpressionMatch match = re.match(arg);
+    std::regex re("^<width>(\\d+)[xX]{1}<height>(\\d+)$");
+    std::smatch match;
 
-    if (match.hasMatch()) {
-        QString width = match.captured("width");
-        QString height = match.captured("height");
-        v.setWidth(width.toDouble());
-        v.setHeight(height.toDouble());
+    std::string s = arg.toStdString();
+    if (std::regex_search(s, match, re)) {
+        v.setWidth(std::stod(match[1]));
+        v.setHeight(std::stod(match[2]));
     } else {
         qDebug() << "WARNING: Ignoring incorrect PNG resolution:" << arg;
     }

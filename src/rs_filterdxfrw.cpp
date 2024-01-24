@@ -1499,29 +1499,27 @@ void RS_FilterDXFRW::prepareBlocks() {
     //Add a name to each dimension, in dxfR12 also for hatches
     for (RS_Entity *e = graphic->firstEntity(RS2::ResolveNone);
 		 e ; e = graphic->nextEntity(RS2::ResolveNone)) {
-        if ( !(e->getFlag(RS2::FlagUndone)) ) {
-            switch (e->rtti()) {
-            case RS2::EntityDimLinear:
-            case RS2::EntityDimAligned:
-            case RS2::EntityDimAngular:
-            case RS2::EntityDimRadial:
-            case RS2::EntityDimDiametric:
-            case RS2::EntityDimLeader:
-                prefix = "*D" + QString::number(++dimNum);
-                noNameBlock[e] = prefix;
-                break;
-            case RS2::EntityHatch:
-                if (version==1009) {
-                    if ( !((RS_Hatch*)e)->isSolid() ) {
-                        prefix = "*U" + QString::number(++hatchNum);
-                        noNameBlock[e] = prefix;
-                    }
+        switch (e->rtti()) {
+        case RS2::EntityDimLinear:
+        case RS2::EntityDimAligned:
+        case RS2::EntityDimAngular:
+        case RS2::EntityDimRadial:
+        case RS2::EntityDimDiametric:
+        case RS2::EntityDimLeader:
+            prefix = "*D" + QString::number(++dimNum);
+            noNameBlock[e] = prefix;
+            break;
+        case RS2::EntityHatch:
+            if (version==1009) {
+                if ( !((RS_Hatch*)e)->isSolid() ) {
+                    prefix = "*U" + QString::number(++hatchNum);
+                    noNameBlock[e] = prefix;
                 }
-                break;
-            default:
-                break;
-            }//end switch
-        }//end if !RS2::FlagUndone
+            }
+            break;
+        default:
+            break;
+        }//end switch
     }
 }
 
@@ -1931,7 +1929,26 @@ void RS_FilterDXFRW::writeTextstyles(){
     //Find fonts used by text entities in drawing
     for (RS_Entity *e = graphic->firstEntity(RS2::ResolveNone);
 		 e ; e = graphic->nextEntity(RS2::ResolveNone)) {
-        if ( !(e->getFlag(RS2::FlagUndone)) ) {
+        switch (e->rtti()) {
+        case RS2::EntityMText:
+            sty = ((RS_MText*)e)->getStyle();
+            break;
+        case RS2::EntityText:
+            sty = ((RS_Text*)e)->getStyle();
+            break;
+        default:
+            sty.clear();
+            break;
+        }
+        if (!sty.isEmpty() && !styles.contains(sty))
+            styles.insert(sty, sty);
+    }
+    //Find fonts used by text entities in blocks
+    RS_Block *blk;
+    for (unsigned i = 0; i < graphic->countBlocks(); i++) {
+        blk = graphic->blockAt(i);
+        for (RS_Entity *e = blk->firstEntity(RS2::ResolveNone);
+			 e ; e = blk->nextEntity(RS2::ResolveNone)) {
             switch (e->rtti()) {
             case RS2::EntityMText:
                 sty = ((RS_MText*)e)->getStyle();
@@ -1945,29 +1962,6 @@ void RS_FilterDXFRW::writeTextstyles(){
             }
             if (!sty.isEmpty() && !styles.contains(sty))
                 styles.insert(sty, sty);
-        }
-    }
-    //Find fonts used by text entities in blocks
-    RS_Block *blk;
-    for (unsigned i = 0; i < graphic->countBlocks(); i++) {
-        blk = graphic->blockAt(i);
-        for (RS_Entity *e = blk->firstEntity(RS2::ResolveNone);
-			 e ; e = blk->nextEntity(RS2::ResolveNone)) {
-            if ( !(e->getFlag(RS2::FlagUndone)) ) {
-                switch (e->rtti()) {
-                case RS2::EntityMText:
-                    sty = ((RS_MText*)e)->getStyle();
-                    break;
-                case RS2::EntityText:
-                    sty = ((RS_Text*)e)->getStyle();
-                    break;
-                default:
-                    sty.clear();
-                    break;
-                }
-                if (!sty.isEmpty() && !styles.contains(sty))
-                    styles.insert(sty, sty);
-            }
         }
     }
     DRW_Textstyle ts;
@@ -2066,9 +2060,7 @@ void RS_FilterDXFRW::writeAppId(){
 void RS_FilterDXFRW::writeEntities(){
     for (RS_Entity *e = graphic->firstEntity(RS2::ResolveNone);
 		 e ; e = graphic->nextEntity(RS2::ResolveNone)) {
-        if ( !(e->getFlag(RS2::FlagUndone)) ) {
-            writeEntity(e);
-        }
+        writeEntity(e);
     }
 }
 

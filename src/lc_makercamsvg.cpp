@@ -237,13 +237,8 @@ void LC_MakerCamSVG::writeEntities(RS_Document* document, RS_Layer* layer) {
     RS_DEBUG->print("RS_MakerCamSVG::writeEntities: Writing entities from layer ...");
 
 	for (auto e: *document) {
-
         if (e->getLayer() == layer) {
-
-            if (!(e->getFlag(RS2::FlagUndone))) {
-
-                writeEntity(e);
-            }
+            writeEntity(e);
         }
     }
 }

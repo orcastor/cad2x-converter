@@ -38,7 +38,7 @@ macx|win32|equals(build_muparser, "true")|!packagesExist(muparser){
 QTBASE_DIR = ../3rdparty/qtbase
 DEPENDPATH += $$QTBASE_DIR/include \
             $$QTBASE_DIR/src
-INCLUDEPATH += $$QTBASE_DIR/include
+INCLUDEPATH += $$QTBASE_DIR/include $$QTBASE_DIR/include/QtCore $$QTBASE_DIR/include/QtGui
 GEN_LIB_DIR = $$QTBASE_DIR/lib
 LIBS += -L$$GEN_LIB_DIR -lQt5Core -lQt5Gui
 msvc {
@@ -47,7 +47,7 @@ msvc {
     PRE_TARGETDEPS += $$GEN_LIB_DIR/libQt5Core.a $$GEN_LIB_DIR/libQt5Gui.a
 }
 
-QT -= widgets
+QT = 
 
 CONFIG += static \
     warn_on \

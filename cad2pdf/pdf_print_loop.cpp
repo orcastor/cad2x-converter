@@ -84,8 +84,6 @@ void PdfPrintLoop::run()
     } else {
         printManyToOnePdf();
     }
-
-    emit finished();
 }
 
 void PdfPrintLoop::printOneToOnePdf(const QString& file) {

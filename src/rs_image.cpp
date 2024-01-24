@@ -290,8 +290,6 @@ void RS_Image::scale(const RS_Vector& center, const RS_Vector& factor) {
     scaleBorders(center,factor);
 }
 
-
-
 void RS_Image::mirror(const RS_Vector& axisPoint1, const RS_Vector& axisPoint2) {
     data.insertionPoint.mirror(axisPoint1, axisPoint2);
     RS_Vector vp0(0.,0.);
@@ -300,8 +298,6 @@ void RS_Image::mirror(const RS_Vector& axisPoint1, const RS_Vector& axisPoint2) 
     data.vVector.mirror(vp0,vp1);
     calculateBorders();
 }
-
-
 
 void RS_Image::draw(RS_Painter* painter, RS_GraphicView* view, double& /*offset*/) {
 	if (!(painter && view) || !img.get() || img->isNull())
@@ -319,17 +315,7 @@ void RS_Image::draw(RS_Painter* painter, RS_GraphicView* view, double& /*offset*
     painter->drawImg(*img,
                      view->toGui(data.insertionPoint),
                      data.uVector, data.vVector, scale);
-
-    if (isSelected() && !(view->isPrinting() || view->isPrintPreview())) {
-        RS_VectorSolutions sol = getCorners();
-		for (size_t i = 0; i < sol.size(); ++i){
-			size_t const j = (i+1)%sol.size();
-			painter->drawLine(view->toGui(sol.get(i)), view->toGui(sol.get(j)));
-		}
-    }
 }
-
-
 
 /**
  * Dumps the point's data to stdout.

@@ -51,25 +51,13 @@ struct PdfPrintParams {
 };
 
 
-class PdfPrintLoop : public QObject {
-
-    Q_OBJECT
+class PdfPrintLoop {
+public:
+    PdfPrintLoop(PdfPrintParams& params) :params{params} {}
 
 public:
 
-    PdfPrintLoop(PdfPrintParams& params, QObject* parent=0) :
-        QObject(parent)
-        , params{params}
-    {
-    }
-
-public slots:
-
     void run();
-
-signals:
-
-    void finished();
 
 private:
     PdfPrintParams params{};

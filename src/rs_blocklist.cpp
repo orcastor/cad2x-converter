@@ -84,7 +84,7 @@ void RS_BlockList::activate(RS_Block* block) {
  *
  * @return false: block already existed and was deleted.
  */
-bool RS_BlockList::add(RS_Block* block, bool notify) {
+bool RS_BlockList::add(RS_Block* block) {
     RS_DEBUG->print("RS_BlockList::add()");
 
 	if (!block) {
@@ -95,11 +95,6 @@ bool RS_BlockList::add(RS_Block* block, bool notify) {
     RS_Block* b = find(block->getName());
 	if (!b) {
         blocks.append(block);
-
-        if (notify) {
-            addNotification();
-        }
-
 		return true;
     } else {
         if (owner) {

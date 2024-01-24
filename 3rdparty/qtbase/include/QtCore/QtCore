@@ -45,9 +45,6 @@
 #include "qelapsedtimer.h"
 #include "qendian.h"
 #include "qeventloop.h"
-#if QT_CONFIG(qeventtransition)
-#include "qeventtransition.h"
-#endif
 #include "qfile.h"
 #include "qfiledevice.h"
 #include "qfileinfo.h"

@@ -437,7 +437,7 @@ public:
         QLocale = 18, QRect = 19, QRectF = 20, QSize = 21, QSizeF = 22,
         QLine = 23, QLineF = 24, QPoint = 25, QPointF = 26, QRegExp = 27,
         QEasingCurve = 29, QUuid = 30, QVariant = 41, QModelIndex = 42,
-        QPersistentModelIndex = 50, QRegularExpression = 44,
+        QPersistentModelIndex = 50,
         QJsonValue = 45, QJsonObject = 46, QJsonArray = 47, QJsonDocument = 48,
         QByteArrayList = 49, QObjectStar = 39, SChar = 40,
         Void = 43,

@@ -69,8 +69,7 @@ public:
     //! @return The active block of NULL if no block is activated.
 	RS_Block* getActive();
 
-    virtual bool add(RS_Block* block, bool notify=true);
-    virtual void addNotification();
+    virtual bool add(RS_Block* block);
     virtual void remove(RS_Block* block);
     virtual bool rename(RS_Block* block, const QString& name);
     //virtual void editBlock(RS_Block* block, const RS_Block& source);
