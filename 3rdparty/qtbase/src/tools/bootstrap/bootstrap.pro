@@ -21,7 +21,9 @@ DEFINES += \
 
 DEFINES -= QT_EVAL
 
-SOURCES += \
+SOURCES +=  \
+           qdom.cpp \
+           qxml.cpp\
            ../../corelib/codecs/qlatincodec.cpp \
            ../../corelib/codecs/qtextcodec.cpp \
            ../../corelib/codecs/qutfcodec.cpp \
@@ -95,9 +97,7 @@ SOURCES += \
            ../../corelib/tools/qstring_compat.cpp \
            ../../corelib/tools/qstringlist.cpp \
            ../../corelib/tools/qversionnumber.cpp \
-           ../../corelib/tools/qvsnprintf.cpp \
-           ../../xml/dom/qdom.cpp \
-           ../../xml/sax/qxml.cpp
+           ../../corelib/tools/qvsnprintf.cpp
 
 unix:SOURCES += ../../corelib/kernel/qcore_unix.cpp \
                 ../../corelib/io/qfilesystemengine_unix.cpp \

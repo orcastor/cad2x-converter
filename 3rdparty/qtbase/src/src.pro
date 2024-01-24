@@ -18,10 +18,6 @@ src_tools_qfloat16_tables.subdir = tools/qfloat16-tables
 src_tools_qfloat16_tables.target = sub-qfloat16-tables
 src_tools_qfloat16_tables.depends = src_tools_bootstrap
 
-src_tools_androiddeployqt.subdir = tools/androiddeployqt
-src_tools_androiddeployqt.target = sub-androiddeployqt
-src_tools_androiddeployqt.depends = src_corelib
-
 src_winmain.subdir = $$PWD/winmain
 src_winmain.target = sub-winmain
 src_winmain.depends = sub-corelib  # just for the module .pri file
@@ -29,10 +25,6 @@ src_winmain.depends = sub-corelib  # just for the module .pri file
 src_corelib.subdir = $$PWD/corelib
 src_corelib.target = sub-corelib
 src_corelib.depends = src_tools_moc src_tools_qfloat16_tables
-
-src_xml.subdir = $$PWD/xml
-src_xml.target = sub-xml
-src_xml.depends = src_corelib
 
 src_3rdparty_harfbuzzng.subdir = $$PWD/3rdparty/harfbuzz-ng
 src_3rdparty_harfbuzzng.target = sub-3rdparty-harfbuzzng
@@ -68,12 +60,6 @@ SUBDIRS += src_tools_bootstrap src_tools_moc src_tools_qfloat16_tables
 TOOLS = src_tools_moc src_tools_qfloat16_tables
 SUBDIRS += src_corelib
 win32:SUBDIRS += src_winmain
-qtConfig(xml): SUBDIRS += src_xml
-
-android {
-    SUBDIRS += src_tools_androiddeployqt
-    TOOLS += src_tools_androiddeployqt
-}
 
 qtConfig(gui) {
     qtConfig(harfbuzz):!qtConfig(system-harfbuzz) {
