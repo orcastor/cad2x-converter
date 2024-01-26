@@ -130,8 +130,8 @@ make -j20
 - ✅ trim dependency of Render (OpenGL / Vulkan / KMS / VNC)
 - ✅ trim dependency of qpa (X server and etc.)
 - ✅ trim dependency of icu / pcre2
-- ✅ inbuild font database
 - ✅ trim useless codes (Pixmap / Icon / Windows and etc.)
+- ✅ inbuilt font database without plugin
 - ✅ minimal binary size (static link) (2.9MB after `strip` and `upx -9 --ultra-brute`)
     ``` sh
     root@e69def756a3b:/opt/cad2x-converter/output# ldd cad2pdf
@@ -141,7 +141,6 @@ make -j20
             libm.so.6 => /lib/aarch64-linux-gnu/libm.so.6 (0x000000550236f000)
             libfreetype.so.6 => /lib/aarch64-linux-gnu/libfreetype.so.6 (0x000000550241a000)
             libz.so.1 => /lib/aarch64-linux-gnu/libz.so.1 (0x00000055024d9000)
-            libmuparser.so.2 => ./libmuparser.so.2 (0x0000005502505000)
             libpthread.so.0 => /lib/aarch64-linux-gnu/libpthread.so.0 (0x000000550256b000)
             libstdc++.so.6 => /lib/aarch64-linux-gnu/libstdc++.so.6 (0x000000550259c000)
             libgcc_s.so.1 => /lib/aarch64-linux-gnu/libgcc_s.so.1 (0x0000005502781000)
@@ -149,7 +148,6 @@ make -j20
             /lib/ld-linux-aarch64.so.1 (0x0000005500000000)
             libpcre.so.3 => /lib/aarch64-linux-gnu/libpcre.so.3 (0x0000005502918000)
     ```
-    - only `libmuparser.so.2` is 3rd party library
 - ✅ merge: cad2pdf + cad2pic = cad2x
 - 🛠️ fix: png size auto setting
 - 🛠️ fix: output file argument
