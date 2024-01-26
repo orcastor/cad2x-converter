@@ -210,10 +210,8 @@ bool RS_Graphic::save()
     *	  coding error that make LibreCAD not aware of modification
     *	  when some kind of drawing modification is done.
     *	----------------------------------------------------------- */
-    QString actualName;
-    RS2::FormatType	actualType;
-
-    actualType	= formatType;
+    QString actualName = filename;
+    RS2::FormatType	actualType = formatType;
 
     /*	Save drawing file if able to created associated object.
                 *	------------------------------------------------------- */
@@ -264,8 +262,8 @@ bool RS_Graphic::saveAs(const QString &filename, RS2::FormatType type)
 
 	// Check/memorize if file name we want to use as new file
 	// name is the same as the actual file name.
-	auto const filenameSaved=this->filename;
-	auto const formatTypeSaved=this->formatType;
+	auto const filenameSaved = this->filename;
+	auto const formatTypeSaved = this->formatType;
 
 	this->filename = filename;
 	this->formatType = type;
@@ -274,8 +272,8 @@ bool RS_Graphic::saveAs(const QString &filename, RS2::FormatType type)
 
 	if (!ret) {
 		//do not modify filenames:
-		this->filename=filenameSaved;
-		this->formatType=formatTypeSaved;
+		this->filename = filenameSaved;
+		this->formatType = formatTypeSaved;
 	}
 
 	return ret;

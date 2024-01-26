@@ -129,7 +129,7 @@ int main(int argc, char* argv[])
     QCommandLineOption pagesNumOpt(QStringList() << "z" << "pages", "Print on multiple pages (Horiz. x Vert.).", "HxV");
     parser.addOption(pagesNumOpt);
 
-    QCommandLineOption outFileOpt(QStringList() << "o" << "outfile", "Output PDF/PNG/SVG file.", "file");
+    QCommandLineOption outFileOpt(QStringList() << "o" << "outfile", "Output DXF/PDF/PNG/SVG file.", "file");
     parser.addOption(outFileOpt);
 
     QCommandLineOption outDirOpt(QStringList() << "t" << "directory", "Target output directory.", "path");
@@ -218,7 +218,7 @@ int main(int argc, char* argv[])
                     }
                     break;
                 }
-                ok = doc->saveAs(params.outFile, RS2::FormatDXF1);
+                ok = doc->saveAs(params.outFile, RS2::FormatDXFRW); // DXF - v2007 defaulted
                 break;
             }
 

@@ -47,7 +47,7 @@ Options:
   -s, --scale <double>        Output scale. E.g.: 0.01 (for 1:100 scale).
   -m, --margins <L,T,R,B>     Paper margins in mm (integer or float).
   -z, --pages <HxV>           Print on multiple pages (Horiz. x Vert.).
-  -o, --outfile <file>        Output PDF/PNG/SVG file.
+  -o, --outfile <file>        Output DXF/PDF/PNG/SVG file.
   -t, --directory <path>      Target output directory.
 
 Arguments:
