@@ -99,9 +99,6 @@ public:
         return &letterList;
     }
     RS_Block* findLetter(const QString& name);
-    //    RS_Block* findLetter(const QString& name) {
-    //		return letterList.find(name);
-    //	}
     unsigned countLetters() {
         return letterList.count();
     }

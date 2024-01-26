@@ -245,8 +245,6 @@ void RS_Insert::update() {
         RS_DEBUG->print("RS_Insert::update: OK");
 }
 
-
-
 /**
  * @return Pointer to the block associated with this Insert or
  *   nullptr if the block couldn't be found. Blocks are requested
@@ -280,7 +278,6 @@ RS_Block* RS_Insert::getBlockForInsert() const{
     return blk;
 }
 
-
 /**
  * Is this insert visible? (re-implementation from RS_Entity)
  *
@@ -303,21 +300,16 @@ bool RS_Insert::isVisible() const
     return RS_Entity::isVisible();
 }
 
-
 RS_VectorSolutions RS_Insert::getRefPoints() const
 {
 	return RS_VectorSolutions{data.insertionPoint};
 }
-
-
 
 RS_Vector RS_Insert::getNearestRef(const RS_Vector& coord,
 									 double* dist) const{
 
         return getRefPoints().getClosest(coord, dist);
 }
-
-
 
 void RS_Insert::move(const RS_Vector& offset) {
         RS_DEBUG->print("RS_Insert::move: offset: %f/%f",
@@ -330,8 +322,6 @@ void RS_Insert::move(const RS_Vector& offset) {
     update();
 }
 
-
-
 void RS_Insert::rotate(const RS_Vector& center, const double& angle) {
         RS_DEBUG->print("RS_Insert::rotate1: insertionPoint: %f/%f "
             "/ center: %f/%f",
@@ -343,6 +333,7 @@ void RS_Insert::rotate(const RS_Vector& center, const double& angle) {
                 data.insertionPoint.x, data.insertionPoint.y);
     update();
 }
+
 void RS_Insert::rotate(const RS_Vector& center, const RS_Vector& angleVector) {
         RS_DEBUG->print("RS_Insert::rotate1: insertionPoint: %f/%f "
             "/ center: %f/%f",
@@ -355,8 +346,6 @@ void RS_Insert::rotate(const RS_Vector& center, const RS_Vector& angleVector) {
     update();
 }
 
-
-
 void RS_Insert::scale(const RS_Vector& center, const RS_Vector& factor) {
         RS_DEBUG->print("RS_Insert::scale1: insertionPoint: %f/%f",
                 data.insertionPoint.x, data.insertionPoint.y);
@@ -367,8 +356,6 @@ void RS_Insert::scale(const RS_Vector& center, const RS_Vector& factor) {
                 data.insertionPoint.x, data.insertionPoint.y);
     update();
 }
-
-
 
 void RS_Insert::mirror(const RS_Vector& axisPoint1, const RS_Vector& axisPoint2) {
     data.insertionPoint.mirror(axisPoint1, axisPoint2);
@@ -382,22 +369,7 @@ void RS_Insert::mirror(const RS_Vector& axisPoint1, const RS_Vector& axisPoint2)
     update();
 }
 
-
 std::ostream& operator << (std::ostream& os, const RS_Insert& i) {
     os << " Insert: " << i.getData() << std::endl;
     return os;
 }
-
-void RS_Insert::draw(RS_Painter* painter, RS_GraphicView* view, double& /*offset*/)
-{
-    if ( ! (painter && view)) return;
-
-    double offset = 0.0;
-
-    for (auto e : getEntityList())
-    {
-        e->setPen(getPen());
-        e->draw(painter, view, offset);
-    }
-}
-

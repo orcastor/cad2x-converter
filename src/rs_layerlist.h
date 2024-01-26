@@ -84,15 +84,6 @@ public:
     void freezeAll(bool freeze);
     void lockAll(bool lock);
 
-    //! sets the layerWidget pointer in RS_LayerListClass
-    void setLayerWitget(QG_LayerWidget * lw) {
-        layerWidget=lw;
-    }
-    //! @return the layerWidget pointer inside the RS_LayerListClass
-    QG_LayerWidget* getLayerWitget() {
-        return layerWidget;
-    }
-
     /**
      * @brief sort by layer names
      */

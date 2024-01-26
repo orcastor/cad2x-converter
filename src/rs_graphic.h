@@ -215,20 +215,6 @@ public:
     void setCrosshairType(RS2::CrosshairType chType);
     RS2::CrosshairType getCrosshairType() const;
 
-    bool isDraftOn() const;
-    void setDraftOn(bool on);
-
-    /** Sets the unit of this graphic's dimensions to 'u' */
-    /*virtual void setDimensionUnit(RS2::Unit u) {
-            addVariable("$INSUNITS", (int)u, 70);
-    dimensionUnit = u;
-    }*/
-
-    /** Gets the unit of this graphic's dimension */
-    /*virtual RS2::Unit getDimensionUnit() {
-    return dimensionUnit;
-    }*/
-
     void centerToPage();
     bool fitToPage();
 
@@ -298,25 +284,22 @@ public:
 
 private:
 
-        bool BackupDrawingFile(const QString &filename);
-        QString currentFileName; //keep a copy of filename for the modifiedTime
+    RS_LayerList layerList;
+    RS_BlockList blockList;
+    RS_VariableDict variableDict;
+    RS2::CrosshairType crosshairType; //crosshair type used by isometric grid
+    //if set to true, will refuse to modify paper scale
+    bool paperScaleFixed = false;
 
-        RS_LayerList layerList;
-        RS_BlockList blockList;
-        RS_VariableDict variableDict;
-        RS2::CrosshairType crosshairType; //crosshair type used by isometric grid
-        //if set to true, will refuse to modify paper scale
-        bool paperScaleFixed = false;
+    // Paper margins in millimeters
+    double marginLeft = 0.;
+    double marginTop = 0.;
+    double marginRight = 0.;
+    double marginBottom = 0.;
 
-        // Paper margins in millimeters
-        double marginLeft = 0.;
-        double marginTop = 0.;
-        double marginRight = 0.;
-        double marginBottom = 0.;
-
-        // Number of pages drawing occupies
-        int pagesNumH = 1;
-        int pagesNumV = 1;
+    // Number of pages drawing occupies
+    int pagesNumH = 1;
+    int pagesNumV = 1;
 };
 
 

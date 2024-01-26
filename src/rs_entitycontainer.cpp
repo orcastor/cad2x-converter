@@ -422,7 +422,7 @@ void RS_EntityContainer::adjustBorders(RS_Entity* entity) {
  * Recalculates the borders of this entity container.
  */
 void RS_EntityContainer::calculateBorders() {
-    RS_DEBUG->print("RS_EntityContainer::calculateBorders");
+    //RS_DEBUG->print("RS_EntityContainer::calculateBorders");
 
     resetBorders();
     for (RS_Entity* e: entities){
@@ -438,8 +438,8 @@ void RS_EntityContainer::calculateBorders() {
         }
     }
 
-    RS_DEBUG->print("RS_EntityContainer::calculateBorders: size 1: %f,%f",
-                    getSize().x, getSize().y);
+    //RS_DEBUG->print("RS_EntityContainer::calculateBorders: size 1: %f,%f",
+    //                getSize().x, getSize().y);
 
     // needed for correcting corrupt data (PLANS.dxf)
     if (minV.x>maxV.x || minV.x>RS_MAXDOUBLE || maxV.x>RS_MAXDOUBLE
@@ -455,8 +455,8 @@ void RS_EntityContainer::calculateBorders() {
         maxV.y = 0.0;
     }
 
-    RS_DEBUG->print("RS_EntityContainer::calculateBorders: size: %f,%f",
-                    getSize().x, getSize().y);
+    //RS_DEBUG->print("RS_EntityContainer::calculateBorders: size: %f,%f",
+    //                getSize().x, getSize().y);
 
     //RS_DEBUG->print("  borders: %f/%f %f/%f", minV.x, minV.y, maxV.x, maxV.y);
 

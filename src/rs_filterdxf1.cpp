@@ -426,7 +426,6 @@ bool RS_FilterDXF1::readFromBuffer() {
 								dxfLine=getBufLine();
                                 if (dxfLine.size()) {
                                     double y = atof(dxfLine.toLatin1().data());
-
                                     graphic->addVariable("$GRIDUNIT", RS_Vector(x,y), 10);
                                 }
                             }

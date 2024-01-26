@@ -165,13 +165,6 @@ bool RS_BlockList::rename(RS_Block* block, const QString& name) {
  * \p nullptr if no such block was found.
  */
 RS_Block* RS_BlockList::find(const QString& name) {
-    try {
-        RS_DEBUG->print(RS_Debug::D_DEBUGGING, "RS_BlockList::find(): %s", name.toLatin1().constData());
-    }
-    catch(...) {
-        RS_DEBUG->print(RS_Debug::D_DEBUGGING, "RS_BlockList::find(): wrong name to find");
-        return nullptr;
-    }
 	// Todo : reduce this from O(N) to O(log(N)) complexity based on sorted list or hash
 	//DFS
 	for(RS_Block* b: blocks) {
@@ -179,7 +172,6 @@ RS_Block* RS_BlockList::find(const QString& name) {
 			return b;
 		}
 	}
-    RS_DEBUG->print(RS_Debug::D_DEBUGGING, "RS_BlockList::find(): bad");
 	return nullptr;
 }
 

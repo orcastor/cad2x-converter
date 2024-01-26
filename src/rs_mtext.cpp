@@ -392,7 +392,7 @@ void RS_MText::addLetter(RS_EntityContainer &oneLine, QChar letter,
     RS_DEBUG->print("RS_MText::update: missing font for letter( %s ), replaced "
                     "it with QChar(0xfffd)",
                     qPrintable(letterText));
-    letterText = QChar(0xfffd);
+    letterText = QChar('?'/*0xfffd*/);
   }
 
   LC_LOG << "RS_MText::update: insert a letter at pos:(" << letterPosition.x
@@ -638,7 +638,6 @@ void RS_MText::draw(RS_Painter *painter, RS_GraphicView *view,
   }
 
   double offset = 0.0;
-
   foreach (RS_Entity *entity, entities)
     entity->draw(painter, view, offset);
 }

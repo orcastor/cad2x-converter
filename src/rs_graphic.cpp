@@ -182,93 +182,6 @@ void RS_Graphic::newDoc() {
     //addLayer(new RS_Layer("ByBlock"));
 }
 
-
-
-/*
- * Description:	Create/update the drawing backup file, if necessary.
- * Author(s):		Claude Sylvain
- * Created:			13 July 2011
- * Last modified:
- *
- * Parameters:		const QString &filename:
- * 						Name of the drawing file to backup.
- *
- * Returns:			bool:
- * 						false	: Operation failed.
- * 						true	: Operation successful.
- */
-bool RS_Graphic::BackupDrawingFile(const QString &filename)
-{
-        static const char	*msg_err	=
-                "RS_Graphic::BackupDrawingFile: Can't create object!";
-
-        bool	ret	= false;		/*	Operation failed, by default. */
-
-
-        /*	- Create backup only if drawing file name exist.
-         *	- Remark: Not really necessary to check if the drawing file
-         *	  name have been defined.
-         *	----------------------------------------------------------- */
-        if (filename.length() > 0)
-        {
-                /*	Built Backup File Name.
-                 *	*/
-                QString	*qs_backup_fn	= new QString(filename + '~');
-
-                /*	Create "Drawing File" object.
-                 *	*/
-                QFile	*qf_df = new QFile(filename);
-
-                /*	If able to create the objects, process...
-                 *	----------------------------------------- */
-                if ((qs_backup_fn != nullptr) && (qf_df != nullptr))
-                {
-                        /*	Create backup file only if drawing file already exist.
-                         *	------------------------------------------------------ */
-                        if (qf_df->exists() == true)
-                        {
-                                /*	Create "Drawing File Backup" object.
-                                 *	*/
-                                QFile	*qf_dfb	= new QFile(*qs_backup_fn);
-
-                                /*	If able to create the object, process...
-                                 *	---------------------------------------- */
-                                if (qf_dfb != nullptr)
-                                {
-                                        /*	If a backup file already exist, remove it!
-                                         *	------------------------------------------ */
-                                        if (qf_dfb->exists() == true)
-                                                qf_dfb->remove();
-
-                                        qf_df->copy(*qs_backup_fn);	/*	Create backup file. */
-                                        ret	= true;						/*	Operation successful. */
-                                        delete qf_dfb;
-                                }
-                                /*	Can't create object.
-                                 *	-------------------- */
-                                else
-                                {
-                    RS_DEBUG->print("%s", msg_err);
-                                }
-                        }
-
-                }
-                /*	Can't create object(s).
-                 *	----------------------- */
-                else
-                {
-            RS_DEBUG->print("%s", msg_err);
-                }
-
-                delete qs_backup_fn;
-                delete qf_df;
-        }
-
-        return ret;
-}
-
-
-
 /*
  *	Description:	Saves this graphic with the current filename and settings.
  *	Author(s):		..., Claude Sylvain
@@ -311,7 +224,6 @@ bool RS_Graphic::save()
         RS_DEBUG->print("RS_Graphic::save: Export...");
 
         ret = RS_FileIO::instance()->fileExport(*this, actualName, actualType);
-        currentFileName=actualName;
     } else {
         RS_DEBUG->print("RS_Graphic::save: Can't create object!");
         RS_DEBUG->print("RS_Graphic::save: File not saved!");
@@ -386,11 +298,6 @@ bool RS_Graphic::open(const QString &filename, RS2::FormatType type) {
     ret = RS_FileIO::instance()->fileImport(*this, filename, type);
 
     if( ret) {
-        currentFileName=QString(filename);
-
-        //cout << *((RS_Graphic*)graphic);
-        //calculateBorders();
-
         RS_DEBUG->print("RS_Graphic::open(%s): OK", filename.toLatin1().data());
     }
 

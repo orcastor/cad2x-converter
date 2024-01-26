@@ -70,7 +70,7 @@ RS_Debug* RS_Debug::instance() {
  * Constructor setting the default debug level.
  */
 RS_Debug::RS_Debug() {
-    debugLevel = D_DEBUGGING;
+    debugLevel = D_NOTHING;
 }
 
 RS_Debug::~RS_Debug() {
@@ -84,7 +84,7 @@ RS_Debug::~RS_Debug() {
 void RS_Debug::setLevel(RS_DebugLevel level) {
     if(debugLevel==level) return;
     debugLevel = level;
-    print( D_NOTHING, "RS_DEBUG::setLevel(%d)", level);
+    // print( D_NOTHING, "RS_DEBUG::setLevel(%d)", level);
     print( D_CRITICAL, "RS_DEBUG: Critical");
     print( D_ERROR, "RS_DEBUG: Errors");
     print( D_WARNING, "RS_DEBUG: Warnings");

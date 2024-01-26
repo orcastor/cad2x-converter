@@ -97,6 +97,8 @@ public:
 	void setOffsetY(int oy);
 	int getOffsetX() const;
 	int getOffsetY() const;
+	void centerOffsetX();
+	void centerOffsetY();
 	/**
 	 * Sets a fixed border in pixel around the graphic. This border
 	 * specifies how far the user can scroll outside the graphic
@@ -108,6 +110,8 @@ public:
 	int getBorderTop() const;
 	int getBorderRight() const;
 	int getBorderBottom() const;
+
+	virtual void zoomAuto(bool axis=true, bool keepAspectRatio=true);
 
 	virtual void drawEntity(RS_Painter *painter, RS_Entity* e, double& offset);
 	virtual void drawEntity(RS_Painter *painter, RS_Entity* e);

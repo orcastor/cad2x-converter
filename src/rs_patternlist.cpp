@@ -39,7 +39,6 @@ RS_PatternList* RS_PatternList::instance() {
 	return &instance;
 }
 
-
 RS_PatternList::~RS_PatternList() = default;
 
 /**
@@ -63,7 +62,6 @@ void RS_PatternList::init() {
 		RS_DEBUG->print("base: %s", name.toLatin1().data());
     }
 }
-
 
 /**
  * @return Pointer to the pattern with the given name or
@@ -90,14 +88,12 @@ RS_Pattern* RS_PatternList::requestPattern(const QString& name) {
 	return nullptr;
 
 }
-
 	
 bool RS_PatternList::contains(const QString& name) const {
 
 	return patterns.count(name.toLower());
 
 }
-
 
 /**
  * Dumps the patterns to stdout.
@@ -111,4 +107,3 @@ std::ostream& operator << (std::ostream& os, RS_PatternList& l) {
 
     return os;
 }
-

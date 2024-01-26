@@ -233,7 +233,7 @@ void RS_GraphicView::setPenForEntity(RS_Painter *painter,RS_Entity *e, double& o
  */
 void RS_GraphicView::drawEntity(RS_Painter *painter, RS_Entity* e) {
 	double offset(0.);
-	drawEntity(painter,e,offset);
+	drawEntity(painter, e, offset);
 }
 
 void RS_GraphicView::drawEntity(RS_Painter *painter, RS_Entity* e, double& offset) {
@@ -662,10 +662,119 @@ int RS_GraphicView::getOffsetY() const{
 	return offsetY;
 }
 
+/**
+ * Centers the drawing in x-direction.
+ */
+void RS_GraphicView::centerOffsetX() {
+	if (container) {
+		offsetX = (int)(((getWidth()-borderLeft-borderRight)
+						 - (container->getSize().x*factor.x))/2.0
+						- (container->getMin().x*factor.x)) + borderLeft;
+	}
+}
+
+/**
+ * Centers the drawing in y-direction.
+ */
+void RS_GraphicView::centerOffsetY() {
+	if (container) {
+		offsetY = (int)((getHeight()-borderTop-borderBottom
+						 - (container->getSize().y*factor.y))/2.0
+						- (container->getMin().y*factor.y)) + borderBottom;
+	}
+}
+
 void RS_GraphicView::setPrinting(bool p) {
 	printing = p;
 }
 
 bool RS_GraphicView::isPrinting() const{
 	return printing;
+}
+/**
+ * performs autozoom
+ *
+ * @param axis include axis in zoom
+ * @param keepAspectRatio true: keep aspect ratio 1:1
+ *                        false: factors in x and y are stretched to the max
+ */
+#include <iostream>
+void RS_GraphicView::zoomAuto(bool axis, bool keepAspectRatio) {
+
+	RS_DEBUG->print("RS_GraphicView::zoomAuto");
+	if (container) {
+        container->calculateBorders();
+
+		double sx, sy;
+		if (axis) {
+			auto const dV = container->getMax() - container->getMin();
+			sx = std::max(dV.x, 0.);
+			sy = std::max(dV.y, 0.);
+		} else {
+			sx = container->getSize().x;
+			sy = container->getSize().y;
+		}
+//		    std::cout<<" RS_GraphicView::zoomAuto("<<sx<<","<<sy<<")"<<std::endl;
+//			std::cout<<" RS_GraphicView::zoomAuto("<<axis<<","<<keepAspectRatio<<")"<<std::endl;
+
+		double fx=1., fy=1.;
+		unsigned short fFlags=0;
+
+		if (sx>RS_TOLERANCE) {
+			fx = (getWidth()-borderLeft-borderRight) / sx;
+		} else {
+			fFlags += 1; //invalid x factor
+		}
+
+		if (sy>RS_TOLERANCE) {
+			fy = (getHeight()-borderTop-borderBottom) / sy;
+		} else {
+			fFlags += 2; //invalid y factor
+		}
+		//    std::cout<<"0: fx= "<<fx<<"\tfy="<<fy<<std::endl;
+
+		RS_DEBUG->print("f: %f/%f", fx, fy);
+
+		switch(fFlags){
+		case 1:
+			fx=fy;
+			break;
+		case 2:
+			fy=fx;
+			break;
+		case 3:
+			return; //do not do anything, invalid factors
+		default:
+			if (keepAspectRatio) {
+				fx = fy = std::min(fx, fy);
+			}
+			//                break;
+		}
+		//    std::cout<<"1: fx= "<<fx<<"\tfy="<<fy<<std::endl;
+
+		RS_DEBUG->print("f: %f/%f", fx, fy);
+		//exclude invalid factors
+		fFlags=0;
+		if (fx<RS_TOLERANCE||fx>RS_MAXDOUBLE) {
+			fx=1.0;
+			fFlags += 1;
+		}
+		if (fy<RS_TOLERANCE||fy>RS_MAXDOUBLE) {
+			fy=1.0;
+			fFlags += 2;
+		}
+		if(fFlags == 3 ) return;
+	
+		//        std::cout<<"2: fx= "<<fx<<"\tfy="<<fy<<std::endl;
+		setFactorX(fx);
+		setFactorY(fy);
+
+		RS_DEBUG->print("f: %f/%f", fx, fy);
+		
+		//        RS_DEBUG->print("centerOffsetX");
+		centerOffsetX();
+		//        RS_DEBUG->print("centerOffsetY");
+		centerOffsetY();
+	}
+	RS_DEBUG->print("RS_GraphicView::zoomAuto OK");
 }

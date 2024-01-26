@@ -56,8 +56,6 @@ RS_Font::RS_Font(const QString& fileName, bool owner)
     rawLffFontList.clear();
 }
 
-
-
 /**
  * Loads the font into memory.
  *
@@ -123,6 +121,7 @@ bool RS_Font::loadFont() {
     if (path.contains(".lff"))
         readLFF(path);
 
+    /*
     RS_Block* bk = letterList.find(QChar(0xfffd));
 	if (!bk) {
         // create new letter:
@@ -138,7 +137,7 @@ bool RS_Font::loadFont() {
         letter->addEntity(pline);
         letter->calculateBorders();
         letterList.add(letter);
-    }
+    }*/
 
     loaded = true;
 
@@ -483,8 +482,8 @@ RS_Block* RS_Font::findLetter(const QString& name) {
     RS_Block* ret= letterList.find(name);
 	if (ret) return ret;
     return generateLffFont(name);
-
 }
+
 /**
  * Dumps the fonts data to stdout.
  */

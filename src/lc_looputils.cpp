@@ -205,7 +205,6 @@ LoopExtractor::LoopExtractor(RS_EntityContainer &edges) :
     assert(!edges.isEmpty());
 }
 
-//------------------------------------------------------------------------------------//
 std::vector<RS_Entity*> LoopExtractor::getConnected() const
 {
     std::vector<RS_Entity *> connected;
@@ -220,11 +219,9 @@ std::vector<RS_Entity*> LoopExtractor::getConnected() const
     return connected;
 }
 
-//------------------------------------------------------------------------------------//
 LoopExtractor::~LoopExtractor() = default;
 
 
-//------------------------------------------------------------------------------------//
 // The algorithm:
 // Keep finding outermost loops from unprocessed edges and remove the loops from unprocess edges.
 // To find the first edge on the outermost, draw a line acrossing one middle point, sort the intersections
@@ -280,37 +277,45 @@ RS_Entity* LoopExtractor::findFirst() const
     return first;
 }
 
-//------------------------------------------------------------------------------------//
 RS_Entity* LoopExtractor::findOutermost(std::vector<RS_Entity*> edges) const
 {
     assert(edges.size() >= 2);
     double edgeLength = RS_MAXDOUBLE;
     for(RS_Entity* edge: edges)
-        edgeLength = std::min({edgeLength, edge->getLength(), edge->getStartpoint().distanceTo(edge->getEndpoint())});
+        if (edge->getLength() > RS_TOLERANCE)
+    edgeLength = std::min({edgeLength, std::max(edge->getLength(), edge->getStartpoint().distanceTo(edge->getEndpoint()))});
+
+    if (edgeLength >= RS_MAXDOUBLE - 1.) {
+        assert(!"Contour size too large");
+    }
 
     // draw a small circle around the current end point
     RS_Circle circle{nullptr, {m_data->vertex, edgeLength * 0.01}};
-    auto getCut = [&circle, p0 = m_data->vertex](RS_Entity* edge){
+    auto getCut = [&circle, p0 = m_data->vertex](RS_Entity* edge) {
         RS_VectorSolutions sol = RS_Information::getIntersection(&circle, edge, true);
-        assert(!sol.empty());
-        return std::make_pair(edge, p0.angleTo(sol.at(0)));
+        return sol.empty() ? std::make_tuple(edge, 0., false) : std::make_tuple(edge, p0.angleTo(sol.at(0)), true);
     };
-    using CutPair = std::pair<RS_Entity*, double>;
+    using CutPair = std::tuple<RS_Entity*, double, bool>;
     // find the angle for the current edge
     CutPair current = getCut(m_data->current);
+    // The current edge must intersect with the small circle
+    assert(std::get<bool>(current));
     std::vector<CutPair> cuts;
-    std::transform(edges.cbegin(), edges.cend(), std::back_inserter(cuts), getCut);
+    for (RS_Entity* edge: edges) {
+        CutPair cut = getCut(edge);
+        if (std::get<bool>(cut))
+            cuts.push_back(cut);
+    }
 
     // find the minimum left turning angle to get the next outermost edge
     std::sort(cuts.begin(), cuts.end(),
-              [a0=current.second](const CutPair& cut0, const CutPair& cut1){
-                using namespace RS_Math;
-                return getAngleDifference(a0, cut0.second) < getAngleDifference(a0, cut1.second);
+            [a0=std::get<double>(current)](const CutPair& cut0, const CutPair& cut1){
+        using namespace RS_Math;
+        return getAngleDifference(a0, std::get<double>(cut0)) < getAngleDifference(a0, std::get<double>(cut1));
     });
-    return cuts.front().first;
+    return std::get<RS_Entity*>(cuts.front());
 }
 
-//------------------------------------------------------------------------------------//
 bool LoopExtractor::findNext() const
 {
     std::vector<RS_Entity*> connected = getConnected();
@@ -333,11 +338,11 @@ bool LoopExtractor::findNext() const
     return true;
 }
 
-
-//------------------------------------------------------------------------------------//
 std::vector<std::unique_ptr<RS_EntityContainer>> LoopExtractor::extract() {
-    std::vector<std::unique_ptr<RS_EntityContainer>> loops;
     LC_LOG<<__func__<<"(): begin";
+    std::vector<std::unique_ptr<RS_EntityContainer>> loops;
+    if (m_data->size < RS_TOLERANCE)
+        return loops;
 
     bool success = true;
     while(success && !m_data->edges.isEmpty()) {
@@ -356,7 +361,6 @@ std::vector<std::unique_ptr<RS_EntityContainer>> LoopExtractor::extract() {
     return loops;
 }
 
-//------------------------------------------------------------------------------------//
 bool LoopExtractor::validate() const
 {
     if (m_loop == nullptr || m_loop->isEmpty())
@@ -375,14 +379,12 @@ bool LoopExtractor::validate() const
     }
 }
 
-//------------------------------------------------------------------------------------//
 struct LoopSorter::AreaPredicate {
     AreaPredicate(const LoopSorter& sorter);
     bool operator () (const RS_EntityContainer* lhs, const RS_EntityContainer* rhs) const;
     const LoopSorter& m_sorter;
 };
 
-//------------------------------------------------------------------------------------//
 struct LoopSorter::Data {
     Data(LoopSorter* sorter, std::vector<std::unique_ptr<RS_EntityContainer>> loops):
         loops{std::move(loops)}
@@ -406,28 +408,23 @@ struct LoopSorter::Data {
     std::unordered_map<RS_EntityContainer*, RS_EntityContainer*> parents;
 };
 
-//------------------------------------------------------------------------------------//
 LoopSorter::AreaPredicate::AreaPredicate(const LoopSorter &sorter):
     m_sorter{sorter}
 {}
 
-//------------------------------------------------------------------------------------//
 bool LoopSorter::AreaPredicate::operator ()(const RS_EntityContainer* lhs, const RS_EntityContainer* rhs) const
 {
     return m_sorter.m_data->area.at(lhs) + RS_TOLERANCE < m_sorter.m_data->area.at(rhs);
 }
 
-//------------------------------------------------------------------------------------//
 LoopSorter::LoopSorter(std::vector<std::unique_ptr<RS_EntityContainer>> loops):
     m_data{std::make_unique<LoopSorter::Data>(this, std::move(loops))}
 {
     init();
 }
 
-//------------------------------------------------------------------------------------//
 LoopSorter::~LoopSorter() = default;
 
-//------------------------------------------------------------------------------------//
 void LoopSorter::init()
 {
     for(const auto& loop: m_data->loops)
@@ -438,7 +435,6 @@ void LoopSorter::init()
         findAncestors(loop);
 }
 
-//------------------------------------------------------------------------------------//
 void LoopSorter::findAncestors(RS_EntityContainer* loop)
 {
     if (m_data->toProcess.erase(loop) == 0)
@@ -475,7 +471,6 @@ void LoopSorter::findAncestors(RS_EntityContainer* loop)
 }
 
 
-//------------------------------------------------------------------------------------//
 std::vector<RS_EntityContainer*> LoopSorter::getResults() const
 {
     std::set<RS_EntityContainer*> roots;
