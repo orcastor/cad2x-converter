@@ -9,7 +9,8 @@ TEMPLATE = subdirs
 TARGET = 3rdparty
 
 SUBDIRS     = \
-        libdxfrw
+        libdxfrw \
+        libcharsetdetect
 
 macx|win32|equals(build_muparser, "true")|!packagesExist(muparser){
         message("Using bundled muparser lib")
