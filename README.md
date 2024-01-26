@@ -14,7 +14,7 @@ Minimal CLI tool convert CAD files (DXF / DWG) to other formats (PDF / PNG / SVG
 - 🌈 **Customized** - with trimmed `Qt 5.12.12` (`QtCore` & `QtGUI`)
 - 🚀 **Extremely Small** - **2.9MB** binary file size at all (on `aarch64-linux`)
 - 🗳️ **Cross Platform** - support Mac OSX / Windows / Linux (Most linux based operating systems)
-- 🔠 **TrueType Font** - support lazy load `TrueType` font besides `lff`/`cxf` - can share with system and other apps
+- 🔠 **TrueType Font** - support lazy load `TrueType` font (not only `lff`/`cxf`) - share system and other apps's fonts
 - � **Unicode Display** - fix for all known `$DWGCODEPAGE` - according to [DXF File Encoding](https://ezdxf.readthedocs.io/en/stable/dxfinternals/fileencoding.html) (not only `Japanese` & `Cyrillic`)
 
 ## Best Paractices
@@ -152,8 +152,8 @@ make -j20
 - 🛠️ fix: png size auto setting
 - 🛠️ fix: output file argument
 - 🆕 feature: support auto orientation detection
-- [ ]🛠️ fix: malformed Unicode characters - according to [DXF File Encoding](https://ezdxf.readthedocs.io/en/stable/dxfinternals/fileencoding.html)
-- [ ]🆕 feature: support lazy load/generate `lff` font from `ttf`/`ttc` font file
+- [ ] 🛠️ fix: malformed Unicode characters - according to [DXF File Encoding](https://ezdxf.readthedocs.io/en/stable/dxfinternals/fileencoding.html)
+- [ ] 🆕 feature: lazy load `ttf`/`ttc` font file support (not only `lff`/`cxf`)
 
 ## Referrence
 
