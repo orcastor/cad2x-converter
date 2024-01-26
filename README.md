@@ -6,7 +6,7 @@
 
 <h1 align="center"><strong>🆒 cad2x</strong> - sub tool of <a href="https://github.com/orcastor/addon-previewer">orcastor/addon-previewer</a></h1>
 
-Minimal CLI tool convert CAD files (DXF / DWG) to other formats (PDF / PNG / SVG) trimming from [LibreCAD](https://github.com/LibreCAD/LibreCAD) (commit-id: 0601535).
+Minimal CLI tool convert CAD files (DXF / DWG) to other formats (DXF / PDF / PNG / SVG) trimming from [LibreCAD](https://github.com/LibreCAD/LibreCAD) (commit-id: 0601535).
 
 # Features
 
@@ -14,15 +14,15 @@ Minimal CLI tool convert CAD files (DXF / DWG) to other formats (PDF / PNG / SVG
 - 🌈 **Customized** - with trimmed `Qt 5.12.12` (`QtCore` & `QtGUI`)
 - 🚀 **Extremely Small** - **2.9MB** binary file size at all (on `aarch64-linux`)
 - 🗳️ **Cross Platform** - support Mac OSX / Windows / Linux (Most linux based operating systems)
-- 🔠 **TrueType Font** - support lazy load `TrueType` font (not only `lff`/`cxf`) - share system and other apps's fonts
-- � **Unicode Display** - fix for all known `$DWGCODEPAGE` - according to [DXF File Encoding](https://ezdxf.readthedocs.io/en/stable/dxfinternals/fileencoding.html) (not only `Japanese` & `Cyrillic`)
+- 🔠 **TrueType Font** - support lazy load `ttf`/`ttc` font (not only `lff`/`cxf`) - share system and other apps' fonts
+- � **Unicode Display** - fix for all known `$DWGCODEPAGE` - follow [DXF File Encoding](https://ezdxf.readthedocs.io/en/stable/dxfinternals/fileencoding.html)  & [QTextCodec Names](https://doc.qt.io/archives/qt-5.12/qtextcodec.html) (not only `Japanese` & `Cyrillic`)
 
 ## Best Paractices
 
 ``` sh
 Usage: ./cad2x [options] <dxf/dwg files>
 
-Print a bunch of DXF/DWG files to PDF/PNG/SVG file(s).
+Print a bunch of DXF/DWG files to DXF/PDF/PNG/SVG file(s).
 
 Examples:
 
@@ -54,9 +54,10 @@ Arguments:
   <dxf/dwg files>             Input DXF/DWG file(s)
 ```
 
-### Convert all the `dwg` files to `pdf` format to `output` directory
+### Convert all the `dwg` files to `pdf` format
 - detect the orientation (-a)
 - auto fit & center drawing in the page (-c)
+- to `output` directory (-t)
 
 ``` sh
 ./cad2x -o pdf *.dwg -t output -ac
@@ -68,6 +69,12 @@ Arguments:
 
 ``` sh
 ./cad2x -o b.png a.dxf -ac
+```
+
+### Convert `a.dwg` to `b.dxf`
+
+``` sh
+./cad2x -o b.dxf a.dwg
 ```
 
 ## Build Tutorials
@@ -152,7 +159,7 @@ make -j20
 - 🛠️ fix: png size auto setting
 - 🛠️ fix: output file argument
 - 🆕 feature: support auto orientation detection
-- [ ] 🛠️ fix: malformed Unicode characters - according to [DXF File Encoding](https://ezdxf.readthedocs.io/en/stable/dxfinternals/fileencoding.html)
+- [ ] 🛠️ fix: malformed Unicode characters - according to [DXF File Encoding](https://ezdxf.readthedocs.io/en/stable/dxfinternals/fileencoding.html) & [QTextCodec Names](https://doc.qt.io/archives/qt-5.12/qtextcodec.html)
 - [ ] 🆕 feature: lazy load `ttf`/`ttc` font file support (not only `lff`/`cxf`)
 
 ## Referrence

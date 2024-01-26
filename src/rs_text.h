@@ -204,9 +204,9 @@ public:
     QString getStyle() {
         return data.style;
     }
-        void setAngle(double a) {
-                data.angle = a;
-        }
+    void setAngle(double a) {
+            data.angle = a;
+    }
     double getAngle() {
         return data.angle;
     }

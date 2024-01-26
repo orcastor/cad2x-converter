@@ -86,7 +86,7 @@ int main(int argc, char* argv[])
     QCoreApplication::setApplicationVersion(XSTR(LC_VERSION));
 
     QStringList appDesc;
-    appDesc << "Print a bunch of DXF/DWG files to PDF/PNG/SVG file(s).";
+    appDesc << "Print a bunch of DXF/DWG files to DXF/PDF/PNG/SVG file(s).";
     appDesc << "";
     appDesc << "Examples:";
     appDesc << "";
@@ -198,7 +198,7 @@ int main(int argc, char* argv[])
 
         params.outFile = (params.outDir.isEmpty() ? fi.path() : params.outDir) + "/" + baseName + "." + format;
 
-        qDebug() << "Printing" << file
+        qDebug() << "Convert" << file
                  << "to" << params.outFile << ">>>>";
 
         bool ok = false;
@@ -207,6 +207,20 @@ int main(int argc, char* argv[])
             std::unique_ptr<RS_Document> doc = openDocAndSetGraphic(file);
             if (doc == nullptr || doc->getGraphic() == nullptr)
                 break;
+
+            if (format == "dxf") {
+                if (fi.suffix() == "dxf") {
+                    QFileInfo ofi(params.outFile);
+                    if (fi.path() != ofi.path()) {
+                        ok = QFile::copy(fi.path(), ofi.path());
+                    } else {
+                        qDebug() << "Same file" << file << "Ignored";
+                    }
+                    break;
+                }
+                ok = doc->saveAs(params.outFile, RS2::FormatDXF1);
+                break;
+            }
 
             RS_Graphic *graphic = doc->getGraphic();
             touchGraphic(graphic, params);
@@ -268,7 +282,7 @@ int main(int argc, char* argv[])
             }
         } while (false);
 
-        qDebug() << "Printing" << file
+        qDebug() << "Convert" << file
                  << "to" << params.outFile << (ok ? "Done" : "Failed");
     }
     return 0;
@@ -459,6 +473,7 @@ QString getFormatFromFile(const QString& fileName)
 {
     QList<QByteArray> supportedImageFormats = QImageWriter::supportedImageFormats();
     supportedImageFormats.push_back("svg"); // add svg
+    supportedImageFormats.push_back("dxf"); // add dxf
 
     for (QString format: supportedImageFormats) {
         if (fileName.endsWith(format, Qt::CaseInsensitive))

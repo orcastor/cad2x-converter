@@ -79,7 +79,6 @@ RS_LineTypePattern::RS_LineTypePattern(std::initializer_list<double> const& patt
     }
 }
 
-
 const RS_LineTypePattern* RS_LineTypePattern::getPattern(RS2::LineType lineType)
 {
     static std::map<RS2::LineType, const RS_LineTypePattern*> lineTypeToPattern = {
@@ -117,4 +116,3 @@ const RS_LineTypePattern* RS_LineTypePattern::getPattern(RS2::LineType lineType)
         return nullptr;
     return lineTypeToPattern[lineType];
 }
-

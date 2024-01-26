@@ -70,6 +70,7 @@ public:
 		
     bool fileExport(RS_Graphic& graphic, const QString& file,
 		RS2::FormatType type = RS2::FormatUnknown);
+
 	/** \brief detectFormat detect file format type
 	 * \param file type
 	 * \param forRead read the file to verify dxf/dxfrw type, default to true
