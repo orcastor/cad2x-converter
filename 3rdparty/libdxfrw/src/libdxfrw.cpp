@@ -63,7 +63,7 @@ void dxfRW::setDebug(DRW::DebugLevel lvl){
     }
 }
 
-bool dxfRW::read(DRW_Interface *interface_, bool ext){
+bool dxfRW::read(DRW_Interface *interface_, const std::string& defaultCodePage, bool ext){
     drw_assert(fileName.empty() == false);
     applyExt = ext;
     std::ifstream filestr;
@@ -97,6 +97,8 @@ bool dxfRW::read(DRW_Interface *interface_, bool ext){
         filestr.open (fileName.c_str(), std::ios_base::in);
         reader = new dxfReaderAscii(&filestr);
     }
+
+    reader->setCodePage(defaultCodePage);
 
     bool isOk {processDxf()};
     filestr.close();

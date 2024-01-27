@@ -33,6 +33,7 @@
 #include "rs_units.h"
 #include "rs_math.h"
 #include "rs_filterdxfrw.h" //for int <-> rs_color conversion
+#include "rs_fontlist.h"
 
 RS_DimensionData::RS_DimensionData():
 	definitionPoint(false),
@@ -744,7 +745,7 @@ RS_Color RS_Dimension::getTextColor() {
  * @return text style for dimensions.
  */
 QString RS_Dimension::getTextStyle() {
-    return getGraphicVariableString("$DIMTXSTY", "standard");
+    return getGraphicVariableString("$DIMTXSTY", RS_FONTLIST->getDefaultFont());
 }
 
 

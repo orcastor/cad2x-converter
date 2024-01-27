@@ -52,6 +52,8 @@ class RS_Leader;
 class RS_Polyline;
 class DL_WriterA;
 
+extern QString defaultCodePage;
+
 /**
  * This format filter class can import and export DXF files.
  * It depends on the libdxfrw library.

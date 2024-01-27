@@ -302,7 +302,6 @@ bool RS_Graphic::open(const QString &filename, RS2::FormatType type) {
     return ret;
 }
 
-
 void RS_Graphic::clearVariables() {
     variableDict.clear();
 }
@@ -657,7 +656,7 @@ double RS_Graphic::getPaperScale() const {
  * Sets a new scale factor for the paper space.
  */
 void RS_Graphic::setPaperScale(double s) {
-    if(paperScaleFixed==false) addVariable("$PSVPSCALE", s, 40);
+    if(paperScaleFixed==false) addVariable("$PSVPSCALE", s, DXF_FORMAT_GC_PSVPScale);
 }
 
 

@@ -130,7 +130,7 @@ bool dwgR::testReader(){
 }
 
 /*start reading dwg file header and, if can read it, continue reading all*/
-bool dwgR::read(DRW_Interface *interface_, bool ext){
+bool dwgR::read(DRW_Interface *interface_, const std::string& defaultCodePage, bool ext){
     bool isOk = false;
     applyExt = ext;
     iface = interface_;
@@ -144,6 +144,7 @@ bool dwgR::read(DRW_Interface *interface_, bool ext){
 
     isOk = reader->readMetaData();
     if (isOk) {
+        reader->setCodePage(defaultCodePage);
         isOk = reader->readFileHeader();
         if (isOk) {
             isOk = processDwg();

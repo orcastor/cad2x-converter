@@ -15,14 +15,14 @@ Minimal CLI tool convert CAD files (DXF / DWG) to other formats (DXF / PDF / PNG
 - 🚀 **Extremely Small** - **2.9MB** binary file size at all (on `aarch64-linux`)
 - 🗳️ **Cross Platform** - support Mac OSX / Windows / Linux (Most linux based operating systems)
 - 🔠 **TrueType Font** - support lazy load `ttf`/`ttc` font (not only `lff`/`cxf`) - share system and other apps' fonts
-- � **Unicode Display** - fix malformed Unicode characters - by [DXF File Encoding](https://ezdxf.readthedocs.io/en/stable/dxfinternals/fileencoding.html)  & [QTextCodec Names](https://doc.qt.io/archives/qt-5.12/qtextcodec.html) & [libcharsetdetect](https://github.com/batterseapower/libcharsetdetect)
+- � **Unicode Display** - fix malformed Unicode characters - by [DXF File Encoding](https://ezdxf.readthedocs.io/en/stable/dxfinternals/fileencoding.html)  & [QTextCodec Names](https://doc.qt.io/archives/qt-5.12/qtextcodec.html)
 
 ## Best Paractices
 
 ``` sh
 Usage: ./cad2x [options] <dxf/dwg files>
 
-Print a bunch of DXF/DWG files to DXF v2007/PDF/PNG/SVG file(s).
+Convert DXF/DWG files to DXF v2007/PDF/PNG/SVG files.
 
 Examples:
 
@@ -40,14 +40,16 @@ Options:
   -v, --version               Displays version information.
   -a, --auto-orientation      Auto paper orientation (landscape or portrait)
                               based on document bounding box.
-  -c, --fit                   Auto fit and center drawing to page.
   -b, --monochrome            Print monochrome (black/white).
+  -c, --fit                   Auto fit and center drawing to page.
+  -e, --code-page <codepage>  Set default code page (default is ANSI_1252).
+  -f, --default-font <font>   Set default font (default is standard).
+  -m, --margins <L,T,R,B>     Paper margins in mm (integer or float).
+  -n, --pages <HxV>           Print on multiple pages (Horiz. x Vert.).
+  -o, --outfile <file>        Output DXF v2007/PDF/PNG/SVG file.
   -p, --paper <WxH>           Paper size (Width x Height) in mm.
   -r, --resolution <integer>  Output resolution (DPI).
   -s, --scale <double>        Output scale. E.g.: 0.01 (for 1:100 scale).
-  -m, --margins <L,T,R,B>     Paper margins in mm (integer or float).
-  -z, --pages <HxV>           Print on multiple pages (Horiz. x Vert.).
-  -o, --outfile <file>        Output DXF v2007/PDF/PNG/SVG file.
   -t, --directory <path>      Target output directory.
 
 Arguments:
@@ -59,29 +61,49 @@ Arguments:
 - auto fit & center drawing in the page (-c)
 - to `output` directory (-t)
 
-``` sh
-./cad2x -o pdf *.dwg -t output -ac
-```
+> ./cad2x -o pdf *.dwg -t output -ac
 
 ### Convert `a.dxf` to `b.png`
 - detect the orientation (-a)
 - auto fit & center drawing in the page (-c)
+- set page size to 2970 x 2100 (-p 2970x2100)
+- set margins (-m 2.0,2.0,2.0,2.0)
 
-``` sh
-./cad2x -o b.png a.dxf -ac
-```
+> ./cad2x -o b.png a.dxf -ac
 
 ### Convert `a.dwg` to `b.dxf` (v2007)
 
-``` sh
-./cad2x -o b.dxf a.dwg
-```
+> ./cad2x -o b.dxf a.dwg
 
-### Convert `a.dxf`(QCad DXF / v2004 / v2000 / v14 / v12) to `b.dxf`(v2007)
+### Convert `a.dxf`(QCad / v2004 / v2000 / v14 / v12) to `b.dxf`(v2007)
 
-``` sh
-./cad2x -o b.dxf a.dxf
-```
+> ./cad2x -o b.dxf a.dxf
+
+### Convert `a.dxf` to `b.pdf`
+- detect the orientation (-a)
+- auto fit & center drawing in the page (-c)
+- set default code page chinese (-e ANSI_936)
+- set default font (-f simsun)
+
+> ./cad2x -o b.pdf a.dxf -e ANSI_936 -f simsun -ac
+
+### Code Page References
+|Language|DXF CodePage|
+|-|-|
+|Thai|ANSI_874|
+|Japanese|ANSI_932|
+|UnifiedChinese|ANSI_936|
+|Korean|ANSI_949|
+|TradChinese|ANSI_950|
+|CentralEurope|ANSI_1250|
+|Cyrillic|ANSI_1251|
+|WesternEurope|ANSI_1252|
+|Greek|ANSI_1253|
+|Turkish|ANSI_1254|
+|Hebrew|ANSI_1255|
+|Arabic|ANSI_1256|
+|Baltic|ANSI_1257|
+|Vietnam|ANSI_1258|
 
 ## Build Tutorials
 
@@ -164,7 +186,7 @@ make -j20
 - ✂️ merge: cad2pdf + cad2pic = cad2x
 - 🛠️ fix: png size auto setting
 - 🛠️ fix: output file argument
-- [ ] 🛠️ fix: malformed Unicode characters - by [DXF File Encoding](https://ezdxf.readthedocs.io/en/stable/dxfinternals/fileencoding.html) & [QTextCodec Names](https://doc.qt.io/archives/qt-5.12/qtextcodec.html) & [libcharsetdetect](https://github.com/batterseapower/libcharsetdetect)
+- 🛠️ fix: malformed Unicode characters - by [DXF File Encoding](https://ezdxf.readthedocs.io/en/stable/dxfinternals/fileencoding.html) & [QTextCodec Names](https://doc.qt.io/archives/qt-5.12/qtextcodec.html)
 - [ ] 🛠️ fix: QCad format DXF incorrect offset of entities
 - 🆕 feature: support auto orientation detection
 - [ ] 🆕 feature: lazy load `ttf`/`ttc` font file support (not only `lff`/`cxf`)

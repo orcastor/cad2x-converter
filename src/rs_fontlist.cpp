@@ -38,6 +38,7 @@ RS_FontList* RS_FontList::uniqueInstance = nullptr;
 RS_FontList* RS_FontList::instance() {
 	if (!uniqueInstance) {
 		uniqueInstance = new RS_FontList();
+        uniqueInstance->setDefaultFont("standard");
 	}
 	return uniqueInstance;
 }
@@ -88,6 +89,10 @@ void RS_FontList::clearFonts() {
 	fonts.clear();
 }
 
+void RS_FontList::setDefaultFont(const QString& name) {
+    defaultFont = name;
+}
+
 /**
  * @return Pointer to the font with the given name or
  * \p NULL if no such font was found. The font will be loaded into
@@ -121,8 +126,8 @@ RS_Font* RS_FontList::requestFont(const QString& name) {
         }
     }
 
-	if (!foundFont && name!="standard") {
-        foundFont = requestFont("standard");
+	if (!foundFont && name != defaultFont) {
+        foundFont = requestFont(defaultFont);
     }
 
     return foundFont;

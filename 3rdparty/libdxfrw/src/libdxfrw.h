@@ -38,7 +38,7 @@ public:
      * @param ext should the extrusion be applied to convert in 2D?
      * @return true for success
      */
-    bool read(DRW_Interface *interface_, bool ext);
+    bool read(DRW_Interface *interface_, const std::string& defaultCodePage, bool ext);
     void setBinary(bool b) {binFile = b;}
 
     bool write(DRW_Interface *interface_, DRW::Version ver, bool bin);

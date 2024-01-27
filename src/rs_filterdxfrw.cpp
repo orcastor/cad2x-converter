@@ -23,10 +23,11 @@
 **
 **********************************************************************/
 
-#include<cstdlib>
+#include <cstdlib>
 #include <QStringList>
 #include <QTextCodec>
 #include <QFileInfo>
+#include <QMap>
 
 #include "rs_filterdxfrw.h"
 
@@ -39,6 +40,7 @@
 #include "rs_dimlinear.h"
 #include "rs_dimradial.h"
 #include "rs_ellipse.h"
+#include "rs_fontlist.h"
 #include "rs_hatch.h"
 #include "rs_image.h"
 #include "rs_insert.h"
@@ -159,10 +161,10 @@ bool RS_FilterDXFRW::fileImport(RS_Graphic& g, const QString& file, RS2::FormatT
 
     this->file = file;
     // add some variables that need to be there for DXF drawings:
-    graphic->addVariable("$DIMSTYLE", "Standard", 2);
-    dimStyle = "Standard";
-    codePage = "ANSI_1252";
-    textStyle = "Standard";
+    graphic->addVariable("$DIMSTYLE", RS_FONTLIST->getDefaultFont(), 2);
+    dimStyle = RS_FONTLIST->getDefaultFont();
+    codePage = defaultCodePage;
+    textStyle = RS_FONTLIST->getDefaultFont();
     //reset library version
     isLibDxfRw = false;
     libDxfRwVersion = 0;
@@ -173,10 +175,10 @@ bool RS_FilterDXFRW::fileImport(RS_Graphic& g, const QString& file, RS2::FormatT
         RS_DEBUG->print("RS_FilterDXFRW::fileImport: reading DWG file");
         if (RS_DEBUG->getLevel()== RS_Debug::D_DEBUGGING)
             dwgr.setDebug(DRW::DebugLevel::Debug);
-        bool success = dwgr.read(this, true);
+        bool success = dwgr.read(this, defaultCodePage.toStdString(), true);
         RS_DEBUG->print("RS_FilterDXFRW::fileImport: reading DWG file: OK");
         // RS_DIALOGFACTORY->commandMessage(QObject::tr("Opened dwg file version %1.").arg(printDwgVersion(dwgr.getVersion())));
-        int  lastError = dwgr.getError();
+        int lastError = dwgr.getError();
         if (false == success) {
             printDwgError(lastError);
             RS_DEBUG->print(RS_Debug::D_WARNING,
@@ -187,15 +189,13 @@ bool RS_FilterDXFRW::fileImport(RS_Graphic& g, const QString& file, RS2::FormatT
     } else {
 #endif
         dxfRW dxfR(QFile::encodeName(file));
-
         RS_DEBUG->print("RS_FilterDXFRW::fileImport: reading file");
         if (RS_Debug::D_DEBUGGING == RS_DEBUG->getLevel()) {
             dxfR.setDebug(DRW::DebugLevel::Debug);
         }
-        bool success = dxfR.read(this, true);
+        bool success = dxfR.read(this, defaultCodePage.toStdString(),  true);
         RS_DEBUG->print("RS_FilterDXFRW::fileImport: reading file: OK");
         //graphic->setAutoUpdateBorders(true);
-
         if (false == success) {
             RS_DEBUG->print(RS_Debug::D_WARNING,
                             "Cannot open DXF file '%s'.", (const char*)QFile::encodeName(file));
@@ -282,7 +282,7 @@ void RS_FilterDXFRW::addLayer(const DRW_Layer &data) {
  */
 void RS_FilterDXFRW::addDimStyle(const DRW_Dimstyle& data){
     RS_DEBUG->print("RS_FilterDXFRW::addLayer");
-    QString dimstyle = graphic->getVariableString("$DIMSTYLE", "standard");
+    QString dimstyle = graphic->getVariableString("$DIMSTYLE", RS_FONTLIST->getDefaultFont());
 
     if (QString::compare(data.name.c_str(), dimstyle, Qt::CaseInsensitive) == 0) {
         if( isLibDxfRw && libDxfRwVersion < LIBDXFRW_VERSION( 0, 6, 2)) {
@@ -424,7 +424,6 @@ void RS_FilterDXFRW::addLine(const DRW_Line& data) {
     RS_DEBUG->print("RS_FilterDXF::addLine: OK");
 }
 
-
 /**
  * Implementation of the method which handles ray entities.
  */
@@ -452,7 +451,6 @@ void RS_FilterDXFRW::addRay(const DRW_Ray& data) {
     RS_DEBUG->print("RS_FilterDXF::addRay: OK");
 }
 
-
 /**
  * Implementation of the method which handles line entities.
  */
@@ -479,8 +477,6 @@ void RS_FilterDXFRW::addXline(const DRW_Xline& data) {
     RS_DEBUG->print("RS_FilterDXF::addXline: OK");
 }
 
-
-
 /**
  * Implementation of the method which handles circle entities.
  */
@@ -493,8 +489,6 @@ void RS_FilterDXFRW::addCircle(const DRW_Circle& data) {
 
     currentContainer->addEntity(entity);
 }
-
-
 
 /**
  * Implementation of the method which handles arc entities.
@@ -514,8 +508,6 @@ void RS_FilterDXFRW::addArc(const DRW_Arc& data) {
 
     currentContainer->addEntity(entity);
 }
-
-
 
 /**
  * Implementation of the method which handles ellipse entities.
@@ -540,7 +532,6 @@ void RS_FilterDXFRW::addEllipse(const DRW_Ellipse& data) {
 
     currentContainer->addEntity(entity);
 }
-
 
 /**
  * Implementation of the method which handles trace entities.
@@ -588,7 +579,6 @@ void RS_FilterDXFRW::addLWPolyline(const DRW_LWPolyline& data) {
 
     currentContainer->addEntity(polyline);
 }
-
 
 /**
  * Implementation of the method which handles polyline entities.
@@ -700,8 +690,6 @@ void RS_FilterDXFRW::addInsert(const DRW_Insert& data) {
     currentContainer->addEntity(entity);
 }
 
-
-
 /**
  * Implementation of the method which handles
  * multi texts (MTEXT).
@@ -749,8 +737,8 @@ void RS_FilterDXFRW::addMText(const DRW_MText& data) {
     // use default style for the drawing:
     if (sty.isEmpty()) {
         // japanese, cyrillic:
-        if (codePage=="ANSI_932" || codePage=="ANSI_1251") {
-            sty = "Unicode";
+        if (codePage.startsWith("ANSI_")) {
+            sty = RS_FONTLIST->getDefaultFont();
         } else {
             sty = textStyle;
         }
@@ -838,8 +826,8 @@ void RS_FilterDXFRW::addText(const DRW_Text& data) {
     // use default style for the drawing:
     if (sty.isEmpty()) {
         // japanese, cyrillic:
-        if (codePage=="ANSI_932" || codePage=="ANSI_1251") {
-            sty = "Unicode";
+        if (codePage.startsWith("ANSI_")) {
+            sty = RS_FONTLIST->getDefaultFont();
         } else {
             sty = textStyle;
         }
@@ -1308,6 +1296,8 @@ void RS_FilterDXFRW::linkImage(const DRW_ImageDef *data) {
     RS_DEBUG->print("linking image: OK");
 }
 
+QString defaultCodePage = "ANSI_1252";
+
 using std::map;
 /**
  * Sets the header variables from the DXF file.
@@ -1338,11 +1328,11 @@ void RS_FilterDXFRW::addHeader(const DRW_Header* data){
         default:
             break;
         }
-
     }
-    codePage = graphic->getVariableString("$DWGCODEPAGE", "ANSI_1252");
-    textStyle = graphic->getVariableString("$TEXTSTYLE", "Standard");
-    dimStyle = graphic->getVariableString("$DIMSTYLE", "Standard");
+
+    codePage = graphic->getVariableString("$DWGCODEPAGE", defaultCodePage);
+    textStyle = graphic->getVariableString("$TEXTSTYLE", RS_FONTLIST->getDefaultFont());
+    dimStyle = graphic->getVariableString("$DIMSTYLE", RS_FONTLIST->getDefaultFont());
     //initialize units vars if not are present in dxf file
     graphic->getVariableInt("$LUNITS", 2);
     graphic->getVariableInt("$LUPREC", 4);
@@ -1625,7 +1615,7 @@ void RS_FilterDXFRW::writeHeader(DRW_Header& data){
 
 void RS_FilterDXFRW::writeLTypes(){
     DRW_LType ltype;
-    // Standard linetypes for LibreCAD / AutoCAD
+    // simsun linetypes for LibreCAD / AutoCAD
     ltype.name = "CONTINUOUS";
     ltype.desc = "Solid line";
     dxfW->writeLineType(&ltype);
@@ -2010,7 +2000,7 @@ void RS_FilterDXFRW::writeVports(){
 
 void RS_FilterDXFRW::writeDimstyles(){
     DRW_Dimstyle dsty;
-    dsty.name = "Standard";
+    dsty.name = RS_FONTLIST->getDefaultFont().toStdString();
     dsty.dimscale = graphic->getVariableDouble("$DIMSCALE", 1.0);
     dsty.dimasz = graphic->getVariableDouble("$DIMASZ", 2.5);
     dsty.dimexo = graphic->getVariableDouble("$DIMEXO", 0.625);
@@ -2032,7 +2022,7 @@ void RS_FilterDXFRW::writeDimstyles(){
     dsty.dimlunit = graphic->getVariableInt("$DIMLUNIT", 2);
     dsty.dimdsep = graphic->getVariableInt("$DIMDSEP", 0);
     dsty.dimfxlon = graphic->getVariableInt("$DIMFXLON", 0);
-    dsty.dimtxsty = graphic->getVariableString("$DIMTXSTY", "standard").toStdString();
+    dsty.dimtxsty = graphic->getVariableString("$DIMTXSTY", RS_FONTLIST->getDefaultFont()).toStdString();
     dsty.dimlwd = graphic->getVariableInt("$DIMLWD", -2);
     dsty.dimlwe = graphic->getVariableInt("$DIMLWE", -2);
     dxfW->writeDimstyle(&dsty);
@@ -2718,7 +2708,7 @@ void RS_FilterDXFRW::writeLeader(RS_Leader* l) {
 
     DRW_Leader leader;
     getEntityAttributes(&leader, l);
-    leader.style = "Standard";
+    leader.style = RS_FONTLIST->getDefaultFont().toStdString();
     leader.arrow = l->hasArrowHead();
     leader.leadertype = 0;
     leader.flag = 3;
@@ -3098,19 +3088,19 @@ RS_Pen RS_FilterDXFRW::attributesToPen(const DRW_Layer* att) const {
  * @param num Color number.
  */
 RS_Color RS_FilterDXFRW::numberToColor(int num) {
-        if (num==0) {
-            return RS_Color(RS2::FlagByBlock);
-        } else if (num==256) {
-            return RS_Color(RS2::FlagByLayer);
-        } else if (num<=255 && num>=0) {
-            return RS_Color(DRW::dxfColors[num][0],
-                            DRW::dxfColors[num][1],
-                            DRW::dxfColors[num][2]);
-        } else {
-            RS_DEBUG->print(RS_Debug::D_WARNING,
-                                "RS_FilterDXF::numberToColor: Invalid color number given.");
-            return RS_Color(RS2::FlagByLayer);
-        }
+    if (num==0) {
+        return RS_Color(RS2::FlagByBlock);
+    } else if (num==256) {
+        return RS_Color(RS2::FlagByLayer);
+    } else if (num<=255 && num>=0) {
+        return RS_Color(DRW::dxfColors[num][0],
+                        DRW::dxfColors[num][1],
+                        DRW::dxfColors[num][2]);
+    } else {
+        RS_DEBUG->print(RS_Debug::D_WARNING,
+                            "RS_FilterDXF::numberToColor: Invalid color number given. %0x", num);
+        return RS_Color(RS2::FlagByLayer);
+    }
 
     return RS_Color();
 }
@@ -3214,7 +3204,7 @@ RS2::LineType RS_FilterDXFRW::nameToLineType(const QString& name) {
 
     QString uName = name.toUpper();
 
-    // Standard linetypes for QCad II / AutoCAD
+    // simsun linetypes for QCad II / AutoCAD
     if (uName.isEmpty() || uName=="BYLAYER") {
         return RS2::LineByLayer;
 
@@ -3315,7 +3305,7 @@ RS2::LineType RS_FilterDXFRW::nameToLineType(const QString& name) {
  */
 QString RS_FilterDXFRW::lineTypeToName(RS2::LineType lineType) {
 
-    // Standard linetypes for QCad II / AutoCAD
+    // simsun linetypes for QCad II / AutoCAD
     switch (lineType) {
 
     case RS2::SolidLine:
@@ -3420,7 +3410,7 @@ QString RS_FilterDXFRW::lineTypeToName(RS2::LineType lineType) {
  */
 /*QString RS_FilterDXFRW::lineTypeToDescription(RS2::LineType lineType) {
 
-    // Standard linetypes for QCad II / AutoCAD
+    // simsun linetypes for QCad II / AutoCAD
     switch (lineType) {
     case RS2::SolidLine:
         return "Solid line";

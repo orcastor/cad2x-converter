@@ -54,12 +54,10 @@ TARGET = cad2x
 
 # Additional 3rdparty to load
 LIBS += -L../generated/lib  \
-    -ldxfrw \
-    -lcharsetdetect
+    -ldxfrw
 
 INCLUDEPATH += \
     ../3rdparty/libdxfrw/src \
-    ../3rdparty/libcharsetdetect/include \
     ../src
 
 # ################################################################################

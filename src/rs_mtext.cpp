@@ -280,7 +280,7 @@ void RS_MText::update() {
             font = fontNew;
           }
           if (nullptr == font) {
-            font = RS_FONTLIST->requestFont("standard");
+            font = RS_FONTLIST->requestFont(RS_FONTLIST->getDefaultFont());
           }
           i = j;
         }

@@ -60,7 +60,8 @@ QStringList RS_Utility::getFileList(const QString& subDirectory, const QString& 
     QString path;
     QDir dir;
 
-    dir = QDir(subDirectory);
+    path = QString(subDirectory);
+    dir = QDir(path);
 
     if (dir.exists() && dir.isReadable()) {
         QStringList files = dir.entryList( QStringList( "*." + fileExtension));

@@ -37,6 +37,7 @@
 #include "rs_painterqt.h"
 #include "rs_units.h"
 #include "rs_vector.h"
+#include "rs_filterdxfrw.h"
 
 #include "lc_makercamsvg.h"
 #include "lc_xmlwriterqxmlstreamwriter.h"
@@ -86,7 +87,8 @@ int main(int argc, char* argv[])
     QCoreApplication::setApplicationVersion(XSTR(LC_VERSION));
 
     QStringList appDesc;
-    appDesc << "Print a bunch of DXF/DWG files to DXF v2007/PDF/PNG/SVG file(s).";
+    appDesc << "";
+    appDesc << "Convert DXF/DWG files to DXF v2007/PDF/PNG/SVG files.";
     appDesc << "";
     appDesc << "Examples:";
     appDesc << "";
@@ -108,11 +110,26 @@ int main(int argc, char* argv[])
     QCommandLineOption autoOrientationOpt(QStringList() << "a" << "auto-orientation", "Auto paper orientation (landscape or portrait) based on document bounding box.");
     parser.addOption(autoOrientationOpt);
 
+    QCommandLineOption monoOpt(QStringList() << "b" << "monochrome", "Print monochrome (black/white).");
+    parser.addOption(monoOpt);
+
     QCommandLineOption fitOpt(QStringList() << "c" << "fit", "Auto fit and center drawing to page.");
     parser.addOption(fitOpt);
 
-    QCommandLineOption monoOpt(QStringList() << "b" << "monochrome", "Print monochrome (black/white).");
-    parser.addOption(monoOpt);
+    QCommandLineOption codePageOpt(QStringList() << "e" << "code-page", "Set default code page (default is ANSI_1252).", "codepage");
+    parser.addOption(codePageOpt);
+
+    QCommandLineOption fontOpt(QStringList() << "f" << "default-font", "Set default font (default is standard).", "font");
+    parser.addOption(fontOpt);
+
+    QCommandLineOption marginsOpt(QStringList() << "m" << "margins", "Paper margins in mm (integer or float).", "L,T,R,B");
+    parser.addOption(marginsOpt);
+
+    QCommandLineOption pagesNumOpt(QStringList() << "n" << "pages", "Print on multiple pages (Horiz. x Vert.).", "HxV");
+    parser.addOption(pagesNumOpt);
+
+    QCommandLineOption outFileOpt(QStringList() << "o" << "outfile", "Output DXF v2007/PDF/PNG/SVG file.", "file");
+    parser.addOption(outFileOpt);
 
     QCommandLineOption paperSizeOpt(QStringList() << "p" << "paper", "Paper size (Width x Height) in mm.", "WxH");
     parser.addOption(paperSizeOpt);
@@ -122,15 +139,6 @@ int main(int argc, char* argv[])
 
     QCommandLineOption scaleOpt(QStringList() << "s" << "scale", "Output scale. E.g.: 0.01 (for 1:100 scale).", "double");
     parser.addOption(scaleOpt);
-
-    QCommandLineOption marginsOpt(QStringList() << "m" << "margins", "Paper margins in mm (integer or float).", "L,T,R,B");
-    parser.addOption(marginsOpt);
-
-    QCommandLineOption pagesNumOpt(QStringList() << "z" << "pages", "Print on multiple pages (Horiz. x Vert.).", "HxV");
-    parser.addOption(pagesNumOpt);
-
-    QCommandLineOption outFileOpt(QStringList() << "o" << "outfile", "Output DXF v2007/PDF/PNG/SVG file.", "file");
-    parser.addOption(outFileOpt);
 
     QCommandLineOption outDirOpt(QStringList() << "t" << "directory", "Target output directory.", "path");
     parser.addOption(outDirOpt);
@@ -162,7 +170,17 @@ int main(int argc, char* argv[])
     parseMarginsArg(parser.value(marginsOpt), params);
     parsePagesNumArg(parser.value(pagesNumOpt), params);
 
+    if (parser.isSet(codePageOpt)) {
+        defaultCodePage = parser.value(codePageOpt);
+    }
+    if (parser.isSet(fontOpt)) {
+        RS_FONTLIST->setDefaultFont(parser.value(fontOpt));
+    }
+
     params.outFile = parser.value(outFileOpt);
+    if (!params.outFile.contains(".")) {
+        params.outFile = "." + params.outFile;
+    }
     params.outDir = parser.value(outDirOpt);
 
     for (auto arg : args) {
@@ -182,6 +200,8 @@ int main(int argc, char* argv[])
             return EXIT_FAILURE;
         }
     }
+
+    RS_FONTLIST->init();
 
     for (auto file : params.files) {
         // find out extension:
@@ -321,7 +341,7 @@ void parseMarginsArg(const QString& arg, PrintParams& params)
     if (arg.isEmpty())
         return;
 
-    std::regex re(R"(\d+(?:\.\d+)?),(\d+(?:\.\d+)?),(\d+(?:\.\d+)?),(\d+(?:\.\d+)?)");
+    std::regex re("(\\d+(?:\\.\\d+)?),(\\d+(?:\\.\\d+)?),(\\d+(?:\\.\\d+)?),(\\d+(?:\\.\\d+)?)");
     std::smatch match;
 
     std::string s = arg.toStdString();

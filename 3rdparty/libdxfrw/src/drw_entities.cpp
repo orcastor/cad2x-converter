@@ -1292,7 +1292,6 @@ bool DRW_LWPolyline::parseDwg(DRW::Version version, dwgBuffer *buf, duint32 bs){
     return buf->isGood();
 }
 
-
 bool DRW_Text::parseCode(int code, dxfReader *reader){
     switch (code) {
     case 40:

@@ -51,6 +51,9 @@ public:
 
     void init();
 
+    void setDefaultFont(const QString& name);
+    QString getDefaultFont() { return defaultFont; }
+
     void clearFonts();
     size_t countFonts() const;
     RS_Font* requestFont(const QString& name);
@@ -66,6 +69,7 @@ private:
     static RS_FontList* uniqueInstance;
     //! fonts in the graphic
     std::vector<std::unique_ptr<RS_Font>> fonts;
+    QString defaultFont;
 };
 
 #endif
