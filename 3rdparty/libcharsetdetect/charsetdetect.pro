@@ -4,7 +4,7 @@ CONFIG += c++20 static warn_on
 
 DESTDIR = ../../generated/lib
 
-DLL_NAME = libcharsetdetect
+DLL_NAME = charsetdetect
 TARGET = $$DLL_NAME
 
 GENERATED_DIR = ../../generated/lib/libcharsetdetect

@@ -15,7 +15,7 @@ Minimal CLI tool convert CAD files (DXF / DWG) to other formats (DXF / PDF / PNG
 - 🚀 **Extremely Small** - **2.9MB** binary file size at all (on `aarch64-linux`)
 - 🗳️ **Cross Platform** - support Mac OSX / Windows / Linux (Most linux based operating systems)
 - 🔠 **TrueType Font** - support lazy load `ttf`/`ttc` font (not only `lff`/`cxf`) - share system and other apps' fonts
-- � **Unicode Display** - fix for all known `$DWGCODEPAGE` - follow [DXF File Encoding](https://ezdxf.readthedocs.io/en/stable/dxfinternals/fileencoding.html)  & [QTextCodec Names](https://doc.qt.io/archives/qt-5.12/qtextcodec.html) (not only `Japanese` & `Cyrillic`)
+- � **Unicode Display** - fix malformed Unicode characters - by [DXF File Encoding](https://ezdxf.readthedocs.io/en/stable/dxfinternals/fileencoding.html)  & [QTextCodec Names](https://doc.qt.io/archives/qt-5.12/qtextcodec.html) & [libcharsetdetect](https://github.com/batterseapower/libcharsetdetect)
 
 ## Best Paractices
 
@@ -147,25 +147,25 @@ make -j20
 - ✅ inbuilt font database without plugin
 - ✅ minimal binary size (static link) (2.9MB after `strip` and `upx -9 --ultra-brute`)
     ``` sh
-    root@e69def756a3b:/opt/cad2x-converter/output# ldd cad2pdf
-            libdl.so.2 => /lib/aarch64-linux-gnu/libdl.so.2 (0x00000055021dc000)
-            libglib-2.0.so.0 => /lib/aarch64-linux-gnu/libglib-2.0.so.0 (0x00000055021f0000)
-            libpng16.so.16 => /lib/aarch64-linux-gnu/libpng16.so.16 (0x000000550232b000)
-            libm.so.6 => /lib/aarch64-linux-gnu/libm.so.6 (0x000000550236f000)
-            libfreetype.so.6 => /lib/aarch64-linux-gnu/libfreetype.so.6 (0x000000550241a000)
-            libz.so.1 => /lib/aarch64-linux-gnu/libz.so.1 (0x00000055024d9000)
-            libpthread.so.0 => /lib/aarch64-linux-gnu/libpthread.so.0 (0x000000550256b000)
-            libstdc++.so.6 => /lib/aarch64-linux-gnu/libstdc++.so.6 (0x000000550259c000)
-            libgcc_s.so.1 => /lib/aarch64-linux-gnu/libgcc_s.so.1 (0x0000005502781000)
-            libc.so.6 => /lib/aarch64-linux-gnu/libc.so.6 (0x00000055027a5000)
-            /lib/ld-linux-aarch64.so.1 (0x0000005500000000)
-            libpcre.so.3 => /lib/aarch64-linux-gnu/libpcre.so.3 (0x0000005502918000)
+    > ldd cad2pdf
+        libdl.so.2 => /lib/aarch64-linux-gnu/libdl.so.2 (0x00000055021dc000)
+        libglib-2.0.so.0 => /lib/aarch64-linux-gnu/libglib-2.0.so.0 (0x00000055021f0000)
+        libpng16.so.16 => /lib/aarch64-linux-gnu/libpng16.so.16 (0x000000550232b000)
+        libm.so.6 => /lib/aarch64-linux-gnu/libm.so.6 (0x000000550236f000)
+        libfreetype.so.6 => /lib/aarch64-linux-gnu/libfreetype.so.6 (0x000000550241a000)
+        libz.so.1 => /lib/aarch64-linux-gnu/libz.so.1 (0x00000055024d9000)
+        libpthread.so.0 => /lib/aarch64-linux-gnu/libpthread.so.0 (0x000000550256b000)
+        libstdc++.so.6 => /lib/aarch64-linux-gnu/libstdc++.so.6 (0x000000550259c000)
+        libgcc_s.so.1 => /lib/aarch64-linux-gnu/libgcc_s.so.1 (0x0000005502781000)
+        libc.so.6 => /lib/aarch64-linux-gnu/libc.so.6 (0x00000055027a5000)
+        /lib/ld-linux-aarch64.so.1 (0x0000005500000000)
+        libpcre.so.3 => /lib/aarch64-linux-gnu/libpcre.so.3 (0x0000005502918000)
     ```
 - ✅ merge: cad2pdf + cad2pic = cad2x
 - 🛠️ fix: png size auto setting
 - 🛠️ fix: output file argument
 - 🆕 feature: support auto orientation detection
-- [ ] 🛠️ fix: malformed Unicode characters - according to [DXF File Encoding](https://ezdxf.readthedocs.io/en/stable/dxfinternals/fileencoding.html) & [QTextCodec Names](https://doc.qt.io/archives/qt-5.12/qtextcodec.html)
+- [ ] 🛠️ fix: malformed Unicode characters - by [DXF File Encoding](https://ezdxf.readthedocs.io/en/stable/dxfinternals/fileencoding.html) & [QTextCodec Names](https://doc.qt.io/archives/qt-5.12/qtextcodec.html) & [libcharsetdetect](https://github.com/batterseapower/libcharsetdetect)
 - [ ] 🆕 feature: lazy load `ttf`/`ttc` font file support (not only `lff`/`cxf`)
 - [ ] 🛠️ fix: QCad format DXF incorrect offset of entities
 
