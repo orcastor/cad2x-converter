@@ -22,11 +22,6 @@ macx|win32|equals(build_muparser, "true")|!packagesExist(muparser){
 	INCLUDEPATH += $$MUPARSER_DIR/include
 	GEN_LIB_DIR = ../generated/lib
 	LIBS += -L$$GEN_LIB_DIR -lmuparser
-	msvc {
-		PRE_TARGETDEPS += $$GEN_LIB_DIR/muparser.lib
-	} else {
-		PRE_TARGETDEPS += $$GEN_LIB_DIR/libmuparser.a
-	}
 }else{
     message("Using external muparser")
     CONFIG += link_pkgconfig
@@ -39,11 +34,6 @@ DEPENDPATH += $$QTBASE_DIR/include \
 INCLUDEPATH += $$QTBASE_DIR/include $$QTBASE_DIR/include/QtCore $$QTBASE_DIR/include/QtGui
 GEN_LIB_DIR = $$QTBASE_DIR/lib
 LIBS += -L$$GEN_LIB_DIR -lQt5Core -lQt5Gui
-msvc {
-    PRE_TARGETDEPS += $$GEN_LIB_DIR/Qt5Core.lib $$GEN_LIB_DIR/Qt5Gui.lib
-} else {
-    PRE_TARGETDEPS += $$GEN_LIB_DIR/libQt5Core.a $$GEN_LIB_DIR/libQt5Gui.a
-}
 
 QT = 
 
@@ -58,23 +48,18 @@ CONFIG += c++17
     QMAKE_CXXFLAGS += -fext-numeric-literals
 }
 
-GEN_LIB_DIR = ../generated/lib
-msvc {
-	PRE_TARGETDEPS += $$GEN_LIB_DIR/dxfrw.lib
-} else {
-	PRE_TARGETDEPS += $$GEN_LIB_DIR/libdxfrw.a
-}
-
 DESTDIR = $${INSTALLDIR}
 
 TARGET = cad2x
 
 # Additional 3rdparty to load
 LIBS += -L../generated/lib  \
-    -ldxfrw
+    -ldxfrw \
+    -lcharsetdetect
 
 INCLUDEPATH += \
     ../3rdparty/libdxfrw/src \
+    ../3rdparty/libcharsetdetect/include \
     ../src
 
 # ################################################################################

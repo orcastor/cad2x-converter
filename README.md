@@ -167,6 +167,7 @@ make -j20
 - 🆕 feature: support auto orientation detection
 - [ ] 🛠️ fix: malformed Unicode characters - according to [DXF File Encoding](https://ezdxf.readthedocs.io/en/stable/dxfinternals/fileencoding.html) & [QTextCodec Names](https://doc.qt.io/archives/qt-5.12/qtextcodec.html)
 - [ ] 🆕 feature: lazy load `ttf`/`ttc` font file support (not only `lff`/`cxf`)
+- [ ] 🛠️ fix: QCad format DXF incorrect offset of entities
 
 ## Referrence
 
