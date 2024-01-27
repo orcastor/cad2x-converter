@@ -22,7 +22,7 @@ Minimal CLI tool convert CAD files (DXF / DWG) to other formats (DXF / PDF / PNG
 ``` sh
 Usage: ./cad2x [options] <dxf/dwg files>
 
-Print a bunch of DXF/DWG files to DXF/PDF/PNG/SVG file(s).
+Print a bunch of DXF/DWG files to DXF v2007/PDF/PNG/SVG file(s).
 
 Examples:
 
@@ -47,7 +47,7 @@ Options:
   -s, --scale <double>        Output scale. E.g.: 0.01 (for 1:100 scale).
   -m, --margins <L,T,R,B>     Paper margins in mm (integer or float).
   -z, --pages <HxV>           Print on multiple pages (Horiz. x Vert.).
-  -o, --outfile <file>        Output DXF/PDF/PNG/SVG file.
+  -o, --outfile <file>        Output DXF v2007/PDF/PNG/SVG file.
   -t, --directory <path>      Target output directory.
 
 Arguments:
@@ -71,10 +71,16 @@ Arguments:
 ./cad2x -o b.png a.dxf -ac
 ```
 
-### Convert `a.dwg` to `b.dxf`
+### Convert `a.dwg` to `b.dxf` (v2007)
 
 ``` sh
 ./cad2x -o b.dxf a.dwg
+```
+
+### Convert `a.dxf`(QCad DXF / v2004 / v2000 / v14 / v12) to `b.dxf`(v2007)
+
+``` sh
+./cad2x -o b.dxf a.dxf
 ```
 
 ## Build Tutorials

@@ -86,7 +86,7 @@ int main(int argc, char* argv[])
     QCoreApplication::setApplicationVersion(XSTR(LC_VERSION));
 
     QStringList appDesc;
-    appDesc << "Print a bunch of DXF/DWG files to DXF/PDF/PNG/SVG file(s).";
+    appDesc << "Print a bunch of DXF/DWG files to DXF v2007/PDF/PNG/SVG file(s).";
     appDesc << "";
     appDesc << "Examples:";
     appDesc << "";
@@ -129,7 +129,7 @@ int main(int argc, char* argv[])
     QCommandLineOption pagesNumOpt(QStringList() << "z" << "pages", "Print on multiple pages (Horiz. x Vert.).", "HxV");
     parser.addOption(pagesNumOpt);
 
-    QCommandLineOption outFileOpt(QStringList() << "o" << "outfile", "Output DXF/PDF/PNG/SVG file.", "file");
+    QCommandLineOption outFileOpt(QStringList() << "o" << "outfile", "Output DXF v2007/PDF/PNG/SVG file.", "file");
     parser.addOption(outFileOpt);
 
     QCommandLineOption outDirOpt(QStringList() << "t" << "directory", "Target output directory.", "path");
@@ -209,15 +209,6 @@ int main(int argc, char* argv[])
                 break;
 
             if (format == "dxf") {
-                if (fi.suffix() == "dxf") {
-                    QFileInfo ofi(params.outFile);
-                    if (fi.path() != ofi.path()) {
-                        ok = QFile::copy(fi.path(), ofi.path());
-                    } else {
-                        qDebug() << "Same file" << file << "Ignored";
-                    }
-                    break;
-                }
                 ok = doc->saveAs(params.outFile, RS2::FormatDXFRW); // DXF - v2007 defaulted
                 break;
             }
