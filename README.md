@@ -110,7 +110,7 @@ Arguments:
 ### How to prepare toolchain
 
 ``` sh
-apt-get install g++ gcc make git-core pkg-config -y --no-install-recommends
+apt-get install g++ gcc make git-core pkg-config qt5-qmake -y --no-install-recommends
 ```
 
 ### How to build trimmed `qtbase(Qt 5.12.12)`
