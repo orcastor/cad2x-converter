@@ -65,9 +65,6 @@ INCLUDEPATH += \
 # ################################################################################
 # Library
 HEADERS += \
-    drw_base.h \
-    drw_entities.h \
-    drw_objects.h \
     dxf_format.h \
     lc_defaults.h \
     lc_looputils.h \
@@ -137,9 +134,6 @@ HEADERS += \
 
 SOURCES += \
     main.cpp \
-    drw_base.cpp \
-    drw_entities.cpp \
-    drw_objects.cpp \
     lc_looputils.cpp \
     lc_makercamsvg.cpp \
     lc_quadratic.cpp \

@@ -192,6 +192,9 @@ int main(int argc, char* argv[])
         if (params.files.length() == 1) {
             QFileInfo ofi(params.outFile);
             baseName = ofi.completeBaseName();
+            if (baseName.isEmpty()) {
+                baseName = fi.completeBaseName();
+            }
         } else {
             baseName = fi.completeBaseName();
         }

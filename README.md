@@ -138,14 +138,14 @@ make -j20
 ## Changelog
 
 - ✨ add font by easily dropping `.lff` into `cad2x-converter/output/fonts`
-- ✅ trim dependency of QtWidgets & QtPrintSupport
-- ✅ trim dependency of GUI app (QtGuiApplication / accessible / input / events / plugins)
-- ✅ trim dependency of Render (OpenGL / Vulkan / KMS / VNC)
-- ✅ trim dependency of qpa (X server and etc.)
-- ✅ trim dependency of icu / pcre2
-- ✅ trim useless codes (Pixmap / Icon / Windows and etc.)
-- ✅ inbuilt font database without plugin
-- ✅ minimal binary size (static link) (2.9MB after `strip` and `upx -9 --ultra-brute`)
+- ✂️ trim dependency of QtWidgets & QtPrintSupport
+- ✂️ trim dependency of GUI app (QtGuiApplication / accessible / input / events / plugins)
+- ✂️ trim dependency of Render (OpenGL / Vulkan / KMS / VNC)
+- ✂️ trim dependency of qpa (X server and etc.)
+- ✂️ trim dependency of icu / pcre2
+- ✂️ trim useless codes (Pixmap / Icon / Windows and etc.)
+- ✂️ inbuilt font database without plugin
+- ✂️ minimal binary size (static link) (2.9MB after `strip` and `upx -9 --ultra-brute`)
     ``` sh
     > ldd cad2pdf
         libdl.so.2 => /lib/aarch64-linux-gnu/libdl.so.2 (0x00000055021dc000)
@@ -161,13 +161,13 @@ make -j20
         /lib/ld-linux-aarch64.so.1 (0x0000005500000000)
         libpcre.so.3 => /lib/aarch64-linux-gnu/libpcre.so.3 (0x0000005502918000)
     ```
-- ✅ merge: cad2pdf + cad2pic = cad2x
+- ✂️ merge: cad2pdf + cad2pic = cad2x
 - 🛠️ fix: png size auto setting
 - 🛠️ fix: output file argument
-- 🆕 feature: support auto orientation detection
 - [ ] 🛠️ fix: malformed Unicode characters - by [DXF File Encoding](https://ezdxf.readthedocs.io/en/stable/dxfinternals/fileencoding.html) & [QTextCodec Names](https://doc.qt.io/archives/qt-5.12/qtextcodec.html) & [libcharsetdetect](https://github.com/batterseapower/libcharsetdetect)
-- [ ] 🆕 feature: lazy load `ttf`/`ttc` font file support (not only `lff`/`cxf`)
 - [ ] 🛠️ fix: QCad format DXF incorrect offset of entities
+- 🆕 feature: support auto orientation detection
+- [ ] 🆕 feature: lazy load `ttf`/`ttc` font file support (not only `lff`/`cxf`)
 
 ## Referrence
 
