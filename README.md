@@ -15,7 +15,7 @@ Minimal CLI tool convert CAD files (DXF / DWG) to other formats (DXF / PDF / PNG
 - 🚀 **Extremely Small** - **2.9MB** binary file size at all (on `aarch64-linux`)
 - 🗳️ **Cross Platform** - support Mac OSX / Windows / Linux (Most linux based operating systems)
 - 🔠 **TrueType Font** - support lazy load `ttf`/`ttc` font (not only `lff`/`cxf`) - share system and other apps' fonts
-- � **Unicode Display** - fix malformed Unicode characters - by [DXF File Encoding](https://ezdxf.readthedocs.io/en/stable/dxfinternals/fileencoding.html)  & [QTextCodec Names](https://doc.qt.io/archives/qt-5.12/qtextcodec.html)
+- � **Unicode Display** - fix malformed Unicode characters - by [DXF File Encoding](https://ezdxf.readthedocs.io/en/stable/dxfinternals/fileencoding.html)
 
 ## Best Paractices
 
@@ -69,7 +69,7 @@ Arguments:
 - set page size to 2970 x 2100 (-p 2970x2100)
 - set margins (-m 2.0,2.0,2.0,2.0)
 
-> ./cad2x -o b.png a.dxf -ac
+> ./cad2x -o b.png a.dxf -ac -p 2970x2100 -m 2.0,2.0,2.0,2.0
 
 ### Convert `a.dwg` to `b.dxf` (v2007)
 
@@ -186,10 +186,15 @@ make -j20
 - ✂️ merge: cad2pdf + cad2pic = cad2x
 - 🛠️ fix: png size auto setting
 - 🛠️ fix: output file argument
-- 🛠️ fix: malformed Unicode characters - by [DXF File Encoding](https://ezdxf.readthedocs.io/en/stable/dxfinternals/fileencoding.html) & [QTextCodec Names](https://doc.qt.io/archives/qt-5.12/qtextcodec.html)
+- 🛠️ fix: malformed Unicode characters - by [DXF File Encoding](https://ezdxf.readthedocs.io/en/stable/dxfinternals/fileencoding.html)
 - [ ] 🛠️ fix: QCad format DXF incorrect offset of entities
 - 🆕 feature: support auto orientation detection
 - [ ] 🆕 feature: lazy load `ttf`/`ttc` font file support (not only `lff`/`cxf`)
+- [ ] 🆕 feature: support more formats
+  - [ ] a quick way from DWG to BMP thumbnail
+  - [ ] DWG / DXF to JSON for [cad.js](https://github.com/ghemingway/cad.js)
+  - [ ] DWG / DXF to XML
+  - [ ] DWG / DXF to TXT
 
 ## Referrence
 
