@@ -13,9 +13,9 @@ Minimal CLI tool convert CAD files (DXF / DWG) to other formats (DXF / PDF / PNG
 - 💼 **Portable** - no GUI & no dependencies
 - 🌈 **Customized** - with trimmed `Qt 5.12.12` (`QtCore` & `QtGUI`)
 - 🚀 **Extremely Small** - **2.9MB** binary file size at all (on `aarch64-linux`)
-- 🗳️ **Cross Platform** - support Mac OSX / Windows / Linux (Most linux based operating systems)
-- 🔠 **TrueType Font** - support lazy load `ttf`/`ttc` font (not only `lff`/`cxf`) - share system and other apps' fonts
-- � **Unicode Display** - fix malformed Unicode characters - by [DXF File Encoding](https://ezdxf.readthedocs.io/en/stable/dxfinternals/fileencoding.html)
+- � **Unicode Display** - support display of malformed Unicode characters - by [DXF File Encoding](https://ezdxf.readthedocs.io/en/stable/dxfinternals/fileencoding.html)
+- 🗳️ **Cross Platform** - support Mac OSX / Windows / Linux / Android (Most linux based operating systems)
+- 🔠 **TrueType Font Reuse** - lazy load `ttf`/`ttc` font (not only `lff`/`cxf`) - share system and other apps' fonts with less overhead
 
 ## Best Paractices
 
