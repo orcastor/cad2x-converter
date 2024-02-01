@@ -31,7 +31,26 @@
 #include <iosfwd>
 #include <QStringList>
 #include <QMap>
+#include <QFileInfo>
+#include <QTextStream>
 #include "rs_blocklist.h"
+
+#include <ft2build.h>
+#include FT_FREETYPE_H
+#include FT_MODULE_H
+#include FT_OUTLINE_H
+#include FT_GLYPH_H
+
+struct OutLine {
+    double prevx = 0.;
+    double prevy = 0.;
+    bool firstpass = false;
+    bool startcontour = false;
+    double factor = 0.;
+    float xMin = 1000.;
+    int yMax = -1000;
+    QString output;
+};
 
 /**
  * Class for representing a font. This is implemented as a RS_Graphic
@@ -42,12 +61,13 @@
  */
 class RS_Font {
 public:
-    RS_Font(const QString& name, bool owner=true);
+    RS_Font(const QString& path, bool owner=true);
     //RS_Font(const char* name);
+    ~RS_Font();
 
-    /** @return the fileName of this font. */
-    QString getFileName() const {
-        return fileName;
+    /** @return the name of this font. */
+    QString getFontName() const {
+        return QFileInfo(path).baseName();
     }
 
     /** @return the fileLicense of this font. */
@@ -113,6 +133,7 @@ public:
 private:
     void readCXF(QString path);
     void readLFF(QString path);
+    void readLFF(QTextStream& ts);
     RS_Block* generateLffFont(const QString& key);
 
 private:
@@ -122,8 +143,8 @@ private:
     //! block list (letters)
     RS_BlockList letterList;
 
-    //! Font file name
-    QString fileName;
+    //! Font file path
+    QString path;
 
     //! Font file license
     QString fileLicense;
@@ -151,6 +172,11 @@ private:
 
     //! Default line spacing factor for this font
     double lineSpacingFactor = 0.;
+
+    //! For TrueType Font
+    FT_Library library;
+    FT_Face face;
+    double factor = 0.;
 };
 
 #endif

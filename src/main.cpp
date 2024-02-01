@@ -122,6 +122,9 @@ int main(int argc, char* argv[])
     QCommandLineOption fontOpt(QStringList() << "f" << "default-font", "Set default font (default is standard).", "font");
     parser.addOption(fontOpt);
 
+    QCommandLineOption fontDirsOpt(QStringList() << "l" << "font-dirs", "Set more font directories.", "dir1,dir2,dir3...");
+    parser.addOption(fontDirsOpt);
+
     QCommandLineOption marginsOpt(QStringList() << "m" << "margins", "Paper margins in mm (integer or float).", "L,T,R,B");
     parser.addOption(marginsOpt);
 
@@ -201,7 +204,20 @@ int main(int argc, char* argv[])
         }
     }
 
-    RS_FONTLIST->init();
+    QStringList fontDirs;
+#if defined(Q_OS_WIN)
+    fontDirs += "C:\\Windows\\Fonts";
+#elif defined(Q_OS_MAC)
+    fontDirs += "/Library/Fonts";
+    fontDirs += "/System/Library/Fonts";
+#elif defined(Q_OS_LINUX)
+    fontDirs += "/usr/share/fonts";
+    fontDirs += "/usr/local/share/fonts";
+    fontDirs += "~/.fonts";
+#endif
+
+    fontDirs += parser.value(fontDirsOpt).split(",");
+    RS_FONTLIST->init(fontDirs);
 
     for (auto file : params.files) {
         // find out extension:
@@ -451,8 +467,8 @@ void drawPage(RS_Graphic* graphic, std::unique_ptr<QPaintDevice>& pd, RS_Painter
 
     double scale = graphic->getPaperScale();
 
-    gv.setOffset((int)ceil(graphic->getPaperInsertionBase().x * f),
-                 (int)ceil(graphic->getPaperInsertionBase().y * f));
+    gv.setOffset((int)(graphic->getPaperInsertionBase().x * f),
+                 (int)(graphic->getPaperInsertionBase().y * f));
     gv.setFactor(f*scale);
     gv.setContainer(graphic);
     gv.zoomAuto(false);
@@ -475,8 +491,8 @@ void drawPage(RS_Graphic* graphic, std::unique_ptr<QPaintDevice>& pd, RS_Painter
             // Extra pages must be created manually.
             QPagedPaintDevice* paged = dynamic_cast<QPagedPaintDevice*>(pd.get());
             if (paged) if (pX > 0 || pY > 0) paged->newPage();
-            gv.setOffset((int)ceil((baseX - offsetX) * f),
-                         (int)ceil((baseY - offsetY) * f));
+            gv.setOffset((int)((baseX - offsetX) * f),
+                         (int)((baseY - offsetY) * f));
             gv.drawEntity(&painter, graphic);
         }
     }

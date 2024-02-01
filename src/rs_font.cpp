@@ -41,19 +41,222 @@
 #include "rs_debug.h"
 #include "rs_utility.h"
 
+#include <cmath>
+
+static std::string FT_StrError(FT_Error errnum)
+{
+    #undef __FTERRORS_H__
+    #define FT_ERRORDEF( e, v, s )  { e, s },
+    #define FT_ERROR_START_LIST     {
+    #define FT_ERROR_END_LIST       { 0, 0 } };
+
+    static const struct {
+        FT_Error errnum;
+        const char * errstr;
+    } ft_errtab[] =
+    #include FT_ERRORS_H
+
+    const FT_Error errno_max = (FT_Error)((sizeof(ft_errtab) / sizeof(ft_errtab[0])) - 2 /* FT_ERROR_END_LIST */);
+    if(errno > errno_max)
+    {
+        return "Internal error";
+    }
+
+    return std::string(ft_errtab[errnum].errstr);
+}
+
+int moveTo(FT_Vector* to, void* p);
+int lineTo(FT_Vector* to, void* p);
+int conicTo(FT_Vector* control, FT_Vector* to, void* p);
+int cubicTo(FT_Vector* control1, FT_Vector* control2, FT_Vector* to, void* p);
+
+static const FT_Outline_Funcs funcs
+= {
+      (FT_Outline_MoveTo_Func) moveTo,
+      (FT_Outline_LineTo_Func) lineTo,
+      (FT_Outline_ConicTo_Func)conicTo,
+      (FT_Outline_CubicTo_Func)cubicTo,
+      0, 0
+  };
+
+std::string clearZeros(double num){
+    const int precision = 6; // Number of decimal digits
+	std::string numLine(precision+5, '\0');
+	snprintf(&(numLine[0]), precision+5, "%.6f", num);
+    std::string str = numLine;
+    int i = str.length()- 1;
+    while (str.at(i) == '0' && i>1) {
+        --i;
+    }
+    if (str.at(i) != '.')
+            i++;
+    return str.substr(0, i);
+}
+
+int moveTo(FT_Vector* to, void* p) {
+    OutLine *ol = (OutLine*)p;
+    if (ol->firstpass) {
+        if (to->x < ol->xMin)
+            ol->xMin = to->x;
+    } else {
+        ol->prevx = to->x;
+        ol->prevy = to->y;
+        if (ol->startcontour) {
+            ol->startcontour = false;
+            ol->output += QString::asprintf("%s,%s", clearZeros((double)(to->x - ol->xMin)*ol->factor).c_str(), clearZeros((double)to->y*ol->factor).c_str());
+        } else {
+            ol->output += QString::asprintf("\n%s,%s", clearZeros((double)(to->x - ol->xMin)*ol->factor).c_str(), clearZeros((double)to->y*ol->factor).c_str());
+        }
+    }
+    return 0;
+}
+
+int lineTo(FT_Vector* to, void* p) {
+    OutLine *ol = (OutLine*)p;
+    if (ol->firstpass) {
+        if (to->x < ol->xMin)
+            ol->xMin = to->x;
+    } else {
+        if (ol->startcontour) {
+            ol->output += QString::asprintf("%s,%s", clearZeros((double)(to->x - ol->xMin)*ol->factor).c_str(), clearZeros((double)to->y*ol->factor).c_str());
+            ol->startcontour = false;
+        } else {
+            ol->output += QString::asprintf(";%s,%s", clearZeros((double)(to->x - ol->xMin)*ol->factor).c_str(), clearZeros((double)to->y*ol->factor).c_str());
+        }
+        ol->prevx = to->x;
+        ol->prevy = to->y;
+
+        if (to->y > ol->yMax) {
+            ol->yMax = to->y;
+        }
+    }
+    return 0;
+}
+
+int conicTo(FT_Vector* control, FT_Vector* to, void* p) {
+    
+    const int nodes = 4; // Number of nodes for quadratic and cubic splines
+    OutLine *ol = (OutLine*)p;
+	if (ol->firstpass) {
+		if (to->x < ol->xMin)
+			ol->xMin = to->x;
+		return 0;
+	}
+	double px, py;
+	double ox = ol->prevx;
+	double oy = ol->prevy;
+    if (ol->startcontour) {
+        ol->output += QString::asprintf("%s,%s", clearZeros((ox - ol->xMin)*ol->factor).c_str(), clearZeros(oy*ol->factor).c_str());
+        ol->startcontour = false;
+    } else {
+        ol->output += QString::asprintf(";%s,%s", clearZeros((ox - ol->xMin)*ol->factor).c_str(), clearZeros(oy*ol->factor).c_str());
+    }
+    for (double t = 0.0; t<=1.0; t+=1.0/nodes) {
+        px = std::pow(1.0-t, 2)*ol->prevx + 2*t*(1.0-t)*control->x + t*t*to->x;
+        py = std::pow(1.0-t, 2)*ol->prevy + 2*t*(1.0-t)*control->y + t*t*to->y;
+        ol->output += QString::asprintf(";%s,%s", clearZeros((double)(px - ol->xMin)*ol->factor).c_str(), clearZeros((double)py*ol->factor).c_str());
+
+//	    ox = px;
+//		oy = py;
+    }
+
+	ol->prevx = to->x;
+	ol->prevy = to->y;
+
+	if (to->y > ol->yMax) ol->yMax = to->y;
+	return 0;
+}
+
+int cubicTo(FT_Vector* /*control1*/, FT_Vector* /*control2*/, FT_Vector* to, void* p) {
+    OutLine *ol = (OutLine*)p;
+    if (ol->firstpass) {
+        if (to->x < ol->xMin)
+            ol->xMin = to->x;
+    } else {
+        if (ol->startcontour) {
+            ol->output += QString::asprintf("%s,%s", clearZeros((double)(to->x - ol->xMin)*ol->factor).c_str(), clearZeros((double)to->y*ol->factor).c_str());
+            ol->startcontour = false;
+        } else {
+            ol->output += QString::asprintf(";%s,%s", clearZeros((double)(to->x - ol->xMin)*ol->factor).c_str(), clearZeros((double)to->y*ol->factor).c_str());
+        }
+        ol->prevx = to->x;
+        ol->prevy = to->y;
+
+        if (to->y > ol->yMax) {
+            ol->yMax = to->y;
+        }
+    }
+    return 0;
+}
+
+/**
+ * Converts one single glyph (character, sign) into LFF.
+ */
+bool convertGlyph(FT_Face face, FT_ULong charcode, OutLine& ol) {
+    FT_Error error;
+    FT_Glyph glyph;
+
+    // load glyph
+    error = FT_Load_Glyph(face,
+                          FT_Get_Char_Index(face, charcode),
+                          FT_LOAD_NO_BITMAP | FT_LOAD_NO_SCALE);
+    if (error) {
+        RS_DEBUG->print(RS_Debug::D_WARNING,
+                        "FT_Load_Glyph: failed error:%s",
+                        FT_StrError(error).c_str());
+        return false;
+    }
+
+    FT_Get_Glyph(face->glyph, &glyph);
+    FT_OutlineGlyph og = (FT_OutlineGlyph)glyph;
+    if (face->glyph->format != ft_glyph_format_outline) {
+        RS_DEBUG->print(RS_Debug::D_WARNING, "FT_Load_Glyph: Not an outline font");
+    }
+
+    // write glyph header
+    ol.output += QString::asprintf("\n[#%04X]\n", (unsigned)charcode);
+
+    // trace outline of the glyph
+    ol.firstpass = true;
+    error = FT_Outline_Decompose(&(og->outline), &funcs, &ol);
+	if (error)
+        RS_DEBUG->print(RS_Debug::D_WARNING,
+                        "FT_Load_Glyph: FT_Outline_Decompose: first pass: %s",
+                        FT_StrError(error).c_str());
+
+    ol.firstpass = false;
+    ol.startcontour = true;
+    error = FT_Outline_Decompose(&(og->outline), &funcs, &ol);
+	if (error)
+        RS_DEBUG->print(RS_Debug::D_WARNING,
+                        "FT_Load_Glyph: FT_Outline_Decompose: second pass: %s",
+                        FT_StrError(error).c_str());
+
+    return true;
+}
+
 /**
  * Constructor.
  *
  * @param owner true if the font owns the letters (blocks). Otherwise
  *              the letters will be deleted when the font is deleted.
  */
-RS_Font::RS_Font(const QString& fileName, bool owner)
-    :	letterList(owner), fileName(fileName), fileLicense("unknown") {
+RS_Font::RS_Font(const QString& path, bool owner)
+    :	letterList(owner), path(path), fileLicense("unknown") {
     loaded = false;
     letterSpacing = 3.0;
     wordSpacing = 6.75;
     lineSpacingFactor = 1.0;
     rawLffFontList.clear();
+}
+
+RS_Font::~RS_Font() {
+    if (face) {
+        FT_Done_Face(face);
+    }
+    if (library) {
+        FT_Done_Library(library);
+    }
 }
 
 /**
@@ -67,32 +270,6 @@ bool RS_Font::loadFont() {
 
     if (loaded) {
         return true;
-    }
-
-    QString path;
-
-    // Search for the appropriate font if we have only the name of the font:
-    if (!fileName.toLower().contains(".cxf") &&
-            !fileName.toLower().contains(".lff")) {
-
-        QStringList fonts = RS_Utility::getFileList("fonts", "lff");
-        fonts.append(RS_Utility::getFileList("fonts", "cxf"));
-
-        QFileInfo file;
-        for (QStringList::Iterator it = fonts.begin();
-             it!=fonts.end();
-             it++) {
-
-            if (QFileInfo(*it).baseName().toLower()==fileName.toLower()) {
-                path = *it;
-                break;
-            }
-        }
-    }
-
-    // We have the full path of the font:
-    else {
-        path = fileName;
     }
 
     // No font paths found:
@@ -116,10 +293,34 @@ bool RS_Font::loadFont() {
     }
     f.close();
 
-    if (path.contains(".cxf"))
+    if (path.endsWith(".cxf"))
         readCXF(path);
-    if (path.contains(".lff"))
+    else if (path.endsWith(".lff"))
         readLFF(path);
+    else if (path.endsWith(".ttf") || path.endsWith(".ttc")) {
+        FT_Error error = FT_Init_FreeType(&library);
+        if (error) {
+            RS_DEBUG->print("RS_Font::loadFont: "
+                            "failed to open font file: %s, error:%s",
+                            path.toLatin1().data(), FT_StrError(error).c_str());
+            return false;
+        }
+        error = FT_New_Face(library,
+                            path.toStdString().c_str(),
+                            0,
+                            &face);
+        if (error) {
+            RS_DEBUG->print("RS_Font::loadFont: "
+                            "failed to open font file: %s, error:%s",
+                            path.toLatin1().data(), FT_StrError(error).c_str());
+            return false;
+        }
+
+        // find out height by tracing 'A'
+        OutLine ol;
+        convertGlyph(face, 65, ol);
+        factor = 1.0/(1.0/9.0*ol.yMax);
+    }
 
     /*
     RS_Block* bk = letterList.find(QChar(0xfffd));
@@ -145,7 +346,6 @@ bool RS_Font::loadFont() {
 
     return true;
 }
-
 
 void RS_Font::readCXF(QString path) {
     QString line;
@@ -287,12 +487,16 @@ void RS_Font::readCXF(QString path) {
 }
 
 void RS_Font::readLFF(QString path) {
-    QString line;
     QFile f(path);
     encoding = "UTF-8";
     f.open(QIODevice::ReadOnly);
     QTextStream ts(&f);
+    readLFF(ts);
+    f.close();
+}
 
+void RS_Font::readLFF(QTextStream& ts) {
+    QString line;
     // Read line by line until we find a new letter:
     while (!ts.atEnd()) {
         line = ts.readLine();
@@ -366,7 +570,6 @@ void RS_Font::readLFF(QString path) {
             }
         }
     }
-    f.close();
 }
 
 void RS_Font::generateAllFonts(){
@@ -380,7 +583,7 @@ void RS_Font::generateAllFonts(){
 RS_Block* RS_Font::generateLffFont(const QString& key){
 
     if (!rawLffFontList.contains( key)) {
-        RS_DEBUG->print( RS_Debug::D_ERROR, "RS_Font::generateLffFont([%04X]) : can not find the letter in LFF file %s", QChar(key.at(0)), qPrintable(fileName));
+        RS_DEBUG->print( RS_Debug::D_ERROR, "RS_Font::generateLffFont([%04X]) : can not find the letter in LFF file %s", QChar(key.at(0)), qPrintable(path));
         return nullptr;
     }
 
@@ -406,7 +609,7 @@ RS_Block* RS_Font::generateLffFont(const QString& key){
 			int uCode = line.toInt(nullptr, 16);
             QChar ch = QChar(uCode);
             if (QString(ch) == key) {   // recursion, a character can't include itself
-                RS_DEBUG->print( RS_Debug::D_ERROR, "RS_Font::generateLffFont([%04X]) : recursion, ignore this character from %s", uCode, qPrintable(fileName));
+                RS_DEBUG->print( RS_Debug::D_ERROR, "RS_Font::generateLffFont([%04X]) : recursion, ignore this character from %s", uCode, qPrintable(path));
                 delete letter;
                 return nullptr;
             }
@@ -414,7 +617,7 @@ RS_Block* RS_Font::generateLffFont(const QString& key){
             RS_Block* bk = letterList.find(ch);
             if (nullptr == bk) {
                 if (!rawLffFontList.contains(ch)) {
-                    RS_DEBUG->print( RS_Debug::D_ERROR, "RS_Font::generateLffFont([%04X]) : can not find the letter C%04X in LFF file %s", QChar(key.at(0)), uCode, qPrintable(fileName));
+                    RS_DEBUG->print( RS_Debug::D_ERROR, "RS_Font::generateLffFont([%04X]) : can not find the letter C%04X in LFF file %s", QChar(key.at(0)), uCode, qPrintable(path));
                     delete letter;
                     return nullptr;
                 }
@@ -479,8 +682,20 @@ RS_Block* RS_Font::generateLffFont(const QString& key){
 }
 
 RS_Block* RS_Font::findLetter(const QString& name) {
-    RS_Block* ret= letterList.find(name);
+    RS_Block* ret = letterList.find(name);
 	if (ret) return ret;
+    if (path.endsWith(".ttf") || path.endsWith(".ttc")) {
+        OutLine ol;
+        ol.factor = factor;
+        // convert one char to lff
+        if (convertGlyph(face, name.at(0).unicode(), ol)) {
+            RS_DEBUG->print(RS_Debug::D_DEBUGGING,
+                            "convertGlyph: %s",
+                            ol.output.toLatin1().data());
+            QTextStream ts(&ol.output);
+            readLFF(ts);
+        }
+    }
     return generateLffFont(name);
 }
 
@@ -488,7 +703,7 @@ RS_Block* RS_Font::findLetter(const QString& name) {
  * Dumps the fonts data to stdout.
  */
 std::ostream& operator << (std::ostream& os, const RS_Font& f) {
-    os << " Font file name: " << f.getFileName().toLatin1().data() << "\n";
+    os << " Font name: " << f.getFontName().toLatin1().data() << "\n";
     //<< (RS_BlockList&)f << "\n";
     return os;
 }

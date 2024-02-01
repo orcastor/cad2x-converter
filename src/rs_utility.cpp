@@ -28,7 +28,7 @@
 #include <QStringList>
 #include <QDir>
 #include "rs_utility.h"
-
+#include "rs_debug.h"
 
 /**
  * Converts a double to a string cutting away unnecessary 0's.
@@ -57,17 +57,22 @@ QString RS_Utility::doubleToString(double value, int precision) {
 QStringList RS_Utility::getFileList(const QString& subDirectory, const QString& fileExtension) {
 
     QStringList fileList;
-    QString path;
-    QDir dir;
+    QString path = subDirectory;
+    QDir dir(path);
 
-    path = QString(subDirectory);
-    dir = QDir(path);
+    RS_DEBUG->print(RS_Debug::D_DEBUGGING,
+                    "RS_Utility::getFileList: %s",
+                    path.toLatin1().data());
 
     if (dir.exists() && dir.isReadable()) {
         QStringList files = dir.entryList( QStringList( "*." + fileExtension));
-        for(QString& file: files)
-        {
+        for(QString& file: files) {
             fileList += path + "/" + file;
+        }
+
+        QStringList subDirs = dir.entryList(QDir::Dirs | QDir::NoSymLinks | QDir::NoDotAndDotDot);
+        for (QString subDir : subDirs) {
+            fileList.append(getFileList(subDirectory + "/" + subDir, fileExtension));
         }
     }
 

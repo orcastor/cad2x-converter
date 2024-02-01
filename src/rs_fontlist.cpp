@@ -43,16 +43,30 @@ RS_FontList* RS_FontList::instance() {
 	return uniqueInstance;
 }
 
-
 /**
  * Initializes the font list by creating empty RS_Font 
  * objects, one for each font that could be found.
  */
-void RS_FontList::init() {
+void RS_FontList::init(const QStringList& dirs) {
     RS_DEBUG->print("RS_FontList::initFonts");
 
-    QStringList list = RS_Utility::getFileList("fonts", "lff");
+    // TruType first, app first
+    QStringList list = RS_Utility::getFileList("fonts", "ttf");
+    list.append(RS_Utility::getFileList("fonts", "ttc"));
+    for (QString dir : dirs) {
+        if (dir.isEmpty()) continue;
+        list.append(RS_Utility::getFileList(dir, "ttf"));
+        list.append(RS_Utility::getFileList(dir, "ttc"));
+    }
+
+    list.append(RS_Utility::getFileList("fonts", "lff"));
     list.append(RS_Utility::getFileList("fonts", "cxf"));
+    for (QString dir : dirs) {
+        if (dir.isEmpty()) continue;
+        list.append(RS_Utility::getFileList(dir, "lff"));
+        list.append(RS_Utility::getFileList(dir, "cxf"));
+    }
+
     QHash<QString, int> added; //used to remember added fonts (avoid duplication)
 
     for (int i = 0; i < list.size(); ++i) {
@@ -60,7 +74,7 @@ void RS_FontList::init() {
 
         QFileInfo fi( list.at(i) );
         if ( !added.contains(fi.baseName()) ) {
-			fonts.emplace_back(new RS_Font(fi.baseName()));
+			fonts.emplace_back(new RS_Font(fi.absoluteFilePath()));
             added.insert(fi.baseName(), 1);
         }
 
@@ -118,7 +132,7 @@ RS_Font* RS_FontList::requestFont(const QString& name) {
 	// Search our list of available fonts:
 	for( auto const& f: fonts){
 
-        if (f->getFileName().toLower() == name2) {
+        if (f->getFontName().toLower() == name2) {
             // Make sure this font is loaded into memory:
             f->loadFont();
 			foundFont = f.get();

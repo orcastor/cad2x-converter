@@ -49,7 +49,7 @@ public:
 
     virtual ~RS_FontList() = default;
 
-    void init();
+    void init(const QStringList& dirs);
 
     void setDefaultFont(const QString& name);
     QString getDefaultFont() { return defaultFont; }
