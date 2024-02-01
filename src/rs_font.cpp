@@ -217,6 +217,7 @@ bool convertGlyph(FT_Face face, FT_ULong charcode, OutLine& ol) {
     ol.output += QString::asprintf("\n[#%04X]\n", (unsigned)charcode);
 
     // trace outline of the glyph
+    ol.xMin = 1000.0;
     ol.firstpass = true;
     error = FT_Outline_Decompose(&(og->outline), &funcs, &ol);
 	if (error)
@@ -232,6 +233,7 @@ bool convertGlyph(FT_Face face, FT_ULong charcode, OutLine& ol) {
                         "FT_Load_Glyph: FT_Outline_Decompose: second pass: %s",
                         FT_StrError(error).c_str());
 
+    ol.output += "\n";
     return true;
 }
 
@@ -687,14 +689,15 @@ RS_Block* RS_Font::findLetter(const QString& name) {
     if (path.endsWith(".ttf") || path.endsWith(".ttc")) {
         OutLine ol;
         ol.factor = factor;
-        // convert one char to lff
-        if (convertGlyph(face, name.at(0).unicode(), ol)) {
-            RS_DEBUG->print(RS_Debug::D_DEBUGGING,
-                            "convertGlyph: %s",
-                            ol.output.toLatin1().data());
-            QTextStream ts(&ol.output);
-            readLFF(ts);
+        for (int i=0; i<(int)name.length(); ++i) {
+            // convert one char to lff
+            if (convertGlyph(face, name.at(i).unicode(), ol)) {}
         }
+        RS_DEBUG->print(RS_Debug::D_DEBUGGING,
+                        "convertGlyph: %s",
+                        ol.output.toLatin1().data());
+        QTextStream ts(&ol.output);
+        readLFF(ts);
     }
     return generateLffFont(name);
 }

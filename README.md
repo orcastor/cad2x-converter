@@ -36,24 +36,28 @@ Examples:
     -- print a.dwg file to b.png.
 
 Options:
-  -h, --help                  Displays this help.
-  -v, --version               Displays version information.
-  -a, --auto-orientation      Auto paper orientation (landscape or portrait)
-                              based on document bounding box.
-  -b, --monochrome            Print monochrome (black/white).
-  -c, --fit                   Auto fit and center drawing to page.
-  -e, --code-page <codepage>  Set default code page (default is ANSI_1252).
-  -f, --default-font <font>   Set default font (default is standard).
-  -m, --margins <L,T,R,B>     Paper margins in mm (integer or float).
-  -n, --pages <HxV>           Print on multiple pages (Horiz. x Vert.).
-  -o, --outfile <file>        Output DXF v2007/PDF/PNG/SVG file.
-  -p, --paper <WxH>           Paper size (Width x Height) in mm.
-  -r, --resolution <integer>  Output resolution (DPI).
-  -s, --scale <double>        Output scale. E.g.: 0.01 (for 1:100 scale).
-  -t, --directory <path>      Target output directory.
+  -h, --help                           Displays this help.
+  -v, --version                        Displays version information.
+  -a, --auto-orientation               Auto paper orientation (landscape or
+                                       portrait) based on document bounding box.
+  -b, --monochrome                     Print monochrome (black/white).
+  -c, --fit                            Auto fit and center drawing to page.
+  -e, --code-page <codepage>           Set default code page (default is
+                                       ANSI_1252).
+  -f, --default-font <font>            Set default font (default is standard).
+  -l, --font-dirs <dir1,dir2,dir3...>  Set more font directories.
+  -m, --margins <L,T,R,B>              Paper margins in mm (integer or float).
+  -n, --pages <HxV>                    Print on multiple pages (Horiz. x
+                                       Vert.).
+  -o, --outfile <file>                 Output DXF v2007/PDF/PNG/SVG file.
+  -p, --paper <WxH>                    Paper size (Width x Height) in mm.
+  -r, --resolution <integer>           Output resolution (DPI).
+  -s, --scale <double>                 Output scale. E.g.: 0.01 (for 1:100
+                                       scale).
+  -t, --directory <path>               Target output directory.
 
 Arguments:
-  <dxf/dwg files>             Input DXF/DWG file(s)
+  <dxf/dwg files>                      Input DXF/DWG file(s)
 ```
 
 ### Convert all the `dwg` files to `pdf` format
@@ -84,8 +88,9 @@ Arguments:
 - auto fit & center drawing in the page (-c)
 - set default code page chinese (-e ANSI_936)
 - set default font (-f simsun)
+- add font list (-l /one/fonts,/two/fonts)
 
-> ./cad2x -o b.pdf a.dxf -e ANSI_936 -f simsun -ac
+> ./cad2x -o b.pdf a.dxf -e ANSI_936 -f simsun -ac -l /one/fonts,/two/fonts
 
 ### Code Page References
 |Language|DXF CodePage|
@@ -159,7 +164,7 @@ make -j20
 
 ## Changelog
 
-- ✨ add font by easily dropping `.lff` into `cad2x-converter/output/fonts`
+- ✨ add font by easily dropping into `cad2x-converter/output/fonts`
 - ✂️ trim dependency of QtWidgets & QtPrintSupport
 - ✂️ trim dependency of GUI app (QtGuiApplication / accessible / input / events / plugins)
 - ✂️ trim dependency of Render (OpenGL / Vulkan / KMS / VNC)
@@ -189,8 +194,8 @@ make -j20
 - 🛠️ fix: malformed Unicode characters - by [DXF File Encoding](https://ezdxf.readthedocs.io/en/stable/dxfinternals/fileencoding.html)
 - [ ] 🛠️ fix: QCad format DXF incorrect offset of entities
 - 🆕 feature: support auto orientation detection
-- [ ] 🆕 feature: lazy load `ttf`/`ttc` font file support (not only `lff`/`cxf`)
-- [ ] 🆕 feature: support more formats
+- 🆕 feature: lazy load `ttf`/`ttc` font file support (not only `lff`/`cxf`)
+- [ ] 🆕 feature: support more export formats
   - [ ] a quick way from DWG to BMP thumbnail
   - [ ] DWG / DXF to JSON for [cad.js](https://github.com/ghemingway/cad.js)
   - [ ] DWG / DXF to XML
@@ -201,9 +206,6 @@ make -j20
 You can refer to original [LibreCAD Wiki - BUILD FROM SOURCE](https://github.com/LibreCAD/LibreCAD/wiki/Build-from-source) page first.
 
 ## FAQ
-
-Q: How to use TrueType font files?
-> A: Use tools/ttf2lff convert the `.ttf` to `.lff` and drop it into `cad2x-converter/output/fonts`
 
 Q: How to export other image formats like bmp / jpeg / tiff / ico / tga?
 > A: Create a directory named 'imageformats' and put the `libq*.so`/`q*.dll` in it (can be found from official Qt5.12), app will automatically load the plugins.
