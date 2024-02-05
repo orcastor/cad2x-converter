@@ -6,6 +6,9 @@
 
 <h1 align="center"><strong>🆒 cad2x</strong> - sub tool of <a href="https://github.com/orcastor/addon-previewer">orcastor/addon-previewer</a></h1>
 
+<p align="center">Pre-built <strong>cad2x</strong>: <a href="https://github.com/orcastor/addon-previewer/tree/main/back/cad2x/linux_arm64">[ linux_arm64 ]</a> (2.88MB) | <a href="https://github.com/orcastor/addon-previewer/tree/main/back/cad2x/linux_x64">[ linux_x64 ]</a> (3.42MB)
+</p>
+
 Minimal CLI tool convert CAD files (DXF / DWG) to other formats (DXF / PDF / PNG / SVG) trimming from [LibreCAD](https://github.com/LibreCAD/LibreCAD) (commit-id: 0601535).
 
 # Features
@@ -112,52 +115,44 @@ Arguments:
 
 ## Build Tutorials
 
-### How to prepare toolchain
+### Preparation
 
 ``` sh
-apt-get install g++ gcc make git-core pkg-config qt5-qmake -y --no-install-recommends
+apt-get install g++ gcc make git-core pkg-config qt5-qmake libfreetype-dev libboost-dev -y --no-install-recommends
 ```
 
 ### How to build trimmed `qtbase(Qt 5.12.12)`
 
 - static QtCore & QtGUI library
 ``` sh
+cd ./3rdparty/qtbase/
 ./configure -developer-build -release -no-iconv -no-icu -static -strip -confirm-license -opensource
+qmake -qt=qt5 -r -- -developer-build -release -no-iconv -no-icu -static -strip -confirm-license -opensource
+make -j20
 
-cd ./3rdparty/qtbase/src/tools
-make -j20 # build qmake & bootstrap & moc
+cd src/corelib
+make install_targ_headers
 
-cd -
-
-cd ./3rdparty/qtbase/src/corelib
 make -j20 staticlib
 
-cd -
+cd ../gui
+make install_targ_headers
 
-cd ./3rdparty/qtbase/src/gui
 make -j20 staticlib
 ```
 
 - shared QtCore & QtGUI library
 ``` sh
+cd ./3rdparty/qtbase/
 ./configure -developer-build -release -no-iconv -no-icu -strip -confirm-license -opensource -R .
-
-cd ./3rdparty/qtbase/src
-make -j20 # build qmake & bootstrap & moc / corelib / gui
+qmake -qt=qt5 -r -- -developer-build -release -no-iconv -no-icu -strip -confirm-license -opensource -R .
+make -j20
 make install
 ```
 
 ### How to build cad2x
 
 ``` sh
-qmake -qt=qt5 -r
-make -j20
-```
-
-### How to build ttf2lff
-
-``` sh
-cd ./tools
 qmake -qt=qt5 -r
 make -j20
 ```
