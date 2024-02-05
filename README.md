@@ -118,7 +118,7 @@ Arguments:
 ### Preparation
 
 ``` sh
-apt-get install g++ gcc make git-core pkg-config qt5-qmake libfreetype-dev libboost-dev -y --no-install-recommends
+apt-get install g++ gcc make git-core pkg-config qt5-qmake libfreetype-dev -y --no-install-recommends
 ```
 
 ### How to build trimmed `qtbase(Qt 5.12.12)`
