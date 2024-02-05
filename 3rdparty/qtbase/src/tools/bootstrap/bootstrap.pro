@@ -4,7 +4,7 @@ TARGET = QtBootstrap
 QT =
 CONFIG += minimal_syncqt internal_module force_bootstrap gc_binaries
 
-MODULE_INCNAME = QtCore QtXml
+MODULE_INCNAME = QtCore QtZlib
 MODULE_DEFINES = \
         QT_VERSION_STR=$$shell_quote(\"$$QT_VERSION\") \
         QT_VERSION_MAJOR=$$QT_MAJOR_VERSION \

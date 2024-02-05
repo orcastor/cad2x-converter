@@ -1,7 +1,6 @@
 %modules = ( # path to module name map
     "QtGui" => "$basedir/src/gui",
     "QtCore" => "$basedir/src/corelib",
-    "QtXml" => "$basedir/src/xml",
     "QtZlib" => "!>$basedir/src/corelib;$basedir/src/3rdparty/zlib",
     "QtFontDatabaseSupport" => "$basedir/src/platformsupport/fontdatabases",
 );

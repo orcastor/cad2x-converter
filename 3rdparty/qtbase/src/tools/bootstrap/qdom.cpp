@@ -54,7 +54,7 @@
 #endif
 #include <qtextstream.h>
 #include <qxml.h>
-#include "private/qxml_p.h"
+#include "qxml_p.h"
 #include <qvariant.h>
 #include <qmap.h>
 #include <qshareddata.h>
