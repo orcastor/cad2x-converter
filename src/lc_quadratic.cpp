@@ -35,6 +35,8 @@
 #include "rs_line.h"
 #include "rs_debug.h"
 
+#include <iostream>
+
 #ifdef EMU_C99
 #include "emu_c99.h" /* C99 math */
 #endif
@@ -44,7 +46,7 @@
  */
 
 LC_Quadratic::LC_Quadratic():
-    m_mQuad(2,2),
+    m_mQuad(2, Vector(2, 0.0)),
     m_vLinear(2),
 	m_bValid(false)
 {}
@@ -62,7 +64,6 @@ LC_Quadratic::LC_Quadratic(const LC_Quadratic& lc0):
 LC_Quadratic& LC_Quadratic::operator = (const LC_Quadratic& lc0)
 {
     if(lc0.isQuadratic()){
-        m_mQuad.resize(2,2,false);
         m_mQuad=lc0.getQuad();
     }
     m_vLinear.resize(2);
@@ -75,25 +76,25 @@ LC_Quadratic& LC_Quadratic::operator = (const LC_Quadratic& lc0)
 
 
 LC_Quadratic::LC_Quadratic(std::vector<double> ce):
-    m_mQuad(2,2),
+    m_mQuad(2, Vector(2, 0.0)),
     m_vLinear(2)
 {
     if(ce.size()==6){
         //quadratic
-        m_mQuad(0,0)=ce[0];
-        m_mQuad(0,1)=0.5*ce[1];
-        m_mQuad(1,0)=m_mQuad(0,1);
-        m_mQuad(1,1)=ce[2];
-        m_vLinear(0)=ce[3];
-        m_vLinear(1)=ce[4];
+        m_mQuad[0][0]=ce[0];
+        m_mQuad[0][1]=0.5*ce[1];
+        m_mQuad[1][0]=m_mQuad[0][1];
+        m_mQuad[1][1]=ce[2];
+        m_vLinear[0]=ce[3];
+        m_vLinear[1]=ce[4];
         m_dConst=ce[5];
         m_bIsQuadratic=true;
         m_bValid=true;
         return;
     }
     if(ce.size()==3){
-        m_vLinear(0)=ce[0];
-        m_vLinear(1)=ce[1];
+        m_vLinear[0]=ce[0];
+        m_vLinear[1]=ce[1];
         m_dConst=ce[2];
         m_bIsQuadratic=false;
         m_bValid=true;
@@ -109,7 +110,7 @@ LC_Quadratic::LC_Quadratic(std::vector<double> ce):
 *@return, a path of center tangential circles which pass the point
 */
 LC_Quadratic::LC_Quadratic(const RS_AtomicEntity* circle, const RS_Vector& point)
-    : m_mQuad(2,2)
+    :m_mQuad(2, Vector(2, 0.0))
     ,m_vLinear(2)
     ,m_bIsQuadratic(true)
     ,m_bValid(true)
@@ -137,12 +138,12 @@ LC_Quadratic::LC_Quadratic(const RS_AtomicEntity* circle, const RS_Vector& point
             m_bValid=false;
             return;
         }
-        m_mQuad(0,0)=1./(d*d);
-        m_mQuad(0,1)=0.;
-        m_mQuad(1,0)=0.;
-        m_mQuad(1,1)=1./(d*d - c*c);
-        m_vLinear(0)=0.;
-        m_vLinear(1)=0.;
+        m_mQuad[0][0]=1./(d*d);
+        m_mQuad[0][1]=0.;
+        m_mQuad[1][0]=0.;
+        m_mQuad[1][1]=1./(d*d - c*c);
+        m_vLinear[0]=0.;
+        m_vLinear[1]=0.;
         m_dConst=-1.;
         center=(center + point)*0.5;
         rotate(center.angleTo(point));
@@ -166,23 +167,23 @@ LC_Quadratic::LC_Quadratic(const RS_AtomicEntity* circle, const RS_Vector& point
         if(p2<RS_TOLERANCE2) {
             //point on line, return a straight line
             m_bIsQuadratic=false;
-            m_vLinear(0)=direction.y;
-            m_vLinear(1)=-direction.x;
+            m_vLinear[0]=direction.y;
+            m_vLinear[1]=-direction.x;
             m_dConst = direction.x*point.y-direction.y*point.x;
             return;
         }
 		RS_Vector center= (projection+point)*0.5;
 //        std::cout<<"point="<<point<<std::endl;
 //        std::cout<<"center="<<center<<std::endl;
-        double p=sqrt(p2);
+        double p=std::sqrt(p2);
         m_bIsQuadratic=true;
         m_bValid=true;
-        m_mQuad(0,0)=0.;
-        m_mQuad(0,1)=0.;
-        m_mQuad(1,0)=0.;
-        m_mQuad(1,1)=1.;
-        m_vLinear(0)=-2.*p;
-        m_vLinear(1)=0.;
+        m_mQuad[0][0]=0.;
+        m_mQuad[0][1]=0.;
+        m_mQuad[1][0]=0.;
+        m_mQuad[1][1]=1.;
+        m_vLinear[0]=-2.*p;
+        m_vLinear[1]=0.;
         m_dConst=0.;
 //        DEBUG_HEADER
 //        std::cout<<*this<<std::endl;
@@ -235,22 +236,22 @@ bool LC_Quadratic::operator != (bool valid) const
 	return m_bValid != valid;
 }
 
-boost::numeric::ublas::vector<double>& LC_Quadratic::getLinear()
+Vector& LC_Quadratic::getLinear()
 {
 	return m_vLinear;
 }
 
-const boost::numeric::ublas::vector<double>& LC_Quadratic::getLinear() const
+const Vector& LC_Quadratic::getLinear() const
 {
 	return m_vLinear;
 }
 
-boost::numeric::ublas::matrix<double>& LC_Quadratic::getQuad()
+Matrix& LC_Quadratic::getQuad()
 {
 	return m_mQuad;
 }
 
-const boost::numeric::ublas::matrix<double>& LC_Quadratic::getQuad() const
+const Matrix& LC_Quadratic::getQuad() const
 {
 	return m_mQuad;
 }
@@ -270,7 +271,7 @@ double& LC_Quadratic::constTerm()
 LC_Quadratic::LC_Quadratic(const RS_AtomicEntity* circle0,
                            const RS_AtomicEntity* circle1,
                            bool mirror):
-    m_mQuad(2,2)
+    m_mQuad(2, Vector(2, 0.0))
     ,m_vLinear(2)
     ,m_bValid(false)
 {
@@ -293,12 +294,12 @@ LC_Quadratic::LC_Quadratic(const RS_AtomicEntity* circle0,
         double angle=0.5*(line0->getAngle1()+line1->getAngle1());
         m_bValid=true;
         m_bIsQuadratic=true;
-        m_mQuad(0,0)=0.;
-        m_mQuad(0,1)=0.5;
-        m_mQuad(1,0)=0.5;
-        m_mQuad(1,1)=0.;
-        m_vLinear(0)=0.;
-        m_vLinear(1)=0.;
+        m_mQuad[0][0]=0.;
+        m_mQuad[0][1]=0.5;
+        m_mQuad[1][0]=0.5;
+        m_mQuad[1][1]=0.;
+        m_vLinear[0]=0.;
+        m_vLinear[1]=0.;
         m_dConst=0.;
         rotate(angle);
         move(centers.get(0));
@@ -342,7 +343,7 @@ LC_Quadratic::LC_Quadratic(const RS_AtomicEntity* circle0,
     double angle=center.angleTo(circle0->getCenter());
     if( f<a){
         //ellipse
-		double const ratio=sqrt(a*a - f*f)/a;
+		double const ratio=std::sqrt(a*a - f*f)/a;
 		RS_Vector const& majorP=RS_Vector{angle}*a;
 		RS_Ellipse const ellipse{nullptr, {center,majorP,ratio,0.,0.,false}};
 		auto const& lc0=ellipse.getQuadratic();
@@ -364,12 +365,12 @@ LC_Quadratic::LC_Quadratic(const RS_AtomicEntity* circle0,
 		//equation xy = 0
 		m_bValid=true;
 		m_bIsQuadratic=true;
-		m_mQuad(0,0)=0.;
-		m_mQuad(0,1)=0.5;
-		m_mQuad(1,0)=0.5;
-		m_mQuad(1,1)=0.;
-		m_vLinear(0)=0.;
-		m_vLinear(1)=0.;
+		m_mQuad[0][0]=0.;
+		m_mQuad[0][1]=0.5;
+		m_mQuad[1][0]=0.5;
+		m_mQuad[1][1]=0.;
+		m_vLinear[0]=0.;
+		m_vLinear[1]=0.;
 		m_dConst=0.;
 		rotate(angle);
 		move(center);
@@ -383,12 +384,12 @@ LC_Quadratic::LC_Quadratic(const RS_AtomicEntity* circle0,
     double b2= f*f - c*c;
     m_bValid=true;
     m_bIsQuadratic=true;
-	m_mQuad(0,0)=1./(c*c);
-    m_mQuad(0,1)=0.;
-    m_mQuad(1,0)=0.;
-    m_mQuad(1,1)=-1./b2;
-    m_vLinear(0)=0.;
-    m_vLinear(1)=0.;
+	m_mQuad[0][0]=1./(c*c);
+    m_mQuad[0][1]=0.;
+    m_mQuad[1][0]=0.;
+    m_mQuad[1][1]=-1./b2;
+    m_vLinear[0]=0.;
+    m_vLinear[1]=0.;
     m_dConst=-1.;
     rotate(angle);
     move(center);
@@ -412,12 +413,12 @@ std::vector<double>  LC_Quadratic::getCoefficients() const
     std::vector<double> ret(0,0.);
     if(isValid()==false) return ret;
     if(m_bIsQuadratic){
-        ret.push_back(m_mQuad(0,0));
-        ret.push_back(m_mQuad(0,1)+m_mQuad(1,0));
-        ret.push_back(m_mQuad(1,1));
+        ret.push_back(m_mQuad[0][0]);
+        ret.push_back(m_mQuad[0][1]+m_mQuad[1][0]);
+        ret.push_back(m_mQuad[1][1]);
     }
-    ret.push_back(m_vLinear(0));
-    ret.push_back(m_vLinear(1));
+    ret.push_back(m_vLinear[0]);
+    ret.push_back(m_vLinear[1]);
     ret.push_back(m_dConst);
     return ret;
 }
@@ -426,26 +427,83 @@ LC_Quadratic LC_Quadratic::move(const RS_Vector& v)
 {
     if(m_bValid==false || v.valid == false) return *this;
 
-    m_dConst -= m_vLinear(0) * v.x + m_vLinear(1)*v.y;
+    m_dConst -= m_vLinear[0] * v.x + m_vLinear[1]*v.y;
 
     if(m_bIsQuadratic){
-        m_vLinear(0) -= 2.*m_mQuad(0,0)*v.x + (m_mQuad(0,1)+m_mQuad(1,0))*v.y;
-        m_vLinear(1) -= 2.*m_mQuad(1,1)*v.y + (m_mQuad(0,1)+m_mQuad(1,0))*v.x;
-        m_dConst += m_mQuad(0,0)*v.x*v.x + (m_mQuad(0,1)+m_mQuad(1,0))*v.x*v.y+ m_mQuad(1,1)*v.y*v.y ;
+        m_vLinear[0] -= 2.*m_mQuad[0][0]*v.x + (m_mQuad[0][1]+m_mQuad[1][0])*v.y;
+        m_vLinear[1] -= 2.*m_mQuad[1][1]*v.y + (m_mQuad[0][1]+m_mQuad[1][0])*v.x;
+        m_dConst += m_mQuad[0][0]*v.x*v.x + (m_mQuad[0][1]+m_mQuad[1][0])*v.x*v.y+ m_mQuad[1][1]*v.y*v.y ;
     }
     return *this;
 }
 
+// 转置函数
+Matrix transpose(const Matrix& mat) {
+    // 获取矩阵的行数和列数
+    size_t rows = mat.size();
+    size_t cols = mat[0].size();
+
+    // 创建转置后的矩阵，初始值均为0
+    Matrix result(cols, Vector(rows, 0.0));
+
+    // 对矩阵进行转置操作
+    for (size_t i = 0; i < rows; ++i) {
+        for (size_t j = 0; j < cols; ++j) {
+            result[j][i] = mat[i][j];
+        }
+    }
+
+    return result;
+}
+
+// 矩阵乘法函数
+Matrix matrix_multiply(const Matrix& mat1, const Matrix& mat2) {
+    // 获取矩阵的行数和列数
+    size_t rows1 = mat1.size();
+    size_t cols1 = mat1[0].size();
+    size_t cols2 = mat2[0].size();
+
+    // 创建结果矩阵，初始值均为0
+    Matrix result(rows1, std::vector<double>(cols2, 0.0));
+
+    // 对矩阵进行乘法操作
+    for (size_t i = 0; i < rows1; ++i) {
+        for (size_t j = 0; j < cols2; ++j) {
+            for (size_t k = 0; k < cols1; ++k) {
+                result[i][j] += mat1[i][k] * mat2[k][j];
+            }
+        }
+    }
+
+    return result;
+}
+
+Vector matrix_multiply(const Matrix& m, const Vector& v) {
+    // 确保矩阵和向量尺寸兼容
+    if (m.empty() || m[0].size() != v.size()) {
+        std::cerr << "Matrix and vector dimensions are incompatible." << std::endl;
+        return Vector();
+    }
+
+    // 计算矩阵乘以向量的结果
+    Vector result(m.size(), 0.0);
+    for (size_t i = 0; i < m.size(); ++i) {
+        for (size_t j = 0; j < m[i].size(); ++j) {
+            result[i] += m[i][j] * v[j];
+        }
+    }
+
+    return result;
+}
 
 LC_Quadratic LC_Quadratic::rotate(const double& angle)
 {
-    using namespace boost::numeric::ublas;
 	auto m=rotationMatrix(angle);
-	auto t=trans(m);
-    m_vLinear = prod(t, m_vLinear);
+	auto t=transpose(m);
+    m_vLinear = matrix_multiply(t, m_vLinear);
     if(m_bIsQuadratic){
-        m_mQuad=prod(m_mQuad,m);
-        m_mQuad=prod(t, m_mQuad);
+        m_mQuad=matrix_multiply(m_mQuad,m);
+        m_mQuad=matrix_multiply(t, m_mQuad);
     }
     return *this;
 }
@@ -463,10 +521,10 @@ LC_Quadratic LC_Quadratic::flipXY(void) const
 {
         LC_Quadratic qf(*this);
     if(isQuadratic()){
-        std::swap(qf.m_mQuad(0,0),qf.m_mQuad(1,1));
-        std::swap(qf.m_mQuad(0,1),qf.m_mQuad(1,0));
+        std::swap(qf.m_mQuad[0][0],qf.m_mQuad[1][1]);
+        std::swap(qf.m_mQuad[0][1],qf.m_mQuad[1][0]);
     }
-    std::swap(qf.m_vLinear(0),qf.m_vLinear(1));
+    std::swap(qf.m_vLinear[0],qf.m_vLinear[1]);
     return qf;
 }
 
@@ -492,11 +550,11 @@ RS_VectorSolutions LC_Quadratic::getIntersection(const LC_Quadratic& l1, const L
     if(p1->isQuadratic()==false){
         //two lines
 		std::vector<std::vector<double> > ce(2,std::vector<double>(3,0.));
-        ce[0][0]=p1->m_vLinear(0);
-        ce[0][1]=p1->m_vLinear(1);
+        ce[0][0]=p1->m_vLinear[0];
+        ce[0][1]=p1->m_vLinear[1];
         ce[0][2]=-p1->m_dConst;
-        ce[1][0]=p2->m_vLinear(0);
-        ce[1][1]=p2->m_vLinear(1);
+        ce[1][0]=p2->m_vLinear[0];
+        ce[1][1]=p2->m_vLinear[1];
         ce[1][2]=-p2->m_dConst;
 		std::vector<double> sn(2,0.);
         if(RS_Math::linearSolver(ce,sn)){
@@ -507,7 +565,7 @@ RS_VectorSolutions LC_Quadratic::getIntersection(const LC_Quadratic& l1, const L
     if(p2->isQuadratic()==false){
         //one line, one quadratic
         //avoid division by zero
-        if(fabs(p2->m_vLinear(0))+DBL_EPSILON<fabs(p2->m_vLinear(1))){
+        if(fabs(p2->m_vLinear[0])+DBL_EPSILON<fabs(p2->m_vLinear[1])){
             ret=getIntersection(p1->flipXY(),p2->flipXY()).flipXY();
 //            for(size_t j=0;j<ret.size();j++){
 //                DEBUG_HEADER
@@ -516,7 +574,7 @@ RS_VectorSolutions LC_Quadratic::getIntersection(const LC_Quadratic& l1, const L
             return ret;
         }
         std::vector<std::vector<double> >  ce(0);
-		if(fabs(p2->m_vLinear(1))<RS_TOLERANCE){
+		if(fabs(p2->m_vLinear[1])<RS_TOLERANCE){
             const double angle=0.25*M_PI;
             LC_Quadratic p11(*p1);
             LC_Quadratic p22(*p2);
@@ -539,20 +597,20 @@ RS_VectorSolutions LC_Quadratic::getIntersection(const LC_Quadratic& l1, const L
 //        }
         return ret;
     }
-    if( fabs(p1->m_mQuad(0,0))<RS_TOLERANCE && fabs(p1->m_mQuad(0,1))<RS_TOLERANCE
+    if( fabs(p1->m_mQuad[0][0])<RS_TOLERANCE && fabs(p1->m_mQuad[0][1])<RS_TOLERANCE
             &&
-            fabs(p2->m_mQuad(0,0))<RS_TOLERANCE && fabs(p2->m_mQuad(0,1))<RS_TOLERANCE
+            fabs(p2->m_mQuad[0][0])<RS_TOLERANCE && fabs(p2->m_mQuad[0][1])<RS_TOLERANCE
             ){
-        if(fabs(p1->m_mQuad(1,1))<RS_TOLERANCE && fabs(p2->m_mQuad(1,1))<RS_TOLERANCE){
+        if(fabs(p1->m_mQuad[1][1])<RS_TOLERANCE && fabs(p2->m_mQuad[1][1])<RS_TOLERANCE){
             //linear
             std::vector<double> ce(0);
-            ce.push_back(p1->m_vLinear(0));
-            ce.push_back(p1->m_vLinear(1));
+            ce.push_back(p1->m_vLinear[0]);
+            ce.push_back(p1->m_vLinear[1]);
             ce.push_back(p1->m_dConst);
             LC_Quadratic lc10(ce);
             ce.clear();
-            ce.push_back(p2->m_vLinear(0));
-            ce.push_back(p2->m_vLinear(1));
+            ce.push_back(p2->m_vLinear[0]);
+            ce.push_back(p2->m_vLinear[1]);
             ce.push_back(p2->m_dConst);
             LC_Quadratic lc11(ce);
             return getIntersection(lc10,lc11);
@@ -596,16 +654,16 @@ RS_VectorSolutions LC_Quadratic::getIntersection(const LC_Quadratic& l1, const L
 /**
    rotation matrix:
 
-   cos x, sin x
-   -sin x, cos x
+   std::cos x, sin x
+   -sin x, std::cos x
    */
-boost::numeric::ublas::matrix<double>  LC_Quadratic::rotationMatrix(const double& angle)
+Matrix  LC_Quadratic::rotationMatrix(const double& angle)
 {
-    boost::numeric::ublas::matrix<double> ret(2,2);
-    ret(0,0)=cos(angle);
-    ret(0,1)=sin(angle);
-    ret(1,0)=-ret(0,1);
-    ret(1,1)=ret(0,0);
+    Matrix ret(2, Vector(2, 0.0));
+    ret[0][0]=std::cos(angle);
+    ret[0][1]=std::sin(angle);
+    ret[1][0]=-ret[0][1];
+    ret[1][1]=ret[0][0];
     return ret;
 }
 

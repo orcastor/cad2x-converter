@@ -28,6 +28,8 @@
 #define RS_MATH_H
 
 #include <vector>
+#include <cmath>
+#include <cfloat>
 
 class RS_Vector;
 class RS_VectorSolutions;

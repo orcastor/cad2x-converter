@@ -302,7 +302,7 @@ RS_VectorSolutions RS_Information::getIntersection(RS_Entity const* e1,
         // need to test whether the intersection is tangential
 		RS_Vector direction1=e1->getTangentDirection(vp);
 		RS_Vector direction2=e2->getTangentDirection(vp);
-        if( direction1.valid && direction2.valid && fabs(fabs(direction1.dotP(direction2)) - sqrt(direction1.squared()*direction2.squared())) < sqrt(tol)*tol )
+        if( direction1.valid && direction2.valid && std::fabs(std::fabs(direction1.dotP(direction2)) - std::sqrt(direction1.squared()*direction2.squared())) < std::sqrt(tol)*tol )
             ret2.setTangent(true);
         //TODO, make the following tangential test, nearest test work for all entity types
 
@@ -321,7 +321,7 @@ RS_VectorSolutions RS_Information::getIntersection(RS_Entity const* e1,
 //            RS_Vector nearest = lpLine->getNearestPointOnEntity( lpCircle->getCenter(), false, &dist);
 
 //            // special case: line touches circle tangent
-//            if( nearest.valid && fabs( dist - lpCircle->getRadius()) < tol) {
+//            if( nearest.valid && std::fabs( dist - lpCircle->getRadius()) < tol) {
 //                ret.set(i,nearest);
 //                ret2.setTangent(true);
 //            }
@@ -355,8 +355,8 @@ RS_VectorSolutions RS_Information::getIntersectionLineLine(RS_Line* e1,
     double num = ((p4.x-p3.x)*(p1.y-p3.y) - (p4.y-p3.y)*(p1.x-p3.x));
     double div = ((p4.y-p3.y)*(p2.x-p1.x) - (p4.x-p3.x)*(p2.y-p1.y));
 
-	if (fabs(div)>RS_TOLERANCE &&
-			fabs(remainder(e1->getAngle1()-e2->getAngle1(), M_PI))>=RS_TOLERANCE*10.) {
+	if (std::fabs(div)>RS_TOLERANCE &&
+			std::fabs(remainder(e1->getAngle1()-e2->getAngle1(), M_PI))>=RS_TOLERANCE*10.) {
 		double u = num / div;
 
 		double xs = p1.x + u * (p2.x-p1.x);
@@ -389,7 +389,7 @@ RS_VectorSolutions RS_Information::getIntersectionLineArc(RS_Line* line,
     nearest = line->getNearestPointOnEntity(arc->getCenter(), false, &dist);
 
     // special case: arc touches line (tangent):
-    if (nearest.valid && fabs(dist - arc->getRadius()) < 1.0e-4) {
+    if (nearest.valid && std::fabs(dist - arc->getRadius()) < 1.0e-4) {
 		ret = RS_VectorSolutions({nearest});
         ret.setTangent(true);
         return ret;
@@ -403,7 +403,7 @@ RS_VectorSolutions RS_Information::getIntersectionLineArc(RS_Line* line,
     RS_Vector delta = p - c;
     if (d2<RS_TOLERANCE2) {
         //line too short, still check the whether the line touches the arc
-        if ( fabs(delta.squared() - r*r) < 2.*RS_TOLERANCE*r ){
+        if ( std::fabs(delta.squared() - r*r) < 2.*RS_TOLERANCE*r ){
 			return RS_VectorSolutions({line->getMiddlePoint()});
         }
         return ret;
@@ -421,7 +421,7 @@ RS_VectorSolutions RS_Information::getIntersectionLineArc(RS_Line* line,
 //        std::cout<<"no intersection\n";
     return ret;
     }else{
-        term1=fabs(term1);
+        term1=std::fabs(term1);
 //        std::cout<< "term1="<<term1 <<" threshold: "<< RS_TOLERANCE * d2 <<std::endl;
         if( term1 < RS_TOLERANCE * d2 ) {
             //tangential;
@@ -431,7 +431,7 @@ RS_VectorSolutions RS_Information::getIntersectionLineArc(RS_Line* line,
 //        std::cout<<"Tangential point: "<<ret<<std::endl;
             return ret;
         }
-        double t = sqrt(fabs(term1));
+        double t = std::sqrt(std::fabs(term1));
     //two intersections
 	 return RS_VectorSolutions({ p + d*(t-a1)/d2, p -d*(t+a1)/d2});
     }
@@ -450,20 +450,20 @@ RS_VectorSolutions RS_Information::getIntersectionLineArc(RS_Line* line,
 
 //    // one or two intersections:
 //    else {
-//        double t1 = (- RS_Vector::dotP(d, delta) + sqrt(term))
+//        double t1 = (- RS_Vector::dotP(d, delta) + std::sqrt(term))
 //                    / RS_Math::pow(d.magnitude(), 2.0);
 //        double t2;
 //        bool tangent = false;
 
 //        // only one intersection:
-//        if (fabs(term)<RS_TOLERANCE) {
+//        if (std::fabs(term)<RS_TOLERANCE) {
 //            t2 = t1;
 //            tangent = true;
 //        }
 
 //        // two intersections
 //        else {
-//            t2 = (-RS_Vector::dotP(d, delta) - sqrt(term))
+//            t2 = (-RS_Vector::dotP(d, delta) - std::sqrt(term))
 //                 / RS_Math::pow(d.magnitude(), 2.0);
 //        }
 
@@ -529,8 +529,8 @@ RS_VectorSolutions RS_Information::getIntersectionArcArc(RS_Entity const* e1,
 
     // one or two intersections:
     else {
-        t1 = sqrt(term);
-        t2 = -sqrt(term);
+        t1 = std::sqrt(term);
+        t2 = -std::sqrt(term);
         bool tangent = false;
 
         RS_Vector sol1 = c1 + u*s + v*t1;
@@ -565,7 +565,7 @@ RS_VectorSolutions RS_Information::getIntersectionEllipseEllipse(
     if (
         (e1->getCenter() - e2 ->getCenter()).squared() < RS_TOLERANCE2 &&
         (e1->getMajorP() - e2 ->getMajorP()).squared() < RS_TOLERANCE2 &&
-        fabs(e1->getRatio() - e2 ->getRatio()) < RS_TOLERANCE
+        std::fabs(e1->getRatio() - e2 ->getRatio()) < RS_TOLERANCE
     ) { // overlapped ellipses, do not do overlap
         return ret;
     }
@@ -718,12 +718,12 @@ RS_VectorSolutions RS_Information::getIntersectionEllipseLine(RS_Line* line,
     double d = b*b - a*c;
 
 //    std::cout<<"RS_Information::getIntersectionEllipseLine(): d="<<d<<std::endl;
-    if (d < - 1.e3*RS_TOLERANCE*sqrt(RS_TOLERANCE)) {
+    if (d < - 1.e3*RS_TOLERANCE*std::sqrt(RS_TOLERANCE)) {
         RS_DEBUG->print("RS_Information::getIntersectionLineEllipse: outside 0");
         return ret;
     }
     if( d < 0. ) d=0.;
-    double root = sqrt(d);
+    double root = std::sqrt(d);
     double t_a = -b/a;
     double t_b = root/a;
     //        double t_b = (-b + root) / a;

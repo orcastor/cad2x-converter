@@ -40,18 +40,10 @@
 #include "rs_painter.h"
 #include "rs_painterqt.h"
 
+#include <iostream>
+
 #ifdef EMU_C99
 #include "emu_c99.h" /* C99 math */
-#endif
-// Workaround for Qt bug: https://bugreports.qt-project.org/browse/QTBUG-22829
-// TODO: the Q_MOC_RUN detection shouldn't be necessary after this Qt bug is resolved
-#ifndef Q_MOC_RUN
-#include <boost/version.hpp>
-#include <boost/math/tools/roots.hpp>
-#include <boost/math/special_functions/ellint_2.hpp>
-#if BOOST_VERSION > 104500
-#include <boost/tuple/tuple.hpp>
-#endif
 #endif
 
 namespace{
@@ -70,21 +62,13 @@ public:
 	void setDistance(const double& target){
 		distance=target;
 	}
-#if BOOST_VERSION > 104500
-    boost::tuples::tuple<double, double, double> operator()(double const& z) const {
-#else
-	boost::fusion::tuple<double, double, double> operator()(double const& z) const {
-#endif
+	std::tuple<double, double, double> operator()(double const& z) const {
         double const cz=std::cos(z);
         double const sz=std::sin(z);
         //delta amplitude
         double const d=std::sqrt(1-k2*sz*sz);
         // return f(x), f'(x) and f''(x)
-#if BOOST_VERSION > 104500
-        return boost::tuples::make_tuple(
-#else
-        return boost::fusion::make_tuple(
-#endif
+        return std::make_tuple(
                     e.getEllipseLength(z) - distance,
                     ra * d,
                     k2ra * sz * cz / d );
@@ -97,6 +81,34 @@ private:
 	const double k2;
 	const double k2ra;
 };
+
+template <class F, class T>
+T halley_iterate(F f, T guess, T min, T max, int digits) {
+    T x = guess;
+    T tol = std::pow(10, -digits);
+    int iter = 0;
+
+    while (iter < 1000) {  // 防止无限循环
+        auto result = f(x);
+        T fx = std::get<0>(result);
+        T fprime = std::get<1>(result);
+        T fprime2 = std::get<2>(result);
+
+        // Halley 迭代法
+        T delta = (2 * fx * fprime) / (2 * fprime * fprime - fx * fprime2);
+        x -= delta;
+
+        if (std::abs(delta) < tol || std::abs(fx) < tol)
+            break;
+
+        if (x < min || x > max)
+            break;
+
+        ++iter;
+    }
+
+    return x;
+}
 
 /**
  * @brief getNearestDistHelper find end point after trimmed by amount
@@ -130,7 +142,6 @@ RS_Vector getNearestDistHelper(RS_Ellipse const& e,
 
 	//solve equation of the distance by second order newton_raphson
     EllipseDistanceFunctor X{e, trimmed};
-	using namespace boost::math::tools;
 	double const sol =
 			halley_iterate<EllipseDistanceFunctor,double>(X,
 														  guess,
@@ -389,6 +400,18 @@ double RS_Ellipse::getLength() const
     return e.getEllipseLength(e.data.angle1,e.data.angle2);
 }
 
+double ellint_2(double m, int n = 1000) {
+    double result = 0.0;
+    double step = M_PI / (2 * n);
+    
+    for (int i = 0; i < n; ++i) {
+        double theta = i * step;
+        result += std::sqrt(1 - m * std::sin(theta) * std::sin(theta));
+    }
+
+    return result * step;
+}
+
 /**
 //Ellipse must have ratio<1, and not reversed
 *@ x1, ellipse angle
@@ -414,7 +437,7 @@ double RS_Ellipse::getEllipseLength(double x1, double x2) const
                (static_cast<int>((x1+RS_TOLERANCE_ANGLE)/M_PI)
                 ))*2;
 //        std::cout<<"Adding "<<ret<<" of E("<<k<<")\n";
-        ret*=boost::math::ellint_2<double>(k);
+        ret*=ellint_2(k);
     } else {
         ret=0.;
     }
@@ -852,12 +875,12 @@ bool RS_Ellipse::createFromQuadratic(const std::vector<double>& dn){
 bool RS_Ellipse::createFromQuadratic(const LC_Quadratic& q){
 	if (!q.isQuadratic()) return false;
 	auto  const& mQ=q.getQuad();
-	double const& a=mQ(0,0);
-	double const& c=2.*mQ(0,1);
-	double const& b=mQ(1,1);
+	double const& a=mQ[0][0];
+	double const& c=2.*mQ[0][1];
+	double const& b=mQ[1][1];
 	auto  const& mL=q.getLinear();
-	double const& d=mL(0);
-	double const& e=mL(1);
+	double const& d=mL[0];
+	double const& e=mL[1];
 	double determinant=c*c-4.*a*b;
 	if(determinant>= -DBL_EPSILON) return false;
 	// find center of quadratic
@@ -873,7 +896,7 @@ bool RS_Ellipse::createFromQuadratic(const LC_Quadratic& q){
 	const auto& mq2=qCentered.getQuad();
 	const double factor=-1./qCentered.constTerm();
 	//quadratic terms
-	if(!createFromQuadratic({mq2(0,0)*factor, 2.*mq2(0,1)*factor, mq2(1,1)*factor})) return false;
+	if(!createFromQuadratic({mq2[0][0]*factor, 2.*mq2[0][1]*factor, mq2[1][1]*factor})) return false;
 
 	//move back to center
 	move(eCenter);

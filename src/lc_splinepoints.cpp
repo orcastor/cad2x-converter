@@ -36,6 +36,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "rs_information.h"
 #include "rs_math.h"
 
+#include <cmath>
+
 
 namespace {
 RS_Vector GetQuadPoint(const RS_Vector& x1,

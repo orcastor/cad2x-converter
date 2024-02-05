@@ -27,8 +27,12 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 
 #include "rs_vector.h"
-#include <boost/numeric/ublas/matrix.hpp>
-#include <boost/numeric/ublas/io.hpp>
+
+// use std::vector instead of boost::numeric::ublas::vector
+typedef std::vector<double> Vector;
+
+// use std::vector<std::vector> instead of boost::numeric::ublas::matrix
+typedef std::vector<std::vector<double>> Matrix;
 
 class RS_VectorSolutions;
 class RS_AtomicEntity;
@@ -85,17 +89,17 @@ public:
 	bool operator == (bool valid) const;
 	bool operator != (bool valid) const;
 
-	boost::numeric::ublas::vector<double>& getLinear();
-	 const boost::numeric::ublas::vector<double>& getLinear() const;
-	 boost::numeric::ublas::matrix<double>& getQuad();
-	 const boost::numeric::ublas::matrix<double>& getQuad() const;
+	Vector& getLinear();
+	 const Vector& getLinear() const;
+	 Matrix& getQuad();
+	 const Matrix& getQuad() const;
 	 double const& constTerm()const;
 	 double& constTerm();
 
     /** switch x,y coordinates */
     LC_Quadratic flipXY(void) const;
     /** the matrix of rotation by angle **/
-    static boost::numeric::ublas::matrix<double> rotationMatrix(const double& angle);
+    static Matrix rotationMatrix(const double& angle);
 
     static RS_VectorSolutions getIntersection(const LC_Quadratic& l1, const LC_Quadratic& l2);
 
@@ -103,8 +107,8 @@ public:
 
 private:
     // the equation form: {x, y}.m_mQuad.{{x},{y}} + m_vLinear.{{x},{y}}+m_dConst=0
-    boost::numeric::ublas::matrix<double> m_mQuad;
-    boost::numeric::ublas::vector<double> m_vLinear;
+    Matrix m_mQuad;
+    Vector m_vLinear;
     double m_dConst;
     bool m_bIsQuadratic;
     /** whether this quadratic form is valid */
