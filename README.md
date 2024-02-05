@@ -123,7 +123,7 @@ apt-get install g++ gcc make git-core pkg-config qt5-qmake libfreetype-dev -y --
 
 ### How to build trimmed `qtbase(Qt 5.12.12)`
 
-- static QtCore & QtGUI library
+- **[strongly recommended]** static QtCore & QtGUI library
 ``` sh
 cd ./3rdparty/qtbase/
 ./configure -developer-build -release -no-iconv -no-icu -static -strip -confirm-license -opensource
@@ -141,7 +141,7 @@ make install_targ_headers
 make -j20 staticlib
 ```
 
-- shared QtCore & QtGUI library
+- [available alternative] shared QtCore & QtGUI library
 ``` sh
 cd ./3rdparty/qtbase/
 ./configure -developer-build -release -no-iconv -no-icu -strip -confirm-license -opensource -R .
