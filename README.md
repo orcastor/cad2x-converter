@@ -91,9 +91,7 @@
 - 设置默认字体 (-f simsun)
 - 添加字体列表 (-l /one/fonts,/two/fonts)
 
-> ./cad2x -o b.pdf a.dxf -e ANSI_936 -f simsun -ac -l /
-
-one/fonts,/two/fonts
+> ./cad2x -o b.pdf a.dxf -e ANSI_936 -f simsun -ac -l /one/fonts,/two/fonts
 
 ### 代码页参考
 |语言|DXF 代码页|
@@ -160,13 +158,16 @@ make -j20
 ## 更改日志
 
 - ✨ 通过简单拖放添加字体到 `cad2x-converter/output/fonts`
-- ✂️ 修剪 QtWidgets & QtPrintSupport 依赖项
-- ✂️ 修剪 GUI 应用程序的依赖项（QtGuiApplication / accessible / input / events / plugins）
-- ✂️ 修剪 Render 的依赖项（OpenGL / Vulkan / KMS / VNC）
-- ✂️ 修剪 qpa 的依赖项（X 服务器等）
-- ✂️ 修剪 boost / icu / pcre2 的依赖项
-- ✂️ 修剪无用代码（Pixmap / Icon / Windows 等）
-- ✂️ 内置字体数据库，无需插件
+- ✂️ 修剪QtBase
+  - ✂️  QtWidgets & QtPrintSupport 依赖项
+  - ✂️ 修剪 GUI 应用程序的依赖项（QtGuiApplication / accessible / input / events / plugins）
+  - ✂️ 修剪 Render 的依赖项（OpenGL / Vulkan / KMS / VNC）
+  - ✂️ 修剪 qpa 的依赖项（X 服务器等）
+  - ✂️ 修剪 ICU / PCRE2 的依赖项
+  - ✂️ 修剪无用代码（Pixmap / Icon / Windows 等）
+  - ✂️ 内置字体数据库，无需插件
+- ✂️ 摘出依赖的代码
+- ✂️ 修剪 boost 的依赖项
 - ✂️ 最小的二进制文件大小（静态链接）（在 `strip` 和 `upx -9 --ultra-brute` 之后为 2.9MB）
     ``` sh
     > ldd cad2pdf

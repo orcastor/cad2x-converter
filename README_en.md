@@ -162,13 +162,16 @@ make -j20
 ## Changelog
 
 - ✨ add font by easily dropping into `cad2x-converter/output/fonts`
-- ✂️ trim dependency of QtWidgets & QtPrintSupport
-- ✂️ trim dependency of GUI app (QtGuiApplication / accessible / input / events / plugins)
-- ✂️ trim dependency of Render (OpenGL / Vulkan / KMS / VNC)
-- ✂️ trim dependency of qpa (X server and etc.)
-- ✂️ trim dependency of boost / icu / pcre2
-- ✂️ trim useless codes (Pixmap / Icon / Windows and etc.)
-- ✂️ inbuilt font database without plugin
+- ✂️ trim QtBase
+  - ✂️ trim dependency of QtWidgets & QtPrintSupport
+  - ✂️ trim dependency of GUI app (QtGuiApplication / accessible / input / events / plugins)
+  - ✂️ trim dependency of Render (OpenGL / Vulkan / KMS / VNC)
+  - ✂️ trim dependency of qpa (X server and etc.)
+  - ✂️ trim dependency of ICU / PCRE2
+  - ✂️ trim useless codes (Pixmap / Icon / Windows and etc.)
+  - ✂️ inbuilt font database without plugin
+- ✂️ pick out dependent codes
+- ✂️ trim dependency of boost
 - ✂️ minimal binary size (static link) (2.9MB after `strip` and `upx -9 --ultra-brute`)
     ``` sh
     > ldd cad2pdf
