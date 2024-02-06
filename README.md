@@ -4,12 +4,12 @@
   </a>
 </p>
 
-<h1 align="center"><strong>🆒 cad2x</strong> - sub tool of <a href="https://github.com/orcastor/addon-previewer">orcas-previewer</a></h1>
+<h1 align="center"><strong>🆒 cad2x</strong> <a href="https://github.com/orcastor/addon-previewer">@orcastor-previewer</a></h1>
 
-<p align="center">Pre-built <strong>cad2x</strong>: <a href="https://github.com/orcastor/addon-previewer/tree/main/back/cad2x/linux_arm64">[ linux_arm64 ]</a> (2.88MB) | <a href="https://github.com/orcastor/addon-previewer/tree/main/back/cad2x/linux_x64">[ linux_x64 ]</a> (3.42MB)
+<p align="center">Releases: <a href="https://github.com/orcastor/addon-previewer/tree/main/back/cad2x/linux_arm64"><strong>linux_arm64</strong></a> (2.88MB) | <a href="https://github.com/orcastor/addon-previewer/tree/main/back/cad2x/linux_x64"><strong>linux_x64</strong></a> (3.42MB)
 </p>
 
-`cad2x` is a minimal CLI tool convert CAD files (DXF / DWG) to other formats (DXF / PDF / PNG / SVG) trimming from [LibreCAD](https://github.com/LibreCAD/LibreCAD) (commit-id: 0601535).
+`cad2x` - a minimal CLI tool that convert CAD files (DXF / DWG) to other formats (DXF / PDF / PNG / SVG) which is derived from [LibreCAD (commit: 0601535)](https://github.com/LibreCAD/LibreCAD/commit/0601535822c66a69da615463e42285616cfadedf).
 
 # Features
 
@@ -191,9 +191,9 @@ make -j20
 - 🆕 feature: support auto orientation detection
 - 🆕 feature: lazy load `ttf`/`ttc` font file support (not only `lff`/`cxf`)
 - 🆕 feature: auto setting system font directories
-  - [**Windows**] `C:\Windows\Fonts`
-  - [**MacOSX**] `/Library/Fonts` `/System/Library/Fonts`
-  - [**Linux**] `/usr/share/fonts` `/usr/local/share/fonts` `~/.fonts`
+  - **Windows** - `C:\Windows\Fonts`
+  - **MacOSX** - `/Library/Fonts` `/System/Library/Fonts`
+  - **Linux** - `/usr/share/fonts` `/usr/local/share/fonts` `~/.fonts`
 - [ ] 🆕 feature: support more export formats
   - [ ] a quick way from DWG to BMP thumbnail
   - [ ] DWG / DXF to JSON for [cad.js](https://github.com/ghemingway/cad.js)
