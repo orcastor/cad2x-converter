@@ -1,3 +1,5 @@
+[English README | 英文说明](README_en.md)
+
 <p align="center">
   <a href="https://orcastor.github.io/doc/">
     <img src="https://orcastor.github.io/doc/logo.svg">
@@ -6,124 +8,122 @@
 
 <h1 align="center"><strong>🆒 cad2x</strong> <a href="https://github.com/orcastor/addon-previewer">@orcastor-previewer</a></h1>
 
-<p align="center">Releases: <a href="https://github.com/orcastor/addon-previewer/tree/main/back/cad2x/common"><strong>fonts & patterns</strong></a> (3.53MB) | <a href="https://github.com/orcastor/addon-previewer/tree/main/back/cad2x/linux_arm64"><strong>linux_arm64</strong></a> (2.88MB) | <a href="https://github.com/orcastor/addon-previewer/tree/main/back/cad2x/linux_x64"><strong>linux_x64</strong></a> (3.42MB)
+<p align="center">预编译版本: <a href="https://github.com/orcastor/addon-previewer/tree/main/back/cad2x/common"><strong>字体与图案</strong></a> (3.53MB) | <a href="https://github.com/orcastor/addon-previewer/tree/main/back/cad2x/linux_arm64"><strong>linux_arm64</strong></a> (2.88MB) | <a href="https://github.com/orcastor/addon-previewer/tree/main/back/cad2x/linux_x64"><strong>linux_x64</strong></a> (3.42MB)
 </p>
 
-`cad2x` - a minimal CLI tool that convert CAD files (DXF / DWG) to other formats (DXF / PDF / PNG / SVG) which is derived from [LibreCAD (commit: 0601535)](https://github.com/LibreCAD/LibreCAD/commit/0601535822c66a69da615463e42285616cfadedf).
+`cad2x` - 一个最小化的命令行工具，用于将 CAD 文件（DXF / DWG）转换为其他格式（DXF / PDF / PNG / SVG），衍生自 [LibreCAD (commit: 0601535)](https://github.com/LibreCAD/LibreCAD/commit/0601535822c66a69da615463e42285616cfadedf)。
 
-# Features
+# 特性
 
-- 💼 **Portable** - no GUI & no dependencies
-- 🌈 **Customized** - with trimmed `Qt 5.12.12` (`QtCore` & `QtGUI`)
-- 🚀 **Extremely Small** - **2.9MB** binary file size at all (on `aarch64-linux`)
-- � **Unicode Display** - support display of malformed Unicode characters - by [DXF File Encoding](https://ezdxf.readthedocs.io/en/stable/dxfinternals/fileencoding.html)
-- 🗳️ **Cross Platform** - support Mac OSX / Windows / Linux / Android (Most linux based operating systems)
-- 🔠 **TrueType Font Reuse** - lazy load `ttf`/`ttc` font (not only `lff`/`cxf`) - share system and other apps' fonts with less overhead
+- 💼 **便携** - 无图形界面 & 无依赖项
+- 🌈 **定制** - 使用精简的 `Qt 5.12.12` (`QtCore` & `QtGUI`)
+- 🚀 **极小** - **2.9MB** 的二进制文件大小（在 `aarch64-linux` 平台上）
+- � **显示** - 支持显示格式错误的 Unicode 字符 - [DXF 文件编码](https://ezdxf.readthedocs.io/en/stable/dxfinternals/fileencoding.html)
+- 🗳️ **跨平台** - 支持 Mac OSX / Windows / Linux / Android（大多数基于 Linux 的操作系统）
+- 🔠 **重用** - 懒加载 `ttf`/`ttc` TrueType 字体（不仅限于 `lff`/`cxf`）- 以较少的开销共享系统和其他应用程序的字体
 
-## Best Paractices
+## 最佳实践
 
 ``` sh
-Usage: ./cad2x [options] <dxf/dwg files>
+使用方法: ./cad2x [选项] <dxf/dwg 文件>
 
-Convert DXF/DWG files to DXF v2007/PDF/PNG/SVG files.
+将 DXF/DWG 文件转换为 DXF v2007/PDF/PNG/SVG 文件。
 
-Examples:
+示例:
 
   cad2x *.dxf|*.dwg|*
-    -- print all dxf/dwg files to pdf files with the same base names.
+    -- 将所有 dxf/dwg 文件打印为具有相同文件名的 pdf 文件。
 
   cad2x -o svg *.dxf|*.dwg|*
-    -- print all dxf/dwg files to svg format.
+    -- 将所有 dxf/dwg 文件转换为 svg 格式。
 
   cad2x -o b.png a.dwg
-    -- print a.dwg file to b.png.
+    -- 将 a.dwg 文件打印为 b.png。
 
-Options:
-  -h, --help                           Displays this help.
-  -v, --version                        Displays version information.
-  -a, --auto-orientation               Auto paper orientation (landscape or
-                                       portrait) based on document bounding box.
-  -b, --monochrome                     Print monochrome (black/white).
-  -c, --fit                            Auto fit and center drawing to page.
-  -e, --code-page <codepage>           Set default code page (default is
-                                       ANSI_1252).
-  -f, --default-font <font>            Set default font (default is standard).
-  -l, --font-dirs <dir1,dir2,dir3...>  Set more font directories.
-  -m, --margins <L,T,R,B>              Paper margins in mm (integer or float).
-  -n, --pages <HxV>                    Print on multiple pages (Horiz. x
-                                       Vert.).
-  -o, --outfile <file>                 Output DXF v2007/PDF/PNG/SVG file.
-  -p, --paper <WxH>                    Paper size (Width x Height) in mm.
-  -r, --resolution <integer>           Output resolution (DPI).
-  -s, --scale <double>                 Output scale. E.g.: 0.01 (for 1:100
-                                       scale).
-  -t, --directory <path>               Target output directory.
+选项:
+  -h, --help                           显示此帮助。
+  -v, --version                        显示版本信息。
+  -a, --auto-orientation               根据文档边界框自动设置纸张方向（横向或纵向）。
+  -b, --monochrome                     打印单色（黑/白）。
+  -c, --fit                            自动适应并居中绘图到页面。
+  -e, --code-page <codepage>           设置默认的代码页（默认为 ANSI_1252）。
+  -f, --default-font <font>            设置默认字体（默认为 standard）。
+  -l, --font-dirs <dir1,dir2,dir3...>  设置更多字体目录。
+  -m, --margins <L,T,R,B>              页面边距（毫米）（整数或浮点数）。
+  -n, --pages <HxV>                    在多页上打印（水平 x 垂直）。
+  -o, --outfile <file>                 输出 DXF v2007/PDF/PNG/SVG 文件。
+  -p, --paper <WxH>                    页面尺寸（宽 x 高）（毫米）。
+  -r, --resolution <integer>           输出分辨率（DPI）。
+  -s, --scale <double>                 输出比例。例如：0.01（表示 1:100 比例）。
+  -t, --directory <path>               目标输出目录。
 
-Arguments:
-  <dxf/dwg files>                      Input DXF/DWG file(s)
+参数:
+  <dxf/dwg 文件>                      输入 DXF/DWG 文件（们）
 ```
 
-### Convert all the `dwg` files to `pdf` format
-- detect the orientation (-a)
-- auto fit & center drawing in the page (-c)
-- to `output` directory (-t)
+### 将所有 `dwg` 文件转换为 `pdf` 格式
+- 检测方向 (-a)
+- 自动适应并居中绘图到页面 (-c)
+- 到 `output` 目录 (-t)
 
 > ./cad2x -o pdf *.dwg -t output -ac
 
-### Convert `a.dxf` to `b.png`
-- detect the orientation (-a)
-- auto fit & center drawing in the page (-c)
-- set page size to 2970 x 2100 (-p 2970x2100)
-- set margins (-m 2.0,2.0,2.0,2.0)
+### 将 `a.dxf` 转换为 `b.png`
+- 检测方向 (-a)
+- 自动适应并居中绘图到页面 (-c)
+- 将页面大小设置为 2970 x 2100 (-p 2970x2100)
+- 设置边距 (-m 2.0,2.0,2.0,2.0)
 
 > ./cad2x -o b.png a.dxf -ac -p 2970x2100 -m 2.0,2.0,2.0,2.0
 
-### Convert `a.dwg` to `b.dxf` (v2007)
+### 将 `a.dwg` 转换为 `b.dxf`（v2007）
 
 > ./cad2x -o b.dxf a.dwg
 
-### Convert `a.dxf`(QCad / v2004 / v2000 / v14 / v12) to `b.dxf`(v2007)
+### 将 `a.dxf`（QCad / v2004 / v2000 / v14 / v12）转换为 `b.dxf`（v2007）
 
 > ./cad2x -o b.dxf a.dxf
 
-### Convert `a.dxf` to `b.pdf`
-- detect the orientation (-a)
-- auto fit & center drawing in the page (-c)
-- set default code page chinese (-e ANSI_936)
-- set default font (-f simsun)
-- add font list (-l /one/fonts,/two/fonts)
+### 将 `a.dxf` 转换为 `b.pdf`
+- 检测方向 (-a)
+- 自动适应并居中绘图到页面 (-c)
+- 设置默认代码页为中文 (-e ANSI_936)
+- 设置默认字体 (-f simsun)
+- 添加字体列表 (-l /one/fonts,/two/fonts)
 
-> ./cad2x -o b.pdf a.dxf -e ANSI_936 -f simsun -ac -l /one/fonts,/two/fonts
+> ./cad2x -o b.pdf a.dxf -e ANSI_936 -f simsun -ac -l /
 
-### Code Page References
-|Language|DXF CodePage|
+one/fonts,/two/fonts
+
+### 代码页参考
+|语言|DXF 代码页|
 |-|-|
-|Thai|ANSI_874|
-|Japanese|ANSI_932|
-|UnifiedChinese|ANSI_936|
-|Korean|ANSI_949|
-|TradChinese|ANSI_950|
-|CentralEurope|ANSI_1250|
-|Cyrillic|ANSI_1251|
-|WesternEurope|ANSI_1252|
-|Greek|ANSI_1253|
-|Turkish|ANSI_1254|
-|Hebrew|ANSI_1255|
-|Arabic|ANSI_1256|
-|Baltic|ANSI_1257|
-|Vietnam|ANSI_1258|
+|泰语|ANSI_874|
+|日语|ANSI_932|
+|简体中文|ANSI_936|
+|韩语|ANSI_949|
+|繁体中文|ANSI_950|
+|中欧|ANSI_1250|
+|西里尔语|ANSI_1251|
+|西欧|ANSI_1252|
+|希腊语|ANSI_1253|
+|土耳其语|ANSI_1254|
+|希伯来语|ANSI_1255|
+|阿拉伯语|ANSI_1256|
+|波罗的海语|ANSI_1257|
+|越南语|ANSI_1258|
 
-## Build Tutorials
+## 构建教程
 
-### Preparation
+### 准备
 
 ``` sh
 apt-get install g++ gcc make git-core pkg-config qt5-qmake libfreetype-dev -y --no-install-recommends
 ```
 
-### How to build trimmed `qtbase(Qt 5.12.12)`
+### 构建精简版的 `qtbase(Qt 5.12.12)`
 
-- **[strongly recommended]** static QtCore & QtGUI library
+- **[强烈推荐]** 静态 QtCore & QtGUI 库
 ``` sh
 cd ./3rdparty/qtbase/
 ./configure -developer-build -release -no-iconv -no-icu -static -strip -confirm-license -opensource
@@ -141,7 +141,7 @@ make install_targ_headers
 make -j20 staticlib
 ```
 
-- [available alternative] shared QtCore & QtGUI library
+- [可用备选方案] 共享 QtCore & QtGUI 库
 ``` sh
 cd ./3rdparty/qtbase/
 ./configure -developer-build -release -no-iconv -no-icu -strip -confirm-license -opensource -R .
@@ -150,24 +150,24 @@ make -j20
 make install
 ```
 
-### How to build cad2x
+### 构建 cad2x
 
 ``` sh
 qmake -qt=qt5 -r
 make -j20
 ```
 
-## Changelog
+## 更改日志
 
-- ✨ add font by easily dropping into `cad2x-converter/output/fonts`
-- ✂️ trim dependency of QtWidgets & QtPrintSupport
-- ✂️ trim dependency of GUI app (QtGuiApplication / accessible / input / events / plugins)
-- ✂️ trim dependency of Render (OpenGL / Vulkan / KMS / VNC)
-- ✂️ trim dependency of qpa (X server and etc.)
-- ✂️ trim dependency of boost / icu / pcre2
-- ✂️ trim useless codes (Pixmap / Icon / Windows and etc.)
-- ✂️ inbuilt font database without plugin
-- ✂️ minimal binary size (static link) (2.9MB after `strip` and `upx -9 --ultra-brute`)
+- ✨ 通过简单拖放添加字体到 `cad2x-converter/output/fonts`
+- ✂️ 修剪 QtWidgets & QtPrintSupport 依赖项
+- ✂️ 修剪 GUI 应用程序的依赖项（QtGuiApplication / accessible / input / events / plugins）
+- ✂️ 修剪 Render 的依赖项（OpenGL / Vulkan / KMS / VNC）
+- ✂️ 修剪 qpa 的依赖项（X 服务器等）
+- ✂️ 修剪 boost / icu / pcre2 的依赖项
+- ✂️ 修剪无用代码（Pixmap / Icon / Windows 等）
+- ✂️ 内置字体数据库，无需插件
+- ✂️ 最小的二进制文件大小（静态链接）（在 `strip` 和 `upx -9 --ultra-brute` 之后为 2.9MB）
     ``` sh
     > ldd cad2pdf
         libdl.so.2 => /lib/aarch64-linux-gnu/libdl.so.2 (0x00000055021dc000)
@@ -183,28 +183,28 @@ make -j20
         /lib/ld-linux-aarch64.so.1 (0x0000005500000000)
         libpcre.so.3 => /lib/aarch64-linux-gnu/libpcre.so.3 (0x0000005502918000)
     ```
-- ✂️ merge: cad2pdf + cad2pic = cad2x
-- 🛠️ fix: png size auto setting
-- 🛠️ fix: output file argument
-- 🛠️ fix: malformed Unicode characters - by [DXF File Encoding](https://ezdxf.readthedocs.io/en/stable/dxfinternals/fileencoding.html)
-- [ ] 🛠️ fix: QCad format DXF incorrect offset of entities
-- 🆕 feature: support auto orientation detection
-- 🆕 feature: lazy load `ttf`/`ttc` font file support (not only `lff`/`cxf`)
-- 🆕 feature: auto setting system font directories
+- ✂️ 合并: cad2pdf + cad2pic = cad2x
+- 🛠️ 修复: png 大小自动设置
+- 🛠️ 修复: 输出文件参数
+- 🛠️ 修复: 格式错误的 Unicode 字符 - [DXF 文件编码](https://ezdxf.readthedocs.io/en/stable/dxfinternals/fileencoding.html)
+- [ ] 🛠️ 修复: QCad 格式 DXF 中实体的不正确偏移
+- 🆕 功能: 支持自动方向检测
+- 🆕 功能: 惰性加载 `ttf`/`ttc` 字体文件支持（不仅限于 `lff`/`cxf`）
+- 🆕 功能: 自动设置系统字体目录
   - **Windows** - `C:\Windows\Fonts`
   - **MacOSX** - `/Library/Fonts` `/System/Library/Fonts`
   - **Linux** - `/usr/share/fonts` `/usr/local/share/fonts` `~/.fonts`
-- [ ] 🆕 feature: support more export formats
-  - [ ] a quick way from DWG to BMP thumbnail
-  - [ ] DWG / DXF to JSON for [cad.js](https://github.com/ghemingway/cad.js)
-  - [ ] DWG / DXF to XML
-  - [ ] DWG / DXF to TXT
+- [ ] 🆕 功能: 支持更多导出格式
+  - [ ] 从 DWG 到 BMP 缩略图的快速方式
+  - [ ] DWG / DXF 到 JSON 用于 [cad.js](https://github.com/ghemingway/cad.js)
+  - [ ] DWG / DXF 到 XML
+  - [ ] DWG / DXF 到 TXT
 
-## Referrence
+## 参考
 
-You can refer to original [LibreCAD Wiki - BUILD FROM SOURCE](https://github.com/LibreCAD/LibreCAD/wiki/Build-from-source) page first.
+您可以首先参考原始的 [LibreCAD Wiki - 从源代码构建](https://github.com/LibreCAD/LibreCAD/wiki/Build-from-source) 页面。
 
-## FAQ
+## 常见问题解答
 
-Q: How to export other image formats like bmp / jpeg / tiff / ico / tga?
-> A: Create a directory named 'imageformats' and put the `libq*.so`/`q*.dll` in it (can be found from official Qt5.12), app will automatically load the plugins.
+问: 如何导出其他图像格式，如 bmp / jpeg / tiff / ico / tga？
+> 答: 创建一个名为 'imageformats' 的目录，并将 `libq<fmt>.so`/`q<fmt>.dll` 放入其中（可以从官方 Qt5.12 找到，\<fmt\>为具体格式），应用程序将自动加载插件。
