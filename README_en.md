@@ -170,7 +170,7 @@ make -j20
   - ✂️ trim dependency of ICU / PCRE2
   - ✂️ trim useless codes (Pixmap / Icon / Windows and etc.)
   - ✂️ inbuilt font database without plugin
-- ✂️ pick out dependent codes
+- ✂️ extract key code
 - ✂️ trim dependency of boost
 - ✂️ minimal binary size (static link) (2.9MB after `strip` and `upx -9 --ultra-brute`)
     ``` sh

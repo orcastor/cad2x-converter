@@ -158,16 +158,16 @@ make -j20
 ## 更改日志
 
 - ✨ 通过简单拖放添加字体到 `cad2x-converter/output/fonts`
-- ✂️ 修剪QtBase
-  - ✂️  QtWidgets & QtPrintSupport 依赖项
-  - ✂️ 修剪 GUI 应用程序的依赖项（QtGuiApplication / accessible / input / events / plugins）
-  - ✂️ 修剪 Render 的依赖项（OpenGL / Vulkan / KMS / VNC）
-  - ✂️ 修剪 qpa 的依赖项（X 服务器等）
-  - ✂️ 修剪 ICU / PCRE2 的依赖项
-  - ✂️ 修剪无用代码（Pixmap / Icon / Windows 等）
+- ✂️ 裁剪QtBase
+  - ✂️ 裁剪 QtWidgets & QtPrintSupport 依赖项
+  - ✂️ 裁剪 GUI 应用程序的依赖项（QtGuiApplication / accessible / input / events / plugins）
+  - ✂️ 裁剪 Render 的依赖项（OpenGL / Vulkan / KMS / VNC）
+  - ✂️ 裁剪 qpa 的依赖项（X 服务器等）
+  - ✂️ 裁剪 ICU / PCRE2 的依赖项
+  - ✂️ 裁剪无用代码（Pixmap / Icon / Windows 等）
   - ✂️ 内置字体数据库，无需插件
-- ✂️ 摘出依赖的代码
-- ✂️ 修剪 boost 的依赖项
+- ✂️ 摘选出关键代码
+- ✂️ 裁剪 boost 的依赖项
 - ✂️ 最小的二进制文件大小（静态链接）（在 `strip` 和 `upx -9 --ultra-brute` 之后为 2.9MB）
     ``` sh
     > ldd cad2pdf
@@ -190,7 +190,7 @@ make -j20
 - 🛠️ 修复: 格式错误的 Unicode 字符 - [DXF 文件编码](https://ezdxf.readthedocs.io/en/stable/dxfinternals/fileencoding.html)
 - [ ] 🛠️ 修复: QCad 格式 DXF 中实体的不正确偏移
 - 🆕 功能: 支持自动方向检测
-- 🆕 功能: 惰性加载 `ttf`/`ttc` 字体文件支持（不仅限于 `lff`/`cxf`）
+- 🆕 功能: 懒加载 `ttf`/`ttc` 字体文件支持（不仅限于 `lff`/`cxf`）
 - 🆕 功能: 自动设置系统字体目录
   - **Windows** - `C:\Windows\Fonts`
   - **MacOSX** - `/Library/Fonts` `/System/Library/Fonts`
