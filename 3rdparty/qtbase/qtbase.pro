@@ -4,8 +4,6 @@
 
 load(qt_parts)
 
-SUBDIRS += qmake/qmake-aux.pro doc
-
 cross_compile: CONFIG += nostrip
 
 confclean.depends += distclean

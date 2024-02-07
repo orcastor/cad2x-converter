@@ -9,8 +9,7 @@
 
     "subconfigs": [
         "src/corelib",
-        "src/gui",
-        "src/xml"
+        "src/gui"
     ],
 
     "commandline": {
@@ -1088,10 +1087,6 @@
                 { "type": "publicQtConfig", "negative": true }
             ]
         },
-        "xml": {
-            "label": "Qt Xml",
-            "output": [ "privateFeature" ]
-        },
         "incredibuild_xge": {
             "label": "IncrediBuild",
             "emitIf": "var.QMAKE_HOST.os == 'Windows'",
@@ -1301,8 +1296,7 @@ Configure with '-qreal float' to create a build that is binary-compatible with 5
         }, {
             "section": "Qt modules and options",
             "entries": [
-                "gui",
-                "xml"
+                "gui"
             ]
         }, {
             "section": "Support enabled for",
