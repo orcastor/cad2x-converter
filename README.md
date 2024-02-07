@@ -208,4 +208,10 @@ make -j20
 ## 常见问题解答
 
 问: 如何导出其他图像格式，如 bmp / jpeg / tiff / ico / tga？
-> 答: 创建一个名为 'imageformats' 的目录，并将 `libq<fmt>.so`/`q<fmt>.dll` 放入其中（可以从官方 Qt5.12 找到，\<fmt\>为具体格式），应用程序将自动加载插件。
+> 答: 创建一个名为 'plugins/imageformats' 的目录，并将 `libq<fmt>.so`/`q<fmt>.dll` 放入其中（可以从 [这里](https://github.com/orcastor/cad2x-converter/tree/master/3rdparty/qtbase/src/plugins/imageformats) 找到，\<fmt\>为具体格式），应用程序将自动加载插件。
+
+问：如果导出的文件空白怎么办？
+> 答：3D模型暂时不支持，如果不是3D文件，尝试添加`-c`参数导出。
+
+问：如果出现乱码怎么办？
+> 答：尝试添加默认编码和对应字体尝试，比如`-e ANSI_936 -f simsun`，设置默认简体中文，默认字体为宋体。

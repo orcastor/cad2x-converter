@@ -212,4 +212,10 @@ You can refer to original [LibreCAD Wiki - BUILD FROM SOURCE](https://github.com
 ## FAQ
 
 Q: How to export other image formats like bmp / jpeg / tiff / ico / tga?
-> A: Create a directory named 'imageformats' and put the `libq<fmt>.so`/`q<fmt>.dll` in it (can be found from official Qt5.12， \<fmt\> is the specified image format), app will automatically load the plugins.
+> A: Create a directory named 'plugins/imageformats' and put the `libq<fmt>.so`/`q<fmt>.dll` in it (can be found from [here](https://github.com/orcastor/cad2x-converter/tree/master/3rdparty/qtbase/src/plugins/imageformats)， \<fmt\> is the specified image format), app will automatically load the plugins.
+
+Q: What should I do if the exported file is blank?
+> A: 3D models are currently not supported. If it's not a 3D file, try adding the `-c` parameter for export.
+
+Q: What should I do if there are garbled characters?
+> A: Try adding default encoding and corresponding font, such as `-e ANSI_936 -f simsun`, setting the default to Simplified Chinese and the default font to SimSun.
