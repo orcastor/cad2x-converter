@@ -16,10 +16,10 @@
 # 特性
 
 - 💼 **便携** - 无图形界面 & 无依赖项
-- 🌈 **定制** - 使用精简的 `Qt 5.12.12` (`QtCore` & `QtGUI`)
+- 🌈 **定制** - 大幅精简了 `Qt 5.12.12` (`QtCore` & `QtGUI`)
 - 🚀 **极小** - **2.9MB** 的二进制文件大小（在 `aarch64-linux` 平台上）
 - � **显示** - 支持显示格式错误的 Unicode 字符 - [DXF 文件编码](https://ezdxf.readthedocs.io/en/stable/dxfinternals/fileencoding.html)
-- 🗳️ **跨平台** - 支持 Mac OSX / Windows / Linux / Android（大多数基于 Linux 的操作系统）
+- 🗳️ **跨平台** - 支持 ![](https://raw.githubusercontent.com/drag-and-publish/operating-system-logos/master/src/16x16/MAC.png)MacOS、![](https://raw.githubusercontent.com/drag-and-publish/operating-system-logos/master/src/16x16/WIN.png)Windows、![](https://raw.githubusercontent.com/drag-and-publish/operating-system-logos/master/src/16x16/LIN.png)Linux、![](https://raw.githubusercontent.com/drag-and-publish/operating-system-logos/master/src/16x16/AND.png)安卓、![](https://raw.githubusercontent.com/drag-and-publish/operating-system-logos/master/src/16x16/IOS.png)iOS和大多数基于Linux的操作系统
 - 🔠 **重用** - 懒加载 `ttf`/`ttc` TrueType 字体（不仅限于 `lff`/`cxf`）- 以较少的开销共享系统和其他应用程序的字体
 
 ## 最佳实践
@@ -192,9 +192,9 @@ make -j20
 - 🆕 功能: 支持自动方向检测
 - 🆕 功能: 懒加载 `ttf`/`ttc` 字体文件支持（不仅限于 `lff`/`cxf`）
 - 🆕 功能: 自动设置系统字体目录
-  - **Windows** - `C:\Windows\Fonts`
-  - **MacOSX** - `/Library/Fonts` `/System/Library/Fonts`
-  - **Linux** - `/usr/share/fonts` `/usr/local/share/fonts` `~/.fonts`
+  - ![](https://raw.githubusercontent.com/drag-and-publish/operating-system-logos/master/src/16x16/WIN.png) - `C:\Windows\Fonts`
+  - ![](https://raw.githubusercontent.com/drag-and-publish/operating-system-logos/master/src/16x16/MAC.png)![](https://raw.githubusercontent.com/drag-and-publish/operating-system-logos/master/src/16x16/IOS.png) - `/Library/Fonts` `/System/Library/Fonts`
+  - ![](https://raw.githubusercontent.com/drag-and-publish/operating-system-logos/master/src/16x16/LIN.png)![](https://raw.githubusercontent.com/drag-and-publish/operating-system-logos/master/src/16x16/AND.png) - `/usr/share/fonts` `/usr/local/share/fonts` `~/.fonts`
 - [ ] 🆕 功能: 支持更多导出格式
   - [ ] 从 DWG 到 BMP 缩略图的快速方式
   - [ ] DWG / DXF 到 JSON 用于 [cad.js](https://github.com/ghemingway/cad.js)

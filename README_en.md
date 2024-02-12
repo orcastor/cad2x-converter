@@ -16,10 +16,10 @@
 # Features
 
 - 💼 **Portable** - no GUI & no dependencies
-- 🌈 **Customized** - with trimmed `Qt 5.12.12` (`QtCore` & `QtGUI`)
+- 🌈 **Customized** - deeply trimmed `Qt 5.12.12` (`QtCore` & `QtGUI`)
 - 🚀 **Extremely Small** - **2.9MB** binary file size at all (on `aarch64-linux`)
 - � **Unicode Display** - support display of malformed Unicode characters - [DXF File Encoding](https://ezdxf.readthedocs.io/en/stable/dxfinternals/fileencoding.html)
-- 🗳️ **Cross Platform** - support Mac OSX / Windows / Linux / Android (Most linux based operating systems)
+- 🗳️ **Cross Platform** - support ![](https://raw.githubusercontent.com/drag-and-publish/operating-system-logos/master/src/16x16/MAC.png)MacOS, ![](https://raw.githubusercontent.com/drag-and-publish/operating-system-logos/master/src/16x16/WIN.png)Windows, ![](https://raw.githubusercontent.com/drag-and-publish/operating-system-logos/master/src/16x16/LIN.png)Linux, ![](https://raw.githubusercontent.com/drag-and-publish/operating-system-logos/master/src/16x16/AND.png)Android, ![](https://raw.githubusercontent.com/drag-and-publish/operating-system-logos/master/src/16x16/IOS.png)iOS and most linux-based OS
 - 🔠 **TrueType Font Reuse** - lazy load `ttf`/`ttc` font (not only `lff`/`cxf`) - share system and other apps' fonts with less overhead
 
 ## Best Paractices
@@ -196,9 +196,9 @@ make -j20
 - 🆕 feature: support auto orientation detection
 - 🆕 feature: lazy load `ttf`/`ttc` font file support (not only `lff`/`cxf`)
 - 🆕 feature: auto setting system font directories
-  - **Windows** - `C:\Windows\Fonts`
-  - **MacOSX** - `/Library/Fonts` `/System/Library/Fonts`
-  - **Linux** - `/usr/share/fonts` `/usr/local/share/fonts` `~/.fonts`
+  - ![](https://raw.githubusercontent.com/drag-and-publish/operating-system-logos/master/src/16x16/WIN.png) - `C:\Windows\Fonts`
+  - ![](https://raw.githubusercontent.com/drag-and-publish/operating-system-logos/master/src/16x16/MAC.png)![](https://raw.githubusercontent.com/drag-and-publish/operating-system-logos/master/src/16x16/IOS.png) - `/Library/Fonts` `/System/Library/Fonts`
+  - ![](https://raw.githubusercontent.com/drag-and-publish/operating-system-logos/master/src/16x16/LIN.png)![](https://raw.githubusercontent.com/drag-and-publish/operating-system-logos/master/src/16x16/AND.png) - `/usr/share/fonts` `/usr/local/share/fonts` `~/.fonts`
 - [ ] 🆕 feature: support more export formats
   - [ ] a quick way from DWG to BMP thumbnail
   - [ ] DWG / DXF to JSON for [cad.js](https://github.com/ghemingway/cad.js)
