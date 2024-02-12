@@ -204,6 +204,7 @@ make -j20
   - [ ] DWG / DXF to JSON for [cad.js](https://github.com/ghemingway/cad.js)
   - [ ] DWG / DXF to XML
   - [ ] DWG / DXF to TXT
+- [ ] 🆕 feature: support 3D models
 
 ## Referrence
 
