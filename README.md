@@ -116,6 +116,7 @@
 ### 准备
 
 ``` sh
+apt update
 apt-get install g++ gcc make git-core pkg-config qt5-qmake libfreetype-dev -y --no-install-recommends
 ```
 
