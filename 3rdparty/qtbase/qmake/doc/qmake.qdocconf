@@ -51,8 +51,6 @@ depends += \
     qtsvg \
     qtuitools \
     qtwinextras \
-    qtx11extras \
-    qtxml \
-    qtxmlpatterns
+    qtx11extras
 
 navigation.landingpage = "qmake Manual"

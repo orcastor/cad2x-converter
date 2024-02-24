@@ -7,7 +7,7 @@
 #define QT_FEATURE_futimes -1
 #define QT_FEATURE_getauxval 1
 #define QT_FEATURE_getentropy 1
-#define QT_FEATURE_glib 1
+#define QT_FEATURE_glib -1
 #define QT_FEATURE_glibc 1
 #define QT_FEATURE_gnu_libiconv -1
 #define QT_FEATURE_iconv -1

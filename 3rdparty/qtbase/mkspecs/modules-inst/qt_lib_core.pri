@@ -12,5 +12,5 @@ QT.core.CONFIG = moc
 QT.core.DEFINES = QT_CORE_LIB
 QT.core.enabled_features = textcodec big_codecs codecs commandlineparser cxx11_future textdate datestring filesystemiterator filesystemwatcher gestures library processenvironment process properties settings sharedmemory std-atomic64 systemsemaphore temporaryfile timezone topleveldomain translation xmlstream xmlstreamreader xmlstreamwriter
 QT.core.disabled_features =
-QT_CONFIG += textcodec big_codecs clock-monotonic codecs textdate datestring doubleconversion eventfd filesystemiterator filesystemwatcher gestures glib inotify library process properties settings sharedmemory systemsemaphore temporaryfile threadsafe-cloexec translation xmlstream xmlstreamreader xmlstreamwriter
+QT_CONFIG += textcodec big_codecs clock-monotonic codecs textdate datestring doubleconversion eventfd filesystemiterator filesystemwatcher gestures inotify library process properties settings sharedmemory systemsemaphore temporaryfile threadsafe-cloexec translation xmlstream xmlstreamreader xmlstreamwriter
 QT_MODULES += core

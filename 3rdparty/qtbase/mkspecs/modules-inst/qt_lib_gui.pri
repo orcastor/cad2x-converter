@@ -11,5 +11,5 @@ QT.gui.module_config = v2
 QT.gui.DEFINES = QT_GUI_LIB
 QT.gui.enabled_features = colornames cssparser imageformatplugin image_heuristic_mask image_text imageformat_bmp imageformat_jpeg imageformat_png imageformat_ppm imageformat_xbm imageformat_xpm pdf picture texthtmlparser textodfwriter validator whatsthis
 QT.gui.disabled_features =
-QT_CONFIG += colornames cssparser freetype fontconfig imageformatplugin harfbuzz ico image_heuristic_mask image_text imageformat_bmp imageformat_jpeg imageformat_png imageformat_ppm imageformat_xbm imageformat_xpm pdf picture texthtmlparser textodfwriter validator whatsthis
+QT_CONFIG += colornames cssparser freetype imageformatplugin harfbuzz ico image_heuristic_mask image_text imageformat_bmp imageformat_jpeg imageformat_png imageformat_ppm imageformat_xbm imageformat_xpm pdf picture texthtmlparser textodfwriter validator whatsthis
 QT_MODULES += gui

@@ -79,8 +79,6 @@ qtConfig(gui) {
     src_plugins.depends += src_gui
 }
 
-android:!android-embedded: SUBDIRS += src_android src_3rdparty_gradle
-
 TR_EXCLUDE = \
     src_tools_bootstrap src_tools_moc \
     src_3rdparty_pcre2 src_3rdparty_harfbuzzng src_3rdparty_freetype

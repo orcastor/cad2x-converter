@@ -8,6 +8,7 @@
 #define QT_FEATURE_filesystemiterator 1
 #define QT_FEATURE_filesystemwatcher 1
 #define QT_FEATURE_gestures 1
+#define QT_NO_GLIB 
 #define QT_NO_ICONV 
 #define QT_FEATURE_library 1
 #define QT_FEATURE_processenvironment 1
