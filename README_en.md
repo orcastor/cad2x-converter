@@ -8,7 +8,7 @@
 
 <h1 align="center"><strong>🆒 cad2x</strong> <a href="https://github.com/orcastor/addon-previewer">@orcastor-previewer</a></h1>
 
-<p align="center">Releases: <a href="https://github.com/orcastor/addon-previewer/tree/main/back/cad2x/common"><strong>fonts & patterns</strong></a> (3.53MB) | <a href="https://github.com/orcastor/addon-previewer/tree/main/back/cad2x/linux_arm64"><strong>linux_arm64</strong></a> (2.88MB) | <a href="https://github.com/orcastor/addon-previewer/tree/main/back/cad2x/linux_x64"><strong>linux_x64</strong></a> (3.42MB)
+<p align="center">Releases: <a href="https://github.com/orcastor/addon-previewer/tree/main/back/cad2x/common"><strong>fonts & patterns</strong></a> (3.53MB) | <a href="https://github.com/orcastor/addon-previewer/tree/main/back/cad2x/linux_arm64"><strong>linux_arm64</strong></a> (2.88MB) | <a href="https://github.com/orcastor/addon-previewer/tree/main/back/cad2x/linux_x64"><strong>linux_x64</strong></a> (3.42MB) | <a href="https://github.com/orcastor/cad2x-converter/files/14414927/cad2x.zip"><strong>windows</strong></a> (need Qt5.12.12 installed)
 </p>
 
 `cad2x` - a minimal CLI tool that convert CAD files (DXF / DWG) to other formats (DXF / PDF / PNG / SVG) which is derived from [LibreCAD (commit: 0601535)](https://github.com/LibreCAD/LibreCAD/commit/0601535822c66a69da615463e42285616cfadedf).
