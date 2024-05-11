@@ -8,7 +8,7 @@
 
 <h1 align="center"><strong>🆒 cad2x</strong> <a href="https://github.com/orcastor/addon-previewer">@orcastor-previewer</a></h1>
 
-<p align="center">预编译版本: <a href="https://github.com/orcastor/addon-previewer/tree/main/back/cad2x/common"><strong>字体与图案</strong></a> (3.53MB) | <a href="https://github.com/orcastor/addon-previewer/tree/main/back/cad2x/linux_arm64"><strong>linux_arm64</strong></a> (2.88MB) | <a href="https://github.com/orcastor/addon-previewer/tree/main/back/cad2x/linux_x64"><strong>linux_x64</strong></a> (3.42MB)
+<p align="center">预编译版本: <a href="https://github.com/orcastor/addon-previewer/tree/main/back/cad2x/common"><strong>字体与图案</strong></a> (3.53MB) | <a href="https://github.com/orcastor/addon-previewer/tree/main/back/cad2x/linux_arm64"><strong>linux_arm64</strong></a> (2.88MB) | <a href="https://github.com/orcastor/addon-previewer/tree/main/back/cad2x/linux_x64"><strong>linux_x64</strong></a> (3.42MB) | <a href="https://github.com/orcastor/cad2x-converter/files/14414927/cad2x.zip"><strong>windows</strong></a> (需安装Qt5.12.12)
 </p>
 
 `cad2x` - 一个最小化的命令行工具，用于将 CAD 文件（DXF / DWG）转换为其他格式（DXF / PDF / PNG / SVG），衍生自 [LibreCAD (commit: 0601535)](https://github.com/LibreCAD/LibreCAD/commit/0601535822c66a69da615463e42285616cfadedf)。
