@@ -43,11 +43,6 @@ src_gui.subdir = $$PWD/gui
 src_gui.target = sub-gui
 src_gui.depends = src_corelib
 
-src_plugins.subdir = $$PWD/plugins
-src_plugins.target = sub-plugins
-
-src_android.subdir = $$PWD/android
-
 # this order is important
 !qtConfig(system-zlib)|cross_compile {
     SUBDIRS += src_qtzlib
@@ -76,7 +71,6 @@ qtConfig(gui) {
         src_gui.depends += src_3rdparty_freetype
     }
     SUBDIRS += src_gui
-    src_plugins.depends += src_gui
 }
 
 TR_EXCLUDE = \

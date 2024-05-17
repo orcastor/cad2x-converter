@@ -31,7 +31,7 @@ macx|win32|equals(build_muparser, "true")|!packagesExist(muparser){
 QTBASE_DIR = ../3rdparty/qtbase
 DEPENDPATH += $$QTBASE_DIR/include \
             $$QTBASE_DIR/src
-INCLUDEPATH += $$QTBASE_DIR/include $$QTBASE_DIR/include/QtCore $$QTBASE_DIR/include/QtGui
+INCLUDEPATH += $$QTBASE_DIR/include $$QTBASE_DIR/include/QtCore $$QTBASE_DIR/include/QtGui  $$QTBASE_DIR/src/3rdparty/freetype/include
 GEN_LIB_DIR = $$QTBASE_DIR/lib
 LIBS += -L$$GEN_LIB_DIR -lQt5Core -lQt5Gui
 
