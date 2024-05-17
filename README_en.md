@@ -8,7 +8,7 @@
 
 <h1 align="center"><strong>🆒 cad2x</strong> <a href="https://github.com/orcastor/addon-previewer">@orcastor-previewer</a></h1>
 
-<p align="center">Releases: <a href="https://github.com/orcastor/addon-previewer/tree/main/back/cad2x/common"><strong>fonts & patterns</strong></a> (3.53MB) | <a href="https://github.com/orcastor/addon-previewer/tree/main/back/cad2x/linux_arm64"><strong>linux_arm64</strong></a> (2.88MB) | <a href="https://github.com/orcastor/addon-previewer/tree/main/back/cad2x/linux_x64"><strong>linux_x64</strong></a> (3.42MB) | <a href="https://github.com/orcastor/cad2x-converter/files/14414927/cad2x.zip"><strong>windows</strong></a> (need Qt5.12.12 installed)
+<p align="center">Releases: <a href="https://github.com/orcastor/addon-previewer/tree/main/back/cad2x/common"><strong>fonts & patterns</strong></a> (3.53MB) | <a href="https://github.com/orcastor/addon-previewer/tree/main/back/cad2x/linux_arm64"><strong>linux_arm64</strong></a> (2.88MB) | <a href="https://github.com/orcastor/addon-previewer/tree/main/back/cad2x/linux_x64"><strong>linux_x64</strong></a> (3.42MB) | <a href="https://github.com/orcastor/addon-previewer/tree/main/back/cad2x/win_x64"><strong>win_x64</strong></a> (3.61MB)
 </p>
 
 `cad2x` - a minimal CLI tool that convert CAD files (DXF / DWG) to other formats (DXF / PDF / PNG / SVG) which is derived from [LibreCAD (commit: 0601535)](https://github.com/LibreCAD/LibreCAD/commit/0601535822c66a69da615463e42285616cfadedf).
@@ -115,7 +115,7 @@ Arguments:
 |Baltic|ANSI_1257|
 |Vietnam|ANSI_1258|
 
-## Build Tutorials
+## Build Tutorials Under Linux
 
 ### Preparation
 
@@ -158,6 +158,43 @@ make install
 ``` sh
 qmake -qt=qt5 -r
 make -j20
+```
+
+## Build Tutorial Under Windows (x64)
+
+### Preparation
+
+- Install [Qt 5.12.12 for Windows](https://download.qt.io/archive/qt/5.12/5.12.12/qt-opensource-windows-x86-5.12.12.exe), make sure to select `MinGW 7.3.0` during installation.
+
+- Download [MinGW 7.3.0-seh](https://versaweb.dl.sourceforge.net/project/mingw-w64/Toolchains%20targetting%20Win64/Personal%20Builds/mingw-builds/7.3.0/threads-win32/seh/x86_64-7.3.0-release-win32-seh-rt_v5-rev0.7z?viasf=1), and extract to a specific location on disk, such as `D:\mingw64`.
+
+- Rename `D:\mingw64\bin\mingw32-make` to `make`.
+
+- Add `D:\mingw64\bin`, `D:\mingw64\x86_64-w64-mingw32\bin`, and `D:\mingw64\libexec\gcc\x86_64-w64-mingw32\7.3.0` to the system environment variable `Path`.
+
+- Replace the `include` and `mkspecs` folders under `$QT$\Qt5.12.12\5.12.12\mingw73_64` directory with the ones from `./3rdparty/qtbase/`.
+
+### Build a Minimal Version of `qtbase (Qt 5.12.12)`
+
+- Static QtCore & QtGUI libraries
+``` sh
+cd ./3rdparty/qtbase/
+./configure -developer-build -release -platform win32-g++ -no-iconv -no-icu -static -strip -confirm-license -opensource -qt-zlib -qt-freetype
+qmake -r -- -developer-build -release -platform win32-g++ -no-iconv -no-icu -static -strip -confirm-license -opensource -qt-zlib -qt-freetype
+make -j20
+```
+
+### How to build cad2x
+
+``` sh
+qmake -r
+make -j20
+```
+
+## Compression using [upx](https://github.com/upx/upx/releases)
+
+``` sh
+./upx -9 --ultra-brute cad2x
 ```
 
 ## Changelog

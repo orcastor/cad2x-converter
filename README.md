@@ -8,7 +8,7 @@
 
 <h1 align="center"><strong>🆒 cad2x</strong> <a href="https://github.com/orcastor/addon-previewer">@orcastor-previewer</a></h1>
 
-<p align="center">预编译版本: <a href="https://github.com/orcastor/addon-previewer/tree/main/back/cad2x/common"><strong>字体与图案</strong></a> (3.53MB) | <a href="https://github.com/orcastor/addon-previewer/tree/main/back/cad2x/linux_arm64"><strong>linux_arm64</strong></a> (2.88MB) | <a href="https://github.com/orcastor/addon-previewer/tree/main/back/cad2x/linux_x64"><strong>linux_x64</strong></a> (3.42MB) | <a href="https://github.com/orcastor/cad2x-converter/files/14414927/cad2x.zip"><strong>windows</strong></a> (需安装Qt5.12.12)
+<p align="center">预编译版本: <a href="https://github.com/orcastor/addon-previewer/tree/main/back/cad2x/common"><strong>字体与图案</strong></a> (3.53MB) | <a href="https://github.com/orcastor/addon-previewer/tree/main/back/cad2x/linux_arm64"><strong>linux_arm64</strong></a> (2.88MB) | <a href="https://github.com/orcastor/addon-previewer/tree/main/back/cad2x/linux_x64"><strong>linux_x64</strong></a> (3.42MB) | <a href="https://github.com/orcastor/addon-previewer/tree/main/back/cad2x/win_x64"><strong>win_x64</strong></a> (3.61MB)
 </p>
 
 `cad2x` - 一个最小化的命令行工具，用于将 CAD 文件（DXF / DWG）转换为其他格式（DXF / PDF / PNG / SVG），衍生自 [LibreCAD (commit: 0601535)](https://github.com/LibreCAD/LibreCAD/commit/0601535822c66a69da615463e42285616cfadedf)。
@@ -111,7 +111,7 @@
 |波罗的海语|ANSI_1257|
 |越南语|ANSI_1258|
 
-## 构建教程
+## Linux构建教程
 
 ### 准备
 
@@ -154,6 +154,43 @@ make install
 ``` sh
 qmake -qt=qt5 -r
 make -j20
+```
+
+## Windows(x64)构建教程
+
+### 准备
+
+- 安装[Qt 5.12.12 for windows](https://download.qt.io/archive/qt/5.12/5.12.12/qt-opensource-windows-x86-5.12.12.exe)，勾选`MinGW7.3.0`
+
+- 下载[MinGW7.3.0-seh](https://versaweb.dl.sourceforge.net/project/mingw-w64/Toolchains%20targetting%20Win64/Personal%20Builds/mingw-builds/7.3.0/threads-win32/seh/x86_64-7.3.0-release-win32-seh-rt_v5-rev0.7z?viasf=1)，解压到磁盘某个位置，比如`D:\mingw64`
+
+- 设置`D:\mingw64\bin`、`D:\mingw64\x86_64-w64-mingw32\bin`、`D:\mingw64\libexec\gcc\x86_64-w64-mingw32\7.3.0`到系统环境变量`Path`
+
+- 把`D:\mingw64\bin\mingw32-make`修改成`make`
+
+- 从`./3rdparty/qtbase/`替换`$QT$\Qt5.12.12\5.12.12\mingw73_64`目录下的`include`和`mkspecs`文件夹
+
+### 构建精简版的 `qtbase(Qt 5.12.12)`
+
+- 静态 QtCore & QtGUI 库
+``` sh
+cd ./3rdparty/qtbase/
+configure -developer-build -release -platform win32-g++ -no-iconv -no-icu -static -strip -confirm-license -opensource -qt-zlib -qt-freetype
+qmake -r -- -developer-build -release -platform win32-g++ -no-iconv -no-icu -static -strip -confirm-license -opensource -qt-zlib -qt-freetype
+make -j20
+```
+
+### 构建 cad2x
+
+``` sh
+qmake -r
+make -j20
+```
+
+## 使用[upx](https://github.com/upx/upx/releases)进行压缩
+
+``` sh
+./upx -9 --ultra-brute cad2x
 ```
 
 ## 更改日志
