@@ -172,6 +172,8 @@ make -j20
 
 ### 构建精简版的 `qtbase(Qt 5.12.12)`
 
+- 通过开始菜单的`Qt 5.12.12 (MinGW 7.3.0 64-bit)`进入`cmd`(命令提示符)
+
 - 静态 QtCore & QtGUI 库
 ``` sh
 cd ./3rdparty/qtbase/

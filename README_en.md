@@ -176,6 +176,8 @@ make -j20
 
 ### Build a Minimal Version of `qtbase (Qt 5.12.12)`
 
+- Enter the `cmd`(Command Prompt) through the Start menu's `Qt 5.12.12 (MinGW 7.3.0 64-bit)`
+
 - Static QtCore & QtGUI libraries
 ``` sh
 cd ./3rdparty/qtbase/
