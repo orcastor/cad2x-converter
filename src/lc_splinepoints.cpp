@@ -559,12 +559,6 @@ LC_SplinePointsData::LC_SplinePointsData(bool _closed, bool _cut):
 {
 }
 
-std::ostream& operator << (std::ostream& os, const LC_SplinePointsData& ld)
-{
-	os << "( closed: " << ld.closed << ")";
-	return os;
-}
-
 // RS_SplinePoints
 
 /**
@@ -2719,15 +2713,6 @@ std::vector<RS_Entity*> LC_SplinePoints::offsetTwoSides(const double& distance) 
 {
 	if(data.cut) return offsetTwoSidesCut(distance);
 	return offsetTwoSidesSpline(distance);
-}
-
-/**
- * Dumps the spline's data to stdout.
- */
-std::ostream& operator << (std::ostream& os, const LC_SplinePoints& l)
-{
-	os << " SplinePoints: " << l.getData() << "\n";
-	return os;
 }
 
 RS_VectorSolutions getLineLineIntersect(

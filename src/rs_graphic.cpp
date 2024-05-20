@@ -747,19 +747,6 @@ void RS_Graphic::addEntity(RS_Entity* entity)
     }
 }
 
-
-/**
- * Dumps the entities to stdout.
- */
-std::ostream& operator << (std::ostream& os, RS_Graphic& g) {
-    os << "--- Graphic: \n";
-    os << "---" << *g.getLayerList() << "\n";
-    os << "---" << *g.getBlockList() << "\n";
-    os << "---" << (RS_EntityContainer&)g << "\n";
-
-    return os;
-}
-
 /**
  * Removes invalid objects.
  * @return how many objects were removed

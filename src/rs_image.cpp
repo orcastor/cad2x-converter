@@ -58,11 +58,6 @@ RS_ImageData::RS_ImageData(int _handle,
 {
 }
 
-std::ostream& operator << (std::ostream& os, const RS_ImageData& ld) {
-	os << "(" << ld.insertionPoint << ")";
-	return os;
-}
-
 /**
  * Constructor.
  */
@@ -316,12 +311,3 @@ void RS_Image::draw(RS_Painter* painter, RS_GraphicView* view, double& /*offset*
                      view->toGui(data.insertionPoint),
                      data.uVector, data.vVector, scale);
 }
-
-/**
- * Dumps the point's data to stdout.
- */
-std::ostream& operator << (std::ostream& os, const RS_Image& i) {
-    os << " Image: " << i.getData() << "\n";
-    return os;
-}
-

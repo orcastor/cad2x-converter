@@ -58,11 +58,6 @@ RS_HatchData::RS_HatchData(bool _solid,
 	//std::cout << "RS_HatchData: " << pattern.latin1() << "\n";
 }
 
-std::ostream& operator << (std::ostream& os, const RS_HatchData& td) {
-	os << "(" << td.pattern.toLatin1().data() << ")";
-	return os;
-}
-
 /**
  * Constructor.
  */
@@ -793,12 +788,4 @@ void RS_Hatch::stretch(const RS_Vector& firstCorner,
 
     RS_EntityContainer::stretch(firstCorner, secondCorner, offset);
     update();
-}
-
-/**
- * Dumps the point's data to stdout.
- */
-std::ostream& operator << (std::ostream& os, const RS_Hatch& p) {
-    os << " Hatch: " << p.getData() << "\n";
-    return os;
 }

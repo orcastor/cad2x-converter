@@ -47,8 +47,6 @@ struct RS_PolylineData : public RS_Flags {
     RS_Vector endpoint;
 };
 
-std::ostream& operator << (std::ostream& os, const RS_PolylineData& pd);
-
 /**
  * Class for a poly line entity (lots of connected lines and arcs).
  *
@@ -136,8 +134,6 @@ public:
 
 	void draw(RS_Painter* painter, RS_GraphicView* view,
 					  double& offset) override;
-
-    friend std::ostream& operator << (std::ostream& os, const RS_Polyline& l);
 
 protected:
     std::unique_ptr<RS_Entity> createVertex(const RS_Vector& v,

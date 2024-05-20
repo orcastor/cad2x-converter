@@ -106,8 +106,6 @@ public:
                 blue()==c.blue() &&
                 getFlags()==c.getFlags());
     }
-
-    friend std::ostream& operator << (std::ostream& os, const RS_Color& c);
 };
 
 #endif

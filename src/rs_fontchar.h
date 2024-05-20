@@ -56,14 +56,6 @@ public:
         return RS2::EntityFontChar;
     }
 
-
-    /*friend std::ostream& operator << (std::ostream& os, const RS_FontChar& b) {
-       	os << " name: " << b.getName().latin1() << "\n";
-    	os << " entities: " << (RS_EntityContainer&)b << "\n";
-       	return os;
-}*/
-
-
 protected:
 };
 

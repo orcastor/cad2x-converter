@@ -51,8 +51,6 @@ struct RS_LineData {
     RS_Vector endpoint;
 };
 
-std::ostream& operator << (std::ostream& os, const RS_LineData& ld);
-
 /**
  * Class for a line entity.
  *
@@ -204,8 +202,6 @@ public:
 
     /** whether the entity's bounding box intersects with visible portion of graphic view */
     void draw(RS_Painter* painter, RS_GraphicView* view, double& offset) override;
-
-    friend std::ostream& operator << (std::ostream& os, const RS_Line& l);
 
     void calculateBorders() override;
     /**

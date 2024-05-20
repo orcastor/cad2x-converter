@@ -331,27 +331,11 @@ RS_Vector RS_Vector::mirror(const RS_Vector& axisPoint1, const RS_Vector& axisPo
 }
 
 /**
- * Streams the vector components to stdout. e.g.: "1/4/0"
- */
-std::ostream& operator << (std::ostream& os, const RS_Vector& v) {
-    if(v.valid) {
-        os << v.x << "/" << v.y << "/" << v.z;
-    } else {
-        os << "invalid vector";
-    }
-    return os;
-}
-
-
-
-/**
  * binary + operator.
  */
 RS_Vector RS_Vector::operator + (const RS_Vector& v) const {
 	return {x + v.x, y + v.y, z + v.z};
 }
-
-
 
 /**
  * binary - operator.
@@ -874,13 +858,4 @@ RS_VectorSolutions RS_VectorSolutions::flipXY(void) const
 		for(const auto& vp: vector)
 			ret.push_back(vp.flipXY());
         return ret;
-}
-
-std::ostream& operator << (std::ostream& os,
-                           const RS_VectorSolutions& s) {
-	for (const RS_Vector& vp: s){
-		os << "(" << vp << ")\n";
-    }
-    os << " tangent: " << (int)s.isTangent() << "\n";
-    return os;
 }

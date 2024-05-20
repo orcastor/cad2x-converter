@@ -37,8 +37,6 @@ struct RS_PointData {
     RS_PointData() = default;
     RS_PointData(const RS_Vector& pos): pos(pos) {}
 
-    friend std::ostream& operator << (std::ostream& os, const RS_PointData& pd);
-
     RS_Vector pos;
 };
 
@@ -107,8 +105,6 @@ public:
 	void mirror(const RS_Vector& axisPoint1, const RS_Vector& axisPoint2) override;
 
 	void draw(RS_Painter* painter, RS_GraphicView* view, double& offset) override;
-
-    friend std::ostream& operator << (std::ostream& os, const RS_Point& p);
 
     /** Recalculates the borders of this entity. */
 	void calculateBorders () override;

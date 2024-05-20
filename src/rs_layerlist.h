@@ -89,8 +89,6 @@ public:
      */
     void sort();
 
-    friend std::ostream& operator << (std::ostream& os, RS_LayerList& l);
-
 private:
     //! layers in the graphic
     QList<RS_Layer*> layers;

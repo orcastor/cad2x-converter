@@ -55,9 +55,6 @@ struct RS_ArcData {
     bool reversed = false;
 };
 
-std::ostream& operator << (std::ostream& os, const RS_ArcData& ad);
-
-
 /**
  * Class for an arc entity. All angles are in Rad.
  *
@@ -229,8 +226,6 @@ public:
 	void draw(RS_Painter* painter, RS_GraphicView* view, double& offset) override;
     /** directly draw the arc, assuming the whole arc is within visible window */
 	void drawVisible(RS_Painter* painter, RS_GraphicView* view, double& offset);
-
-    friend std::ostream& operator << (std::ostream& os, const RS_Arc& a);
 
 	virtual void calculateBorders() override;
     /** return the equation of the entity

@@ -520,24 +520,3 @@ void LC_DimArc::calcDimension()
                   << std::endl;
     }
 }
-
-
-std::ostream& operator << (std::ostream& os, const LC_DimArc& input_dimArc)
-{
-    os << " DimArc Information : \n" 
-       << input_dimArc.getData() << std::endl << std::endl;
-
-    return os;
-}
-
-
-std::ostream& operator << (std::ostream& os, const LC_DimArcData& input_dimArcData)
-{
-    os << " {\n\tCentre      : " << input_dimArcData.centre 
-       <<   "\n\tRadius      : " << input_dimArcData.radius 
-       <<   "\n\tStart Angle : " << input_dimArcData.startAngle 
-       <<   "\n\tEnd   Angle : " << input_dimArcData.endAngle 
-       <<   "\n}"                << std::endl << std::endl;
-
-    return os;
-}

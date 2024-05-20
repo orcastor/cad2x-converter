@@ -276,18 +276,3 @@ RS_Block* RS_BlockList::getActive() {
 	return activeBlock;
 }
 
-/**
- * Dumps the blocks to stdout.
- */
-std::ostream& operator << (std::ostream& os, RS_BlockList& b) {
-
-    os << "Blocklist: \n";
-    for (int i=0; i<b.count(); ++i) {
-        RS_Block* blk = b.at(i);
-
-        os << *blk << "\n";
-    }
-
-    return os;
-}
-

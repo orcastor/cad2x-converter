@@ -103,8 +103,6 @@ public:
 
     static RS_VectorSolutions getIntersection(const LC_Quadratic& l1, const LC_Quadratic& l2);
 
-    friend std::ostream& operator << (std::ostream& os, const LC_Quadratic& l);
-
 private:
     // the equation form: {x, y}.m_mQuad.{{x},{y}} + m_vLinear.{{x},{y}}+m_dConst=0
     Matrix m_mQuad;

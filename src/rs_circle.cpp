@@ -57,14 +57,6 @@ bool RS_CircleData::operator == (RS_CircleData const& rhs) const
     return std::abs(radius - rhs.radius) < RS_TOLERANCE;
 }
 
-std::ostream& operator << (std::ostream& os, const RS_CircleData& ad)
-{
-	os << "(" << ad.center <<
-		  "/" << ad.radius <<
-		  ")";
-	return os;
-}
-
 
 /**
  * constructor.
@@ -816,13 +808,4 @@ double RS_Circle::areaLineIntegral() const
 	const double r = getRadius();
 	
 	return M_PI*r*r;
-}
-
-
-/**
- * Dumps the circle's data to stdout.
- */
-std::ostream& operator << (std::ostream& os, const RS_Circle& a) {
-    os << " Circle: " << a.data << "\n";
-    return os;
 }

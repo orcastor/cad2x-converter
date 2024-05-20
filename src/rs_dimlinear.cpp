@@ -52,16 +52,6 @@ RS_DimLinearData::RS_DimLinearData(const RS_Vector& _extensionPoint1,
 {
 }
 
-std::ostream& operator << (std::ostream& os,
-								  const RS_DimLinearData& dd) {
-	os << "(" << dd.extensionPoint1 << ","
-	   << dd.extensionPoint1 <<','
-	   << dd.angle <<','
-	   << dd.oblique <<','
-		  <<")";
-	return os;
-}
-
 /**
  * Constructor.
  *
@@ -368,12 +358,4 @@ void RS_DimLinear::moveRef(const RS_Vector& ref, const RS_Vector& offset) {
         edata.extensionPoint2 += offset;
                 updateDim(true);
     }
-}
-
-/**
- * Dumps the point's data to stdout.
- */
-std::ostream& operator << (std::ostream& os, const RS_DimLinear& d) {
-    os << " DimLinear: " << d.getData() << "\n" << d.getEData() << "\n";
-    return os;
 }

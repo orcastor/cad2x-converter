@@ -183,8 +183,6 @@ public:
 
 	void draw(RS_Painter* painter, RS_GraphicView* view, double& offset) override;
 
-    friend std::ostream& operator << (std::ostream& os, RS_EntityContainer& ec);
-
 	bool isOwner() const {return autoDelete;}
     void setOwner(bool owner) {autoDelete=owner;}
     /**

@@ -701,13 +701,3 @@ RS_Block* RS_Font::findLetter(const QString& name) {
     }
     return generateLffFont(name);
 }
-
-/**
- * Dumps the fonts data to stdout.
- */
-std::ostream& operator << (std::ostream& os, const RS_Font& f) {
-    os << " Font name: " << f.getFontName().toLatin1().data() << "\n";
-    //<< (RS_BlockList&)f << "\n";
-    return os;
-}
-

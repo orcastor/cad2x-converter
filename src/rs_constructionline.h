@@ -121,9 +121,6 @@ m0 x + m1 y + m2 =0
     void draw(RS_Painter* /*painter*/, RS_GraphicView* /*view*/,
                 double& /*offset*/) override {}
 
-    friend std::ostream& operator << (std::ostream& os,
-                                      const RS_ConstructionLine& l);
-
     void calculateBorders() override;
 
 protected:

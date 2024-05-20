@@ -305,16 +305,3 @@ void RS_LayerList::lockAll(bool lock) {
          }
     }
 }
-
-/**
- * Dumps the layers to stdout.
- */
-std::ostream& operator << (std::ostream& os, RS_LayerList& l) {
-
-    os << "Layerlist: \n";
-    for (unsigned i=0; i<l.count(); i++) {
-        os << *(l.at(i)) << "\n";
-    }
-
-    return os;
-}

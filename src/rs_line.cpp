@@ -47,13 +47,6 @@
 #include "emu_c99.h"
 #endif
 
-std::ostream& operator << (std::ostream& os, const RS_LineData& ld) {
-	os << "RS_LINE: ((" << ld.startpoint <<
-		  ")(" << ld.endpoint <<
-		  "))";
-	return os;
-}
-
 /**
  * Constructor.
  */
@@ -663,13 +656,3 @@ void RS_Line::drawInfinite(RS_Painter& painter, RS_GraphicView& view)
 
     painter.drawLine(view.toGui(vpIts.get(0)), view.toGui(vpIts.get(1)));
 }
-
-/**
- * Dumps the point's data to stdout.
- */
-std::ostream& operator << (std::ostream& os, const RS_Line& l) {
-    os << " Line: " << l.getData() << "\n";
-    return os;
-}
-
-

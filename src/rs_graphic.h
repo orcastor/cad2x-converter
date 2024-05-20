@@ -278,8 +278,6 @@ public:
         return pagesNumV;
     }
 
-    friend std::ostream& operator << (std::ostream& os, RS_Graphic& g);
-
     int clean();
 
 private:

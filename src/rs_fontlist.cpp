@@ -146,20 +146,3 @@ RS_Font* RS_FontList::requestFont(const QString& name) {
 
     return foundFont;
 }
-
-/**
- * Dumps the fonts to stdout.
- */
-std::ostream& operator << (std::ostream& os, RS_FontList& l) {
-
-    os << "Fontlist: \n";
-	for(auto const& f: l.fonts){
-        os << *f << "\n";
-    }
-
-    return os;
-}
-
-
-
-

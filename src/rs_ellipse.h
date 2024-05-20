@@ -53,8 +53,6 @@ struct RS_EllipseData {
     bool reversed = false;
 };
 
-std::ostream& operator << (std::ostream& os, const RS_EllipseData& ed);
-
 /**
  * Class for an ellipse entity. All angles are in Rad.
  *
@@ -213,8 +211,6 @@ public:
 	void draw(RS_Painter* painter, RS_GraphicView* view, double& offset) override;
 	void drawVisible(RS_Painter* painter, RS_GraphicView* view, double& offset);
 	//! \}
-
-    friend std::ostream& operator << (std::ostream& os, const RS_Ellipse& a);
 
 	//void calculateEndpoints() override;
 	void calculateBorders() override;

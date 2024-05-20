@@ -77,8 +77,6 @@ struct RS_InsertData {
     RS2::UpdateMode updateMode{};
 };
 
-std::ostream& operator << (std::ostream& os, const RS_InsertData& d);
-
 /**
  * An insert inserts a block into the drawing at a certain location
  * with certain attributes (angle, scale, ...).
@@ -186,8 +184,6 @@ public:
     void rotate(const RS_Vector& center, const RS_Vector& angleVector) override;
     void scale(const RS_Vector& center, const RS_Vector& factor) override;
     void mirror(const RS_Vector& axisPoint1, const RS_Vector& axisPoint2) override;
-
-    friend std::ostream& operator << (std::ostream& os, const RS_Insert& i);
 
 protected:
     RS_InsertData data{};

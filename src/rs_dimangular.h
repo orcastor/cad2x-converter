@@ -57,8 +57,6 @@ struct RS_DimAngularData
     RS_Vector definitionPoint4; ///< dim arc radius point, DXF codes 16,26,36
 };
 
-std::ostream& operator << (std::ostream& os, const RS_DimAngularData& dd);
-
 /**
  * Holds the DXF variables that defines a angular dimension entity.
  */
@@ -100,8 +98,6 @@ private:
     double arrowSize    {0.0};  ///< arrow length
 };
 
-std::ostream& operator << (std::ostream& os, const LC_DimAngularVars& dd);
-
 /**
  * Class for angular dimension entities.
  *
@@ -109,8 +105,6 @@ std::ostream& operator << (std::ostream& os, const LC_DimAngularVars& dd);
  */
 class RS_DimAngular : public RS_Dimension
 {
-    friend std::ostream& operator << (std::ostream& os, const RS_DimAngular& d);
-
 public:
     RS_DimAngular(RS_EntityContainer* parent,
                   const RS_DimensionData& d,

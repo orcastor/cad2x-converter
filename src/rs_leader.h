@@ -40,9 +40,6 @@ struct RS_LeaderData {
     RS_LeaderData(bool arrowHeadFlag) : arrowHead{arrowHeadFlag} {
 	}
 
-	friend std::ostream& operator << (std::ostream& os,
-									  const RS_LeaderData& /*ld*/);
-
 	/** true: leader has an arrow head. false: no arrow. */
     bool arrowHead = false;
 };
@@ -95,8 +92,6 @@ public:
 	void stretch(const RS_Vector& firstCorner,
 				 const RS_Vector& secondCorner,
 				 const RS_Vector& offset) override;
-
-	friend std::ostream& operator << (std::ostream& os, const RS_Leader& l);
 
 protected:
     RS_LeaderData data;

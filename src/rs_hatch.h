@@ -57,10 +57,6 @@ struct RS_HatchData {
 	QString pattern;
 };
 
-std::ostream& operator << (std::ostream& os, const RS_HatchData& td);
-
-
-
 /**
  * Class for a hatch entity.
  *
@@ -160,8 +156,6 @@ public:
     void stretch(const RS_Vector& firstCorner,
                          const RS_Vector& secondCorner,
                          const RS_Vector& offset) override;
-
-    friend std::ostream& operator << (std::ostream& os, const RS_Hatch& p);
 
 protected:
         RS_HatchData data;

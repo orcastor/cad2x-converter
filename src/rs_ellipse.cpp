@@ -216,16 +216,6 @@ private:
 
 }
 
-std::ostream& operator << (std::ostream& os, const RS_EllipseData& ed) {
-	os << "(" << ed.center <<
-		  " " << ed.majorP <<
-		  " " << ed.ratio <<
-		  " " << ed.angle1 <<
-		  "," << ed.angle2 <<
-		  ")";
-	return os;
-}
-
 /**
  * Constructor.
  */
@@ -1887,13 +1877,3 @@ void RS_Ellipse::drawVisible(RS_Painter* painter, RS_GraphicView* view, double& 
                          getAngle1(), getAngle2(),
                          isReversed());
 }
-
-
-/**
- * Dumps the point's data to stdout.
- */
-std::ostream& operator << (std::ostream& os, const RS_Ellipse& a) {
-    os << " Ellipse: " << a.data << "\n";
-    return os;
-}
-

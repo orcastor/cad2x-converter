@@ -126,8 +126,6 @@ public:
         return letterList.at(i);
     }
 
-    friend std::ostream& operator << (std::ostream& os, const RS_Font& l);
-
     friend class RS_FontList;
 
 private:

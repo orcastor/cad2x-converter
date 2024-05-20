@@ -25,10 +25,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <cassert>
 #include "lc_rect.h"
 
-#define INTERT_TEST(s) qDebug()<<"\ntesting " #s; \
-	assert(s); \
-	qDebug()<<"Passed";
-
 using namespace lc::geo;
 
 Coordinate LC_Rect::Vector(Coordinate const& p, Coordinate const& q) {
@@ -274,36 +270,4 @@ Area(coord, {coord.x + width, coord.y + height})
 		return {{lowerLeftCorner(), lowerRightCorner(),
 					upperRightCorner(), upperLeftCorner()}};
 	}
-
-	std::ostream& operator<<(std::ostream& os, const Area& area) {
-		os << "Area(" << area.minP() << " " << area.maxP() << ")";
-		return os;
-	}
-
-void LC_Rect::unitTest() {
-	LC_Rect const rect0{{0., 0.}, {1., 1.}};
-	LC_Rect const rect1{{0.5, 0.5}, {1.5, 1.5}};
-	LC_Rect const rect2{{1.5, 1.5}, {2.5, 2.5}};
-	LC_Rect const rect3{{0.0, 1.}, {1.5, 1.5}};
-
-	//intersects() tests
-	INTERT_TEST(rect0.intersects(rect1))
-	INTERT_TEST(rect1.intersects(rect0))
-	INTERT_TEST(rect1.intersects(rect2))
-	INTERT_TEST(rect2.intersects(rect1))
-
-	INTERT_TEST(!rect0.intersects(rect2))
-	INTERT_TEST(!rect2.intersects(rect0))
-
-	INTERT_TEST(rect2.intersects(rect3))
-	INTERT_TEST(rect3.intersects(rect2))
-
-	// inArea() tests
-	INTERT_TEST(rect0.inArea({0.1, 0.1}))
-	INTERT_TEST(rect0.inArea({0.5, 0.5}))
-
-	INTERT_TEST(!rect0.inArea({1.1, 1.1}))
-	INTERT_TEST(!rect0.inArea({-1.1, -1.1}))
-
-}
 

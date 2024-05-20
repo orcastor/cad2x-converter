@@ -200,11 +200,8 @@ public:
 	 */
 	std::array<Coordinate, 4> vertices() const;
 
-	static void unitTest();
-
 private:
 	static Coordinate Vector(Coordinate const& p, Coordinate const& q);
-	friend std::ostream& operator<<(std::ostream& os, const Area& area);
 
 private:
     Coordinate _minP{};

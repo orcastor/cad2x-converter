@@ -52,15 +52,8 @@ struct LC_DimArcData
     RS_Vector startAngle;
 };
 
-
-std::ostream& operator << (std::ostream& os, const LC_DimArcData& input_dimArcData);
-
-
 class LC_DimArc : public RS_Dimension
 {
-    friend std::ostream& operator << (std::ostream& os, const LC_DimArc& input_dimArc);
-
-
     public:
 
         LC_DimArc( RS_EntityContainer* parent, 

@@ -55,12 +55,6 @@ RS_DimAlignedData::RS_DimAlignedData(const RS_Vector& _extensionPoint1,
 {
 }
 
-std::ostream& operator << (std::ostream& os,
-								  const RS_DimAlignedData& dd) {
-	os << "(" << dd.extensionPoint1 << "/" << dd.extensionPoint1 << ")";
-	return os;
-}
-
 /**
  * Constructor.
  *
@@ -363,14 +357,4 @@ void RS_DimAligned::moveRef(const RS_Vector& ref, const RS_Vector& offset) {
                 }
                 updateDim(true);
     }
-}
-
-
-
-/**
- * Dumps the point's data to stdout.
- */
-std::ostream& operator << (std::ostream& os, const RS_DimAligned& d) {
-    os << " DimAligned: " << d.getData() << "\n" << d.getEData() << "\n";
-    return os;
 }

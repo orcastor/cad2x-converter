@@ -67,14 +67,6 @@ bool RS_ArcData::isValid() const{
 			fabs(remainder(angle1-angle2, 2.*M_PI))>RS_TOLERANCE_ANGLE);
 }
 
-std::ostream& operator << (std::ostream& os, const RS_ArcData& ad) {
-	os << "(" << ad.center <<
-		  "/" << ad.radius <<
-		  " " << ad.angle1 <<
-		  "," << ad.angle2 <<
-		  ")";
-	return os;
-}
 /**
  * Default constructor.
  */
@@ -1049,13 +1041,5 @@ double RS_Arc::areaLineIntegral() const
     } else {
         return fEnd-fStart + 2.*r2*getAngleLength();
     }
-}
-
-/**
- * Dumps the point's data to stdout.
- */
-std::ostream& operator << (std::ostream& os, const RS_Arc& a) {
-    os << " Arc: " << a.data << "\n";
-    return os;
 }
 

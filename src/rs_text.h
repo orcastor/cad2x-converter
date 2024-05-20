@@ -125,8 +125,6 @@ struct RS_TextData {
     RS2::UpdateMode updateMode = RS2::NoUpdate;
 };
 
-std::ostream& operator << (std::ostream& os, const RS_TextData& td);
-
 /**
  * Class for a text entity.
  * Please note that text strings can contain special
@@ -237,8 +235,6 @@ public:
     virtual void stretch(const RS_Vector& firstCorner,
                          const RS_Vector& secondCorner,
                          const RS_Vector& offset) override;
-
-    friend std::ostream& operator << (std::ostream& os, const RS_Text& p);
 
     void draw(RS_Painter* painter, RS_GraphicView* view, double& offset) override;
 

@@ -38,15 +38,6 @@ RS_ConstructionLineData::RS_ConstructionLineData(const RS_Vector& point1,
 {
 }
 
-std::ostream& operator << (std::ostream& os,
-								  const RS_ConstructionLineData& ld)
-{
-	os << "(" << ld.point1 <<
-	"/" << ld.point2 <<
-	")";
-	return os;
-}
-
 /**
  * Constructor.
  */
@@ -261,21 +252,7 @@ void RS_ConstructionLine::scale(const RS_Vector& center, const RS_Vector& factor
     //calculateBorders();
 }
 
-
-
 void RS_ConstructionLine::mirror(const RS_Vector& axisPoint1, const RS_Vector& axisPoint2) {
         data.point1.mirror(axisPoint1, axisPoint2);
         data.point2.mirror(axisPoint1, axisPoint2);
 }
-
-
-
-/**
- * Dumps the point's data to stdout.
- */
-std::ostream& operator << (std::ostream& os, const RS_ConstructionLine& l) {
-    os << " ConstructionLine: " << l.getData() << "\n";
-    return os;
-}
-
-

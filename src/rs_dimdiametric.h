@@ -55,8 +55,6 @@ struct RS_DimDiametricData {
     double leader = false;
 };
 
-std::ostream& operator << (std::ostream& os, const RS_DimDiametricData& dd);
-
 /**
  * Class for diametric dimension entities.
  *
@@ -102,9 +100,6 @@ public:
 	void mirror(const RS_Vector& axisPoint1, const RS_Vector& axisPoint2) override;
 
 	void moveRef(const RS_Vector& ref, const RS_Vector& offset) override;
-
-    friend std::ostream& operator << (std::ostream& os,
-                                      const RS_DimDiametric& d);
 
 protected:
     /** Extended data. */

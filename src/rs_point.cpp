@@ -217,18 +217,4 @@ void RS_Point::draw(RS_Painter* painter,RS_GraphicView* view, double& /*offset*/
 	}
 }
 
-/**
- * Dumps the point's data to stdout.
- */
-std::ostream& operator << (std::ostream& os, const RS_Point& p) {
-    os << " Point: " << p.getData() << "\n";
-    return os;
-}
-
-std::ostream& operator << (std::ostream& os, const RS_PointData& pd)
-{
-        os << "(" << pd.pos << ")";
-        return os;
-}
-
 // EOF

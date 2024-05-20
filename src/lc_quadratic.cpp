@@ -667,27 +667,4 @@ Matrix  LC_Quadratic::rotationMatrix(const double& angle)
     return ret;
 }
 
-
-/**
- * Dumps the point's data to stdout.
- */
-std::ostream& operator << (std::ostream& os, const LC_Quadratic& q) {
-
-    os << " quadratic form: ";
-	if(q == false) {
-        os<<" invalid quadratic form"<<std::endl;
-        return os;
-    }
-    os<<std::endl;
-	auto ce=q.getCoefficients();
-    unsigned short i=0;
-    if(ce.size()==6){
-        os<<ce[0]<<"*x^2 "<<( (ce[1]>=0.)?"+":" ")<<ce[1]<<"*x*y  "<< ((ce[2]>=0.)?"+":" ")<<ce[2]<<"*y^2 ";
-        i=3;
-    }
-    if(q.isQuadratic() && ce[i]>=0.) os<<"+";
-        os<<ce[i]<<"*x "<<((ce[i+1]>=0.)?"+":" ")<<ce[i+1]<<"*y "<< ((ce[i+2]>=0.)?"+":" ")<<ce[i+2]<<" == 0"
-                                                                              <<std::endl;
-    return os;
-}
 //EOF

@@ -188,23 +188,3 @@ void RS_Leader::stretch(const RS_Vector& firstCorner,
     RS_EntityContainer::stretch(firstCorner, secondCorner, offset);
     update();
 }
-
-/**
- * Dumps the leader's data to stdout.
- */
-std::ostream& operator << (std::ostream& os, const RS_Leader& l) {
-    os << " Leader: " << l.getData() << " {\n";
-
-    os << (RS_EntityContainer&)l;
-
-    os << "\n}\n";
-
-    return os;
-}
-
-std::ostream& operator << (std::ostream& os,
-                                      const RS_LeaderData& /*ld*/) {
-        os << "(Leader)";
-        return os;
-}
-

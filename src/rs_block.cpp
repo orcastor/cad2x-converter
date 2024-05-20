@@ -164,9 +164,3 @@ QStringList RS_Block::findNestedInsert(const QString& bName) {
 
     return bnChain;
 }
-
-std::ostream& operator << (std::ostream& os, const RS_Block& b) {
-    os << " name: " << b.getName().toLatin1().data() << "\n";
-    os << " entities: " << (RS_EntityContainer&)b << "\n";
-    return os;
-}

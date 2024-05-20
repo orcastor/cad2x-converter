@@ -52,8 +52,6 @@ struct RS_SplineData {
 	std::vector<double> knotslist;
 };
 
-std::ostream& operator << (std::ostream& os, const RS_SplineData& ld);
-
 /**
  * Class for a spline entity.
  *
@@ -144,8 +142,6 @@ public:
 
 		void draw(RS_Painter* painter, RS_GraphicView* view, double& offset) override;
 		const std::vector<RS_Vector>& getControlPoints() const;
-
-        friend std::ostream& operator << (std::ostream& os, const RS_Spline& l);
 
 		void calculateBorders() override;
 

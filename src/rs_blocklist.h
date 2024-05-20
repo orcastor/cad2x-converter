@@ -82,8 +82,6 @@ public:
     bool isOwner() const {return owner;}
     void setOwner(bool ow) {owner = ow;}
 
-    friend std::ostream& operator << (std::ostream& os, RS_BlockList& b);
-
 private:
     //! Is the list owning the blocks?
     bool owner = false;

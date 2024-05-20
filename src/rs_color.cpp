@@ -85,10 +85,3 @@ int RS_Color::colorDistance(const RS_Color& c) const {
                                    + std::pow(c.blue() - blue(), 2) * (767 - redMean) / 256)
                         / 7.64834);
 }
-
-std::ostream& operator << (std::ostream& os, const RS_Color& c) {
-       os << " color: " << c.name().toLatin1().data()
-       << " flags: " << (c.getFlag(RS2::FlagByLayer) ? "RS2::FlagByLayer " : "")
-       << (c.getFlag(RS2::FlagByBlock) ? "RS2::FlagByBlock " : "");
-       return os;
-}

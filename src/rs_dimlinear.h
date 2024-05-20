@@ -61,9 +61,6 @@ struct RS_DimLinearData {
     double oblique = 0.;
 };
 
-std::ostream& operator << (std::ostream& os,
-									  const RS_DimLinearData& dd);
-
 /**
  * Class for aligned dimension entities.
  *
@@ -125,9 +122,6 @@ public:
                          const RS_Vector& secondCorner,
                          const RS_Vector& offset) override;
     void moveRef(const RS_Vector& ref, const RS_Vector& offset) override;
-
-    friend std::ostream& operator << (std::ostream& os,
-                                      const RS_DimLinear& d);
 
 protected:
     /** Extended data. */

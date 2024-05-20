@@ -59,8 +59,6 @@ struct LC_SplinePointsData
 	std::vector<RS_Vector> controlPoints;
 };
 
-std::ostream& operator << (std::ostream& os, const LC_SplinePointsData& ld);
-
 /**
  * Class for a spline entity.
  *
@@ -215,8 +213,6 @@ public:
     std::vector<RS_Vector> const& getPoints() const;
     std::vector<RS_Vector> const& getControlPoints() const;
     std::vector<RS_Vector> getStrokePoints() const;
-
-    friend std::ostream& operator << (std::ostream& os, const LC_SplinePoints& l);
 
 	void calculateBorders() override;
 

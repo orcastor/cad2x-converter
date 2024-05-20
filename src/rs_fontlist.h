@@ -60,8 +60,6 @@ public:
     std::vector<std::unique_ptr<RS_Font> >::const_iterator begin() const;
     std::vector<std::unique_ptr<RS_Font> >::const_iterator end() const;
 
-    friend std::ostream& operator << (std::ostream& os, RS_FontList& l);
-
 private:
     RS_FontList()=default;
     RS_FontList(RS_FontList const&)=delete;

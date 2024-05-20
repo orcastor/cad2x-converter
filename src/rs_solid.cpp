@@ -61,18 +61,6 @@ RS_SolidData::RS_SolidData(const RS_Vector& corner1,
 {
 }
 
-std::ostream& operator << (std::ostream& os,
-                           const RS_SolidData& pd)
-{
-    os << "(";
-    for (int i = RS_SolidData::FirstCorner; i < RS_SolidData::MaxCorners; i++) {
-        os << pd.corner[i];
-    }
-    os << ")";
-
-    return os;
-}
-
 /**
  * Default constructor.
  */
@@ -470,13 +458,3 @@ void RS_Solid::setDistPtr(double *dist, const double value) const
         *dist = value;
     }
 }
-
-/**
- * Dumps the point's data to stdout.
- */
-std::ostream& operator << (std::ostream& os, const RS_Solid& p)
-{
-    os << " Solid: " << p.getData() << "\n";
-    return os;
-}
-

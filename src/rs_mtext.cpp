@@ -50,15 +50,6 @@ RS_MTextData::RS_MTextData(const RS_Vector &_insertionPoint, double _height,
       lineSpacingFactor(_lineSpacingFactor), text(_text), style(_style),
       angle(_angle), updateMode(_updateMode) {}
 
-std::ostream &operator<<(std::ostream &os, const RS_MTextData &td) {
-  os << "(" << td.insertionPoint << ',' << td.height << ',' << td.width << ','
-     << td.valign << ',' << td.halign << ',' << td.drawingDirection << ','
-     << td.lineSpacingStyle << ',' << td.lineSpacingFactor << ','
-     << td.text.toLatin1().data() << ',' << td.style.toLatin1().data() << ','
-     << td.angle << ',' << td.updateMode << ',' << ")";
-  return os;
-}
-
 /**
  * Constructor.
  */
@@ -615,14 +606,6 @@ void RS_MText::stretch(const RS_Vector &firstCorner,
 
     move(offset);
   }
-}
-
-/**
- * Dumps the point's data to stdout.
- */
-std::ostream &operator<<(std::ostream &os, const RS_MText &p) {
-  os << " Text: " << p.getData() << "\n";
-  return os;
 }
 
 void RS_MText::draw(RS_Painter *painter, RS_GraphicView *view,

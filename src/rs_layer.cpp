@@ -202,16 +202,3 @@ bool RS_Layer::setConstruction( const bool construction){
 	data.construction = construction;
 	return construction;
 }
-
-/**
- * Dumps the layers data to stdout.
- */
-std::ostream& operator << (std::ostream& os, const RS_Layer& l) {
-    os << " name: " << l.getName().toLatin1().data()
-    << " pen: " << l.getPen()
-    << " frozen: " << (int)l.isFrozen()
-    << " address: " << &l
-    << std::endl;
-    return os;
-}
-

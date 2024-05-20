@@ -90,9 +90,6 @@ struct RS_DimensionData : public RS_Flags {
     double angle = 0.;
 };
 
-std::ostream& operator << (std::ostream& os,
-								  const RS_DimensionData& dd);
-
 /**
  * Abstract base class for dimension entity classes.
  *

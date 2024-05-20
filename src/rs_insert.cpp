@@ -84,11 +84,6 @@ RS_InsertData::RS_InsertData(const QString& _name,
 {
 }
 
-std::ostream& operator << (std::ostream& os,
-									 const RS_InsertData& d) {
-	   os << "(" << d.name.toLatin1().data() << ")";
-	   return os;
-   }
 /**
  * @param parent The graphic this block belongs to.
  */
@@ -367,9 +362,4 @@ void RS_Insert::mirror(const RS_Vector& axisPoint1, const RS_Vector& axisPoint2)
         data.scaleFactor.x*=-1;
 
     update();
-}
-
-std::ostream& operator << (std::ostream& os, const RS_Insert& i) {
-    os << " Insert: " << i.getData() << std::endl;
-    return os;
 }

@@ -49,13 +49,6 @@ RS_PolylineData::RS_PolylineData(const RS_Vector& _startpoint,
 	}
 }
 
-std::ostream& operator << (std::ostream& os,
-								  const RS_PolylineData& pd) {
-	os << "(" << pd.startpoint <<
-	"/" << pd.endpoint <<
-	")";
-	return os;
-}
 /**
  * Constructor.
  */
@@ -687,20 +680,3 @@ void RS_Polyline::draw(RS_Painter* painter,RS_GraphicView* view, double& /*offse
 
     painter->drawPolyline(*this, *view);
 }
-
-
-
-
-/**
- * Dumps the point's data to stdout.
- */
-std::ostream& operator << (std::ostream& os, const RS_Polyline& l) {
-    os << " Polyline: " << l.getData() << " {\n";
-
-    os << (RS_EntityContainer&)l;
-
-    os << "\n}\n";
-
-    return os;
-}
-

@@ -223,38 +223,3 @@ void RS_VariableDict::remove(const QString& key)
     // here the block is removed from the list but not deleted
     variables.remove(key);
 }
-
-
-/**
- * Dumps the variables to stdout.
- */
-std::ostream& operator << (std::ostream& os, RS_VariableDict& d)
-{
-    os << "Variables: \n";
-	auto it = d.variables.begin();
-    while (it != d.variables.end()) {
-        os << it.key().toLatin1().data() << ": ";
-        switch (it.value().getType()) {
-        case RS2::VariableVoid:
-            os << "void\n";
-            break;
-        case RS2::VariableInt:
-            os << "int " << it.value().getInt() << "\n";
-            break;
-        case RS2::VariableDouble:
-            os << "double " << it.value().getDouble() << "\n";
-            break;
-        case RS2::VariableVector:
-            os << "vector " << it.value().getVector() << "\n";
-            break;
-        case RS2::VariableString:
-            os << "string " << it.value().getString().toLatin1().data() << "\n";
-            break;
-        }
-        ++it;
-    }
-    os << std::endl;
-
-    return os;
-}
-

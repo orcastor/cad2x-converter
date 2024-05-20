@@ -551,26 +551,3 @@ void RS_DimAngular::fixDimension(void)
         }
     }
 }
-
-/**
- * Dumps the point's data to stdout.
- */
-std::ostream& operator << (std::ostream& os, const RS_DimAngular& d)
-{
-    os << " DimAngular: "
-       << d.getData() << std::endl
-       << d.getEData() << std::endl;
-
-    return os;
-}
-
-std::ostream& operator << (std::ostream& os, const RS_DimAngularData& dd)
-{
-    os << "(" << dd.definitionPoint1
-       << "," << dd.definitionPoint2
-       << "," << dd.definitionPoint3
-       << "," << dd.definitionPoint3
-       << ")";
-
-    return os;
-}

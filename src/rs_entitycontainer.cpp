@@ -1759,61 +1759,6 @@ QList<RS_Entity *>::iterator RS_EntityContainer::end()
     return entities.end();
 }
 
-/**
- * Dumps the entities to stdout.
- */
-std::ostream& operator << (std::ostream& os, RS_EntityContainer& ec) {
-
-    static int indent = 0;
-
-    std::string tab(indent * 2, ' ');
-
-    ++indent;
-
-    unsigned long int id = ec.getId();
-
-    os << tab << "EntityContainer[" << id << "]: \n";
-    os << tab << "Borders[" << id << "]: "
-       << ec.minV << " - " << ec.maxV << "\n";
-    //os << tab << "Unit[" << id << "]: "
-    //<< RS_Units::unit2string (ec.unit) << "\n";
-    if (ec.getLayer()) {
-        os << tab << "Layer[" << id << "]: "
-           << ec.getLayer()->getName().toLatin1().data() << "\n";
-    } else {
-        os << tab << "Layer[" << id << "]: <nullptr>\n";
-    }
-    //os << ec.layerList << "\n";
-
-    os << tab << " Flags[" << id << "]: "
-       << (ec.getFlag(RS2::FlagVisible) ? "RS2::FlagVisible" : "");
-    os << "\n";
-
-
-    os << tab << "Entities[" << id << "]: \n";
-    for(auto t: ec){
-        switch (t->rtti()) {
-        case RS2::EntityInsert:
-            os << tab << *((RS_Insert*)t);
-            os << tab << *((RS_Entity*)t);
-            os << tab << *((RS_EntityContainer*)t);
-            break;
-        default:
-            if (t->isContainer()) {
-                os << tab << *((RS_EntityContainer*)t);
-            } else {
-                os << tab << *t;
-            }
-            break;
-        }
-    }
-    os << tab << "\n\n";
-    --indent;
-
-    return os;
-}
-
-
 RS_Entity* RS_EntityContainer::first() const
 {
     return entities.first();

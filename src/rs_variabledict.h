@@ -74,8 +74,6 @@ public:
 
     //void addVariableDictListener(RS_VariableDictListener* listener);
 
-    friend std::ostream& operator << (std::ostream& os, RS_VariableDict& v);
-
 private:
     //! Variables for the graphic
     QHash<QString, RS_Variable> variables;

@@ -131,8 +131,6 @@ public:
         return false;
     }
 
-    friend std::ostream& operator << (std::ostream& os, const RS_Block& b);
-
     /** 
 	 * sets a new name for the block. Only called by blocklist to
 	 * assure that block names stay unique.

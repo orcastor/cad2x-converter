@@ -46,8 +46,6 @@ struct RS_CircleData {
     double radius = 0.;
 };
 
-std::ostream& operator << (std::ostream& os, const RS_CircleData& ad);
-
 /**
  * Class for a circle entity.
  *
@@ -174,8 +172,6 @@ m0 x + m1 y + m2 =0
 * @return \pi r^2
 */
 	double areaLineIntegral() const override;
-
-    friend std::ostream& operator << (std::ostream& os, const RS_Circle& a);
 
 	void calculateBorders() override;
 

@@ -54,9 +54,6 @@ struct RS_DimRadialData {
     double leader=0.;
 };
 
-std::ostream& operator << (std::ostream& os,
-									  const RS_DimRadialData& dd);
-
 /**
  * Class for radial dimension entities.
  *
@@ -102,9 +99,6 @@ public:
 	void scale(const RS_Vector& center, const RS_Vector& factor) override;
 	void mirror(const RS_Vector& axisPoint1, const RS_Vector& axisPoint2) override;
 	void moveRef(const RS_Vector& ref, const RS_Vector& offset) override;
-
-    friend std::ostream& operator << (std::ostream& os,
-                                      const RS_DimRadial& d);
 
 protected:
     /** Extended data. */

@@ -52,12 +52,6 @@ RS_DimRadialData::RS_DimRadialData(const RS_Vector& _definitionPoint,
 {
 }
 
-std::ostream& operator << (std::ostream& os,
-								  const RS_DimRadialData& dd) {
-	os << "(" << dd.definitionPoint << "/" << dd.leader << ")";
-	return os;
-}
-
 /**
  * Constructor.
  *
@@ -304,12 +298,4 @@ void RS_DimRadial::moveRef(const RS_Vector& ref, const RS_Vector& offset) {
         data.middleOfText.move(offset);
                 updateDim(false);
     }
-}
-
-/**
- * Dumps the point's data to stdout.
- */
-std::ostream& operator << (std::ostream& os, const RS_DimRadial& d) {
-    os << " DimRadial: " << d.getData() << "\n" << d.getEData() << "\n";
-    return os;
 }

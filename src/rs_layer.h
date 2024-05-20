@@ -182,8 +182,6 @@ public:
      */
 	bool setConstruction( const bool construction);
 
-    friend std::ostream& operator << (std::ostream& os, const RS_Layer& l);
-
 private:
     //! Layer data
     RS_LayerData data;

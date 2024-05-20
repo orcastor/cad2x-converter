@@ -48,12 +48,6 @@ RS_DimDiametricData::RS_DimDiametricData(const RS_Vector& _definitionPoint,
 {
 }
 
-std::ostream& operator << (std::ostream& os,
-								  const RS_DimDiametricData& dd) {
-	os << "(" << dd.definitionPoint << "," << dd.leader << ")";
-	return os;
-}
-
 /**
  * Constructor.
  *
@@ -206,14 +200,4 @@ void RS_DimDiametric::moveRef(const RS_Vector& ref, const RS_Vector& offset) {
         data.middleOfText.move(offset);
                 updateDim(false);
     }
-}
-
-
-
-/**
- * Dumps the point's data to stdout.
- */
-std::ostream& operator << (std::ostream& os, const RS_DimDiametric& d) {
-    os << " DimDiametric: " << d.getData() << "\n" << d.getEData() << "\n";
-    return os;
 }

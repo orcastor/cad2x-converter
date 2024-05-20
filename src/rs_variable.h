@@ -107,8 +107,6 @@ public:
 		return code;
 	}
 
-    //friend std::ostream& operator << (std::ostream& os, RS_Variable& v);
-
 private:
 	RS_VariableContents contents;
 	RS2::VariableType type = RS2::VariableVoid;

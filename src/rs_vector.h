@@ -127,8 +127,6 @@ public:
     /** switch x,y for all vectors */
     RS_Vector flipXY(void) const;
 
-    friend std::ostream& operator << (std::ostream&, const RS_Vector& v);
-
 #ifdef RS_TEST
 
     static bool test();
@@ -197,9 +195,6 @@ public:
 
     /** switch x,y for all vectors */
     RS_VectorSolutions flipXY(void) const;
-
-    friend std::ostream& operator << (std::ostream& os,
-                                      const RS_VectorSolutions& s);
 
 private:
 	std::vector<RS_Vector> vector;

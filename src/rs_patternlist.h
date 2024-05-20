@@ -83,9 +83,6 @@ public:
 
 	bool contains(const QString& name) const;
 
-    friend std::ostream& operator << (std::ostream& os, RS_PatternList& l);
-
-
 private:
     //! patterns in the graphic
 	PTN_MAP patterns;

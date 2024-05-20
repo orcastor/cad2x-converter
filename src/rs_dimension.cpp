@@ -84,22 +84,6 @@ RS_DimensionData::RS_DimensionData(const RS_Vector& _definitionPoint,
 {
 }
 
-std::ostream& operator << (std::ostream& os,
-						   const RS_DimensionData& dd) {
-	os << "("
-	   << dd.definitionPoint<<','
-	   <<dd.middleOfText<<','
-	  <<dd.valign<<','
-	 <<dd.halign<<','
-	<<dd.lineSpacingStyle<<','
-	<<dd.lineSpacingFactor<<','
-	<<dd.text.toLatin1().data() <<','
-	<<dd.style.toLatin1().data()<<','
-	<<dd.angle
-	<< ")";
-	return os;
-}
-
 /**
  * Constructor.
  */

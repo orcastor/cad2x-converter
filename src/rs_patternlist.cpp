@@ -94,16 +94,3 @@ bool RS_PatternList::contains(const QString& name) const {
 	return patterns.count(name.toLower());
 
 }
-
-/**
- * Dumps the patterns to stdout.
- */
-std::ostream& operator << (std::ostream& os, RS_PatternList& l) {
-
-    os << "Patternlist: \n";
-	for (auto const& pa: l.patterns)
-		if (pa.second)
-			os<< *pa.second << '\n';
-
-    return os;
-}

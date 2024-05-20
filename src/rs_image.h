@@ -207,10 +207,7 @@ public:
 
 	void draw(RS_Painter* painter, RS_GraphicView* view, double& offset) override;
 
-    friend std::ostream& operator << (std::ostream& os, const RS_Image& l);
-
 	void calculateBorders() override;
-
 
 protected:
 	// whether the point is within image

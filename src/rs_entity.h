@@ -471,8 +471,6 @@ public:
     void setUserDefVar(QString key, QString val);
     void delUserDefVar(QString key);
 
-    friend std::ostream& operator << (std::ostream& os, RS_Entity& e);
-
     /** Recalculates the borders of this entity. */
     virtual void calculateBorders() = 0;
     /** whether the entity is on a constructionLayer */

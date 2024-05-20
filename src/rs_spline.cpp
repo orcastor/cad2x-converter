@@ -43,25 +43,6 @@ RS_SplineData::RS_SplineData(int _degree, bool _closed):
 {
 }
 
-std::ostream& operator << (std::ostream& os, const RS_SplineData& ld) {
-	os << "( degree: " << ld.degree <<
-	      " closed: " << ld.closed;
-	if (ld.controlPoints.size()) {
-		os << "\n(control points:\n";
-		for (auto const& v: ld.controlPoints)
-			os<<v;
-		os<<")\n";
-	}
-	if (ld.knotslist.size()) {
-		os << "\n(knot vector:\n";
-		for (auto const& v: ld.knotslist)
-			os<<v;
-		os<<")\n";
-	}
-	os  << ")";
-	return os;
-}
-
 /**
  * Constructor.
  */
@@ -625,13 +606,4 @@ void RS_Spline::rbsplinu(size_t npts, size_t k, size_t p1,
 		t += step;
     }
 
-}
-
-
-/**
- * Dumps the spline's data to stdout.
- */
-std::ostream& operator << (std::ostream& os, const RS_Spline& l) {
-    os << " Spline: " << l.getData() << "\n";
-    return os;
 }

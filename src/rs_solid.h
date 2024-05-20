@@ -66,9 +66,6 @@ struct RS_SolidData
     std::array<RS_Vector, MaxCorners> corner;
 };
 
-
-std::ostream& operator << (std::ostream& os, const RS_SolidData& pd);
-
 /**
  * Class for a solid entity (e.g. dimension arrows).
  *
@@ -133,8 +130,6 @@ public:
     void mirror(const RS_Vector& axisPoint1, const RS_Vector& axisPoint2) override;
 
     void draw(RS_Painter* painter, RS_GraphicView* view, double& offset) override;
-
-    friend std::ostream& operator << (std::ostream& os, const RS_Solid& p);
 
     /** Recalculates the borders of this entity. */
     void calculateBorders() override;

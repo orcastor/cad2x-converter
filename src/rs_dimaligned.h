@@ -55,8 +55,6 @@ struct RS_DimAlignedData {
 	RS_Vector extensionPoint2;
 };
 
-std::ostream& operator << (std::ostream& os, const RS_DimAlignedData& dd);
-
 /**
  * Class for aligned dimension entities.
  *
@@ -107,9 +105,6 @@ public:
                          const RS_Vector& secondCorner,
 						 const RS_Vector& offset) override;
 	void moveRef(const RS_Vector& ref, const RS_Vector& offset) override;
-
-    friend std::ostream& operator << (std::ostream& os,
-                                      const RS_DimAligned& d);
 
 protected:
     /** Extended data. */
