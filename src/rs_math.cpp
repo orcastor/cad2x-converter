@@ -300,7 +300,7 @@ QString RS_Math::derationalize(const QString& expr) {
         for (size_t i = 1; i < match.size(); ++i) {
             std::cout << "Capture group " << i << ": " << match[i] << std::endl;
         }
-        
+
         int sign = (match[1].str().empty()) ? 1 : -1;
         double total = 0.0;
 
@@ -322,7 +322,7 @@ QString RS_Math::derationalize(const QString& expr) {
         total *= sign;
 
 		RS_DEBUG->print("RS_Math::derationalize: total = '%f'", total);
-		return QString("%1").arg(total);		
+		return QString("%1").arg(total);
 	}
 	else {
 		return expr;
@@ -656,10 +656,10 @@ std::vector<double> RS_Math::cubicSolver(const std::vector<double>& ce)
 std::vector<double> RS_Math::quarticSolver(const std::vector<double>& ce)
 {
     std::vector<double> ans(0,0.);
-    if(RS_DEBUG->getLevel()>=RS_Debug::D_INFORMATIONAL){
-		DEBUG_HEADER
-        std::cout<<"expected array size=4, got "<<ce.size()<<std::endl;
-    }
+    // if(RS_DEBUG->getLevel()>=RS_Debug::D_INFORMATIONAL){
+		// DEBUG_HEADER
+    //     std::cout<<"expected array size=4, got "<<ce.size()<<std::endl;
+    // }
     if(ce.size() != 4) return ans;
     if(RS_DEBUG->getLevel()>=RS_Debug::D_INFORMATIONAL){
         std::cout<<"x^4+("<<ce[0]<<")*x^3+("<<ce[1]<<")*x^2+("<<ce[2]<<")*x+("<<ce[3]<<")==0"<<std::endl;
@@ -678,10 +678,10 @@ std::vector<double> RS_Math::quarticSolver(const std::vector<double>& ce)
     double p= ce[1] - (3./8)*a2;
     double q= ce[2] + ce[0]*((1./8)*a2 - 0.5*ce[1]);
     double r= ce[3] - shift*ce[2] + (ce[1] - 3.*shift2)*shift2;
-    if(RS_DEBUG->getLevel()>=RS_Debug::D_INFORMATIONAL){
-		DEBUG_HEADER
-        std::cout<<"x^4+("<<p<<")*x^2+("<<q<<")*x+("<<r<<")==0"<<std::endl;
-    }
+    // if(RS_DEBUG->getLevel()>=RS_Debug::D_INFORMATIONAL){
+		// DEBUG_HEADER
+    //     std::cout<<"x^4+("<<p<<")*x^2+("<<q<<")*x+("<<r<<")==0"<<std::endl;
+    // }
     if (q*q <= 1.e-4*RS_TOLERANCE*std::abs(p*r)) {// Biquadratic equations
         double discriminant= 0.25*p*p -r;
         if (discriminant < -1.e3*RS_TOLERANCE) {
@@ -929,7 +929,7 @@ bool RS_Math::linearSolver(const std::vector<std::vector<double> >& mt, std::vec
                 cmax=std::abs(mt0[j][i]);
             }
         }
-	
+
 	// issue #1386: relax singular condition
 	// TODO: switch to QR-decomposition based algorithms
         if(cmax<RS_TOLERANCE) return false; //singular matrix
@@ -1098,10 +1098,10 @@ RS_VectorSolutions RS_Math::simultaneousQuadraticSolverFull(const std::vector<st
     //y^0
     qy[0]=-d2*g*l + a*d*j*l - a2*l2
             - ( f2*g2 - d*f*g*j + a*f*j2 - 2.*a*f*g*l);
-	if(RS_DEBUG->getLevel()>=RS_Debug::D_INFORMATIONAL){
-		DEBUG_HEADER
-        std::cout<<qy[4]<<"*y^4 +("<<qy[3]<<")*y^3+("<<qy[2]<<")*y^2+("<<qy[1]<<")*y+("<<qy[0]<<")==0"<<std::endl;
-	}
+	// if(RS_DEBUG->getLevel()>=RS_Debug::D_INFORMATIONAL){
+	// 	DEBUG_HEADER
+  //       std::cout<<qy[4]<<"*y^4 +("<<qy[3]<<")*y^3+("<<qy[2]<<")*y^2+("<<qy[1]<<")*y+("<<qy[0]<<")==0"<<std::endl;
+	// }
     //quarticSolver
 	auto roots=quarticSolverFull(qy);
     if(RS_DEBUG->getLevel()>=RS_Debug::D_INFORMATIONAL){
@@ -1114,10 +1114,10 @@ RS_VectorSolutions RS_Math::simultaneousQuadraticSolverFull(const std::vector<st
     std::vector<double> ce(0,0.);
 
     for(size_t i0=0;i0<roots.size();i0++){
-        if(RS_DEBUG->getLevel()>=RS_Debug::D_INFORMATIONAL){
-			DEBUG_HEADER
-            std::cout<<"y="<<roots[i0]<<std::endl;
-        }
+      //   if(RS_DEBUG->getLevel()>=RS_Debug::D_INFORMATIONAL){
+			// DEBUG_HEADER
+      //       std::cout<<"y="<<roots[i0]<<std::endl;
+      //   }
         /*
           Collect[Eliminate[{ a*x^2 + b*x*y+c*y^2+d*x+e*y+f==0,g*x^2+h*x*y+i*y^2+j*x+k*y+l==0},x],y]
           */
@@ -1155,10 +1155,10 @@ RS_VectorSolutions RS_Math::simultaneousQuadraticSolverFull(const std::vector<st
         RS_Vector vp(-ce[2]/ce[1],roots[i0]);
         if(simultaneousQuadraticVerify(m,vp)) ret.push_back(vp);
     }
-	if(RS_DEBUG->getLevel()>=RS_Debug::D_INFORMATIONAL){
-		DEBUG_HEADER
-        std::cout<<"ret="<<ret<<std::endl;
-	}
+	// if(RS_DEBUG->getLevel()>=RS_Debug::D_INFORMATIONAL){
+	// 	DEBUG_HEADER
+  //       std::cout<<"ret="<<ret<<std::endl;
+	// }
     return ret;
 }
 

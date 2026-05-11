@@ -316,7 +316,7 @@ LC_Quadratic::LC_Quadratic(const RS_AtomicEntity* circle0,
                                                            false)-circle0->getCenter();
 	if(normal.dotP(disp)>0.) normal *= -1.;
     if(mirror) normal *= -1.;
-							   
+
 		RS_Line directrix{line1->getStartpoint()+normal,
 										   line1->getEndpoint()+normal};
         LC_Quadratic lc0(&directrix,circle0->getCenter());
@@ -542,11 +542,11 @@ RS_VectorSolutions LC_Quadratic::getIntersection(const LC_Quadratic& l1, const L
     if(p1->isQuadratic()==false){
         std::swap(p1,p2);
     }
-	if(RS_DEBUG->getLevel()>=RS_Debug::D_INFORMATIONAL){
-		DEBUG_HEADER
-		std::cout<<*p1<<std::endl;
-		std::cout<<*p2<<std::endl;
-	}
+	// if(RS_DEBUG->getLevel()>=RS_Debug::D_INFORMATIONAL){
+	// 	DEBUG_HEADER
+	// 	std::cout<<*p1<<std::endl;
+	// 	std::cout<<*p2<<std::endl;
+	// }
     if(p1->isQuadratic()==false){
         //two lines
 		std::vector<std::vector<double> > ce(2,std::vector<double>(3,0.));
@@ -620,11 +620,11 @@ RS_VectorSolutions LC_Quadratic::getIntersection(const LC_Quadratic& l1, const L
     std::vector<std::vector<double> >  ce(0);
     ce.push_back(p1->getCoefficients());
     ce.push_back(p2->getCoefficients());
-    if(RS_DEBUG->getLevel()>=RS_Debug::D_INFORMATIONAL){
-        DEBUG_HEADER
-        std::cout<<*p1<<std::endl;
-        std::cout<<*p2<<std::endl;
-    }
+    // if(RS_DEBUG->getLevel()>=RS_Debug::D_INFORMATIONAL){
+    //     DEBUG_HEADER
+    //     std::cout<<*p1<<std::endl;
+    //     std::cout<<*p2<<std::endl;
+    // }
 	auto sol= RS_Math::simultaneousQuadraticSolverFull(ce);
     bool valid= sol.size()>0;
 	for(auto & v: sol){
@@ -642,10 +642,10 @@ RS_VectorSolutions LC_Quadratic::getIntersection(const LC_Quadratic& l1, const L
 	for(auto const& v: sol){
 		if(v.magnitude()<=RS_MAXDOUBLE){
 			ret.push_back(v);
-			if(RS_DEBUG->getLevel()>=RS_Debug::D_INFORMATIONAL){
-				DEBUG_HEADER
-				std::cout<<v<<std::endl;
-			}
+			// if(RS_DEBUG->getLevel()>=RS_Debug::D_INFORMATIONAL){
+			// 	DEBUG_HEADER
+			// 	std::cout<<v<<std::endl;
+			// }
 		}
 	}
     return ret;
